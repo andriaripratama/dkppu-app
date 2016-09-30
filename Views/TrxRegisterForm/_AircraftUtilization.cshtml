@@ -1,0 +1,167 @@
+﻿@model List<DKUPPU.ViewModels.AircraftUtilizationViewModel>
+@{
+    Layout = null;
+
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Aircraft Type</th>
+
+                <th>Daily (Hour)</th>
+
+                <th>Weekly (Hour)</th>
+
+                <th>Monthly (Hour)</th>
+            </tr>
+        </thead>
+        <tbody id="table-aircraft">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                //string datepicker = "";
+                //string from_date = "";
+                //string until_date = "";
+            }
+            @foreach (DKUPPU.ViewModels.AircraftUtilizationViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                //datepicker = "";
+                //from_date = "";
+                //until_date = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    //from_date = "from-date";
+                    //until_date = "until-date";
+                    //datepicker = "date-picker";
+                }
+                <tr id="AircraftUtilizationViewModel-@j" class="old-tr">
+                    <td>
+                        @Html.DropDownList("AircraftUtilizationViewModel[" + j.ToString() + "].aircraft_type", (IEnumerable<SelectListItem>)ViewBag.DropAircraft, "Select Aircraft", new { @class = "form-control required-value aircraft_type", id = "AircraftUtilizationViewModel_" + j.ToString() + "__aircraft_type" })
+                        @*<input type="text" name="AircraftUtilizationViewModel[@j].aircraft_type" id="AircraftUtilizationViewModel_@j.ToString()__aircraft_type" class="form-control required-value" value="@Html.DisplayFor(m => m[j].aircraft_type)" @vreadonly>*@
+                        <input type="hidden" name="AircraftUtilizationViewModel[@j].id_aircraftUtilization" id="AircraftUtilizationViewModel_@j.ToString()__id_aircraftUtilization" value="@Html.DisplayFor(m => m[j].id_aircraftUtilization)">
+                    </td>
+                    <td>
+                        <input type="number" pattern="[0-9]{10}" title="Tes" name="AircraftUtilizationViewModel[@j].daily" id="AircraftUtilizationViewModel_@j.ToString()__daily" class="form-control required-value" value="@Html.DisplayFor(m => m[j].daily)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="number" name="AircraftUtilizationViewModel[@j].weekly" id="AircraftUtilizationViewModel_@j.ToString()__weekly" class="form-control required-value" value="@Html.DisplayFor(m => m[j].weekly)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="number" name="AircraftUtilizationViewModel[@j].monthly" id="AircraftUtilizationViewModel_@j.ToString()__monthly" class="form-control required-value" value="@Html.DisplayFor(m => m[j].monthly)" @vreadonly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('#add-aircraft-utilization').click(function (e) {
+            var $tabelData = $('#table-aircraft');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-aircraft-utilization", function (e) {
+            var $tabelData = $('#table-aircraft');
+            Remove(e, $tabelData);
+        });
+
+        $('.number').keyup(function () {
+            MustNumber($(this)) 
+        });
+
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+              
+                $.each($trNew.find('#AircraftUtilizationViewModel_' + (parseInt(suffix) + 1) + '__aircraft_type'), function (i, val) {
+                   
+                    $(this).attr('readonly', 'readonly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationViewModel_' + (parseInt(suffix) + 1) + '__daily'), function (i, val) {
+                    $(this).addClass('daily');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationViewModel_' + (parseInt(suffix) + 1) + '__weekly'), function (i, val) {
+                    $(this).addClass('weekly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationViewModel_' + (parseInt(suffix) + 1) + '__monthly'), function (i, val) {
+                    $(this).addClass('monthly');
+                });
+                $trLast.after($trNew);
+
+
+
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                if (!numericReg.test(value)) {
+                    $(object).after('<span class="help-block">Numeric characters only.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    var value = parseInt(value);
+                    $(object).val(value);
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+    });
+</script>
+
+

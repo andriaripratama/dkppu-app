@@ -1,0 +1,155 @@
+﻿@model DKUPPU.ViewModels.MutationApplicant
+@{
+    ViewBag.Title = "Update Organization";
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Approval Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Information</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.applicant_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.applicant_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.HiddenFor(model => model.id_trx_mutation)
+                                @Html.HiddenFor(model => model.id_applicant)
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Previous Organization</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.old_id_org_type, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.old_id_org_type_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.old_id_org, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.old_id_org_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.HiddenFor(model => model.old_id_org)
+                                @Html.HiddenFor(model => model.new_id_org)
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Current Organization</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.new_id_org_type_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.new_id_org_type_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.new_id_org_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.new_id_org_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.last_license_number, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.last_license_number, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </div>
+                        <div class="col-md-5">
+                            <a role="button" id="view-applicant" class="btn btn-primary" data-target="#preview-document" data-toggle="modal">View</a>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-left">
+                            <a id="last_license_doc" style="cursor:pointer;" class="preview" data-target="#preview-document" data-toggle="modal">
+                                @Html.DisplayNameFor(model => model.last_license_doc)
+                            </a>
+                        </label>
+                        <div class="col-md-5">
+
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-left">
+                            <a id="letter_recruitment" style="cursor:pointer;" class="preview" data-target="#preview-document" data-toggle="modal">
+                                @Html.DisplayNameFor(model => model.letter_recruitment)
+                            </a>
+                        </label>
+                        <div class="col-md-5">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <input id="Approved" name="Approved" type="submit" class="btn btn-primary disabled" value="Approved" />
+                    <input id="Revised" name="Revised" type="submit" class="btn btn-primary disabled" value="Revised" />
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<script>
+    $(function () {
+        $('.preview').click(function () {
+            var doc_type = $(this).attr('id');
+            var id_trx_mutation = $('#id_trx_mutation').val();
+            $.ajax({
+                url: "@Url.Action("GetMutationByTrx", "MutationApplicant")",
+                data: {
+                    id_trx_mutation: id_trx_mutation,
+                    doc_type: doc_type
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+        $('#view-applicant').click(function () {
+            var license_no = $('#last_license_number').val();
+            var fullname = $('#applicant_name').val();
+            var id_org = $('#old_id_org').val();
+            $.ajax({
+                url: "@Url.Action("CekApplicantExistByLicenseNoAndName", "MutationApplicant")",
+                data: {
+                    license_no: license_no,
+                    fullname: fullname,
+                    id_org : id_org
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

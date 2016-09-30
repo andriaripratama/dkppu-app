@@ -1,0 +1,165 @@
+﻿@model List<DKUPPU.ViewModels.AuthorizedPerson>
+@{
+    Layout = null;
+
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+
+                <th>Job Title</th>
+
+                <th>Phone Number</th>
+
+                <th>Email Address</th>
+            </tr>
+        </thead>
+        <tbody id="table-aircraft">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+    //string datepicker = "";
+    //string from_date = "";
+    //string until_date = "";
+            }
+            @foreach (DKUPPU.ViewModels.AuthorizedPerson item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                //datepicker = "";
+                //from_date = "";
+                //until_date = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    //from_date = "from-date";
+                    //until_date = "until-date";
+                    //datepicker = "date-picker";
+                }
+                <tr id="AuthorizedPerson-@j" class="old-tr">
+                    <td>
+                        <input type="text" name="AuthorizedPerson[@j].Name" id="AuthorizedPerson_@j.ToString()__Name" class="form-control required-value" value="@Html.DisplayFor(m => m[j].Name)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="AuthorizedPerson[@j].JobTitle" id="AuthorizedPerson_@j.ToString()__JobTitle" class="form-control required-value" value="@Html.DisplayFor(m => m[j].JobTitle)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="AuthorizedPerson[@j].PhoneNumber" id="AuthorizedPerson_@j.ToString()__PhoneNumber" class="form-control required-value" value="@Html.DisplayFor(m => m[j].PhoneNumber)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="number" name="AuthorizedPerson[@j].Email" id="AuthorizedPerson_@j.ToString()__Email" class="form-control required-value" value="@Html.DisplayFor(m => m[j].Email)" @vreadonly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('#add-aircraft-utilization').click(function (e) {
+            var $tabelData = $('#table-aircraft');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-aircraft-utilization", function (e) {
+            var $tabelData = $('#table-aircraft');
+            Remove(e, $tabelData);
+        });
+
+        $('.number').keyup(function () {
+            MustNumber($(this))
+        });
+
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+
+                $.each($trNew.find('#AuthorizedPerson_' + (parseInt(suffix) + 1) + '__aircraft_type'), function (i, val) {
+
+                    $(this).attr('readonly', 'readonly');
+                });
+
+                $.each($trNew.find('#AuthorizedPerson_' + (parseInt(suffix) + 1) + '__daily'), function (i, val) {
+                    $(this).addClass('daily');
+                });
+
+                $.each($trNew.find('#AuthorizedPerson_' + (parseInt(suffix) + 1) + '__weekly'), function (i, val) {
+                    $(this).addClass('weekly');
+                });
+
+                $.each($trNew.find('#AuthorizedPerson_' + (parseInt(suffix) + 1) + '__monthly'), function (i, val) {
+                    $(this).addClass('monthly');
+                });
+                $trLast.after($trNew);
+
+
+
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                if (!numericReg.test(value)) {
+                    $(object).after('<span class="help-block">Numeric characters only.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    var value = parseInt(value);
+                    $(object).val(value);
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+    });
+</script>
+
+

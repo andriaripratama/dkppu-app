@@ -1,0 +1,128 @@
+﻿@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal" id="add-license-applicant">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="LicenseType">Start Date</label>
+                <div class="col-md-5">
+                    @Html.Editor("startDate", new { htmlAttributes = new { @class = "form-control datepicker" } })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="LicenseType">End Date</label>
+                <div class="col-md-5">
+                    @Html.Editor("endDate", new { htmlAttributes = new { @class = "form-control datepicker" } })
+                </div>
+                <div class="col-md-5">
+                    <button id="ok-dashboard" class="btn btn-primary btn-sm">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12" style="padding-right:30px">
+        <div id="grafik-idWfStatus">
+        </div>
+    </div>
+</div>
+<div class="row" style="padding-top:20px">
+    <div class="col-xs-12">
+        <a href="@Url.Action("Index","Dashboard")" class="btn btn-sm btn-default pull-right">Back</a>
+    </div>
+</div>
+<script>
+    $(function () {
+        //license_type
+        $('.datepicker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+        $('#ok-dashboard').click(function () {
+            var startDate = $('#startDate').val();
+            var endDate = $('#endDate').val();
+            getListData(startDate, endDate);
+        });
+        function getListData(startDate, endDate) {
+            $.ajax({
+                url: '@Url.Action("GetLicensePerLicenseType", "Dashboard")',
+                data: {
+                    startDate: startDate,
+                    endDate: endDate
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-idWfStatus').append(img);
+                },
+                success: function (data) {
+                    var label = [];
+                    var total = [];
+                    $.each(data.data, function (i, data) {
+                        label[i] = data.name;
+                        total[i] = data.y;
+                    });
+                    $('#grafik-idWfStatus').highcharts({
+                        chart: {
+                            type: 'bar',
+                            margin: 75,
+                            options3d: {
+                                enabled: true,
+                                alpha: 0,
+                                beta: 0,
+                                depth: 0,
+                                viewDistance: 25
+                            },
+                            height: 1200,
+                        },
+                        title: {
+                            text: 'Grafik per License in (' + data.range + ')'
+                        },
+                        xAxis: {
+                            categories: label,
+                            title: {
+                                text: null
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total',
+                                align: 'center'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        plotOptions: {
+                            bar: {
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                depth: 0
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'License',
+                            data: total
+                        }]
+                    });
+
+                    $('.loader').remove();
+                }
+            });
+        }
+    });
+</script>

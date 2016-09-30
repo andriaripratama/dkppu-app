@@ -1,0 +1,200 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_phase)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+
+            bool isCertificationTeamDesignatedFormVisible = ViewBag.IsCertificationTeamDesignatedFormVisible == null ? false : (ViewBag.IsCertificationTeamDesignatedFormVisible ? true : false);
+            bool isJobAidDocumentFormVisible = ViewBag.IsJobAidDocumentFormVisible == null ? false : (ViewBag.IsJobAidDocumentFormVisible ? true : false);
+            
+            <div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase1/_InformationForm", Model.TrxOrganizationInitialCerViewModel)
+                <fieldset>
+                    <legend>Upload Document</legend>
+                    @Html.Partial("../PAOCOrganization/Phase1/_DocUploadApprovalForm", Model.ListOfTrxOrganizationDoc)
+                </fieldset>
+                @if (isCertificationTeamDesignatedFormVisible == true)
+                {
+                    <fieldset>
+                        <legend>Certification Team Designated</legend>
+
+                        <div class="row form-group">
+                            <label class="col-md-4 control-label text-left">
+                                &nbsp;
+                            </label>
+                            <div class="col-md-8">
+                                <div class="pull-right">
+                                    <a id="addCertificationTeam" role="button" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+                                </div><br />
+                            </div>
+                        </div>
+                        @Html.Partial("../PAOCOrganization/Phase1/_CertificationTeamDesignatedForm", Model.ListOfTrxOrganizationCertificationTeam)
+                    </fieldset>
+                }
+                @if (isJobAidDocumentFormVisible == true)
+                {
+                    <fieldset>
+                        <legend>JOB AID Document</legend>
+                        @Html.Partial("../PAOCOrganization/Phase1/_DocCertificationUploadApprovalForm", Model.ListOfTrxOrganizationDocCertification)
+                    </fieldset>
+                }
+                <fieldset>
+                    <legend>Notes</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Logs</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @Html.Partial("../PAOCOrganization/Phase1/_LogNotesApprovalForm", Model.ListOfTrxOrganizationNotes)
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" value="submit" name="btn_submit" type="submit">Submit</button>
+                    <button class="btn btn-default" id="id_save" value="save" name="btn_submit" type="submit">Save</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#addCertificationTeam').click(function (e) {
+            addRow(e, 'ListOfTrxOrganizationCertificationTeam');
+        });
+
+        //$('div').on("click", "a.airline-type-detail-remove-row", function (e) {
+        //    e.preventDefault();
+
+        //    var trRemove = $(this).parent().parent().attr('id');
+        //    var trIndexId = trRemove.match(/\d+/);
+
+        //    RemoveRow(e, 'TrxOrganizationAirlineTypeViewModel', trIndexId);
+
+        //    return false;
+        //});
+
+        function addRow(e, tableName) {
+            e.preventDefault();
+
+            var trLast = $('#' + tableName).find("tr:last");
+            var trNew = $('#' + tableName + '_0').clone();
+            var suffix = $('#' + tableName + ' > tr').length;
+            var isSelected = true;
+
+            if (suffix > 1) {
+                $.each($('#' + tableName).find("tr > td > select"), function (i, val) {
+                    if (i > 1 && $(this).val() == '') isSelected = false;
+                });
+            }
+
+            if (isSelected) {
+                var oldNTr = trNew.attr('id');
+                var newNTr = oldNTr.replace('_0', '_' + suffix);
+
+                $('#' + tableName + '_0').hide();
+
+                trNew.attr('id', newNTr);
+                trNew.removeAttr('style');
+
+                $.each(trNew.find('td'), function (i, val) {
+                    var compObject = $(this).children('[id*=' + tableName + '_]');
+                    var compName = compObject.attr('name');
+                    var compID = compObject.attr('id');
+
+                    if (typeof compName != 'undefined') {
+                        compName = compName.replace('[0]', '[' + parseInt(suffix) + ']');
+                        compObject.attr('name', compName);
+                        if (compObject.is('select'))
+                            compObject.addClass('required-value-dropdown');
+                        else
+                            compObject.addClass('required');
+                    }
+
+                    if (typeof compID != 'undefined') {
+                        compID = compID.replace('_0_', '_' + parseInt(suffix) + '_');
+
+                        compObject.attr('id', compID);
+                        if (!(suffix == 1 && compObject.hasClass('certification-team-remove-row'))) compObject.removeClass('invisible');
+                    }
+                });
+
+                trLast.after(trNew);
+
+                GetPersonnelCertificationTeam(tableName, suffix);
+                GetPositionCertificationTeam(tableName, suffix);
+            }
+        }
+
+        function RemoveRow(e, tableName, indexId) {
+            e.preventDefault();
+
+            $("#" + tableName + '_' + indexId).remove();
+
+            var trName = $('#' + tableName + ' > tr').length;
+
+            if (trName == 1) $('#' + tableName + '_0').show();
+
+            return false;
+        }
+
+        function GetPersonnelCertificationTeam(tableName, indexId) {
+            $.ajax({
+                url: '@Url.Action("GetPersonnelCertificationTeam", "PAOCOrganization")',
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#' + tableName + '_' + indexId + '__id_user_cer_team').empty();
+                    $('#' + tableName + '_' + indexId + '__id_user_cer_team').append('<option value="">Select</option>');
+
+                    var isDataExist = false;
+
+                    $.each(data, function (i, data) {
+                        $.each($('#' + tableName).find("tr > td > select"), function (i, val) {
+                            if (data.id_user == $(this).val()) isDataExist = true;
+                        });
+
+                        if (!isDataExist)
+                            $('#' + tableName + '_' + indexId + '__id_user_cer_team').append('<option value="' + data.id_user + '">' + data.fullname + '</option>');
+
+                        isDataExist = false;
+                    });
+                }
+            });
+        }
+
+        function GetPositionCertificationTeam(tableName, indexId) {
+            $.ajax({
+                url: '@Url.Action("GetPositionCertificationTeam", "PAOCOrganization")',
+                data: {
+                    index_id: indexId
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#' + tableName + '_' + indexId + '__id_position_cer_team').empty();
+                    $('#' + tableName + '_' + indexId + '__id_position_cer_team').append('<option value="">Select</option>');
+
+                    $.each(data, function (i, data) {
+                        $('#' + tableName + '_' + indexId + '__id_position_cer_team').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        }
+    });
+</script>

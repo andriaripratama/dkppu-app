@@ -1,0 +1,39 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicAviationSecurityViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date Of Recurrent</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicAviationSecurityViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicAviationSecurityViewModel_@j">
+                    <td><input type="text" class="form-control date-picker" name="TrxLicAviationSecurityViewModel[@j].recurrent_date" id="TrxLicAviationSecurityViewModel_@j.ToString()__recurrent_date"></td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicAviationSecurityViewModel[@j].expired_date" id="TrxLicAviationSecurityViewModel_@j.ToString()__expired_date"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+
+

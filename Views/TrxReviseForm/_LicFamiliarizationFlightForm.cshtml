@@ -1,0 +1,45 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicFamiliarizationFlightViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicFamiliarizationFlightViewModel">
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.TrxLicFamiliarizationFlightViewModel item in Model.OrderBy(a => a.updated_date))
+            {
+                <tr id="TrxLicFamiliarizationFlightViewModel_@j">
+                    <td>
+                        <input type="hidden" name="TrxLicFamiliarizationFlightViewModel[@j].id_rating" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__id_rating" required="required" value="@Html.DisplayFor(a => item.id_rating)">
+                        <input type="hidden" name="TrxLicFamiliarizationFlightViewModel[@j].id_trx_familiarization_flight" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__id_trx_familiarization_flight" value="@Html.DisplayFor(a => item.id_trx_familiarization_flight)">
+                        <input type="text" class="form-control" name="TrxLicFamiliarizationFlightViewModel[@j].group_type_rating" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__group_type_rating" required="required" readonly="readonly" value="@Html.DisplayFor(a => item.group_type_rating)">
+                    </td>
+                    <td><input type="text" class="form-control date-picker" name="MstLicFamiliarizationFlightViewModel[@j].recurrent_date" id="MstLicFamiliarizationFlightViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)"></td>
+                    <td><input type="text" class="form-control date-picker" name="MstLicFamiliarizationFlightViewModel[@j].expired_date" id="MstLicFamiliarizationFlightViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+

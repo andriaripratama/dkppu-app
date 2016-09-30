@@ -1,0 +1,84 @@
+﻿@model List<DKUPPU.ViewModels.TrxOrganizationDocViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th colspan="2">Status</th>
+                        <th>Remark</th>
+                        <th>Remark Log</th>
+                    </tr>
+                </thead>
+                <tbody id="ListOfTrxOrganizationDoc">
+                    @{
+                        int j = 0;
+                    }
+                    @foreach (DKUPPU.ViewModels.TrxOrganizationDocViewModel item in Model)
+                    {
+                        string satisfied = "";
+                        string unSatified = "";
+
+                        if (item.is_satisfied != null)
+                        {
+                            satisfied = item.is_satisfied == true ? "checked" : "";
+                            unSatified = item.is_satisfied == false ? "checked" : "";
+                        }
+
+                        <tr id="ListOfTrxOrganizationDoc_@j">
+                            <td>
+                                <a id="@j" style="cursor:pointer;" class="preview" data-target="#preview-document" data-toggle="modal">@Html.DisplayFor(a => item.label_name)</a>
+                                <input type="hidden" class="form-control" name="ListOfTrxOrganizationDoc[@j].id_trx_org_doc" id="ListOfTrxOrganizationDoc_@j.ToString()__id_trx_org_doc" value="@Html.DisplayFor(a => item.id_trx_org_doc)">
+                                <input type="hidden" class="form-control" name="ListOfTrxOrganizationDoc[@j].custom_filter" id="ListOfTrxOrganizationDoc_@j.ToString()__custom_filter" value="@Html.DisplayFor(a => item.custom_filter)">
+                            </td>
+                            <td>
+                                <input type="radio" class="satisfied" name="ListOfTrxOrganizationDoc[@j].is_satisfied" id="ListOfTrxOrganizationDoc_@j.ToString()__is_satisfied" value="True" @satisfied /> <label for="ListOfTrxOrganizationDoc_@j.ToString()__is_satisfied">Satisfied</label>
+                            </td>
+                            <td>
+                                <input type="radio" class="un-satisfied" name="ListOfTrxOrganizationDoc[@j].is_satisfied" id="ListOfTrxOrganizationDoc_@j.ToString()__is_unsatisfied" value="False" @unSatified /> <label for="ListOfTrxOrganizationDoc_@j.ToString()__is_unsatisfied">Unsatisfied</label>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="ListOfTrxOrganizationDoc[@j].doc_remark" id="ListOfTrxOrganizationDoc_@j.ToString()__doc_remark" value="@Html.DisplayFor(a => item.doc_remark)">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" name="ListOfTrxOrganizationDoc[@j].doc_remark_log" id="ListOfTrxOrganizationDoc_@j.ToString()__doc_remark_log" value="@Html.DisplayFor(a => item.doc_remark_log)" readonly="readonly">
+                            </td>
+                        </tr>
+                        j++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"></div>
+<script>
+    $(function () {
+        $('.preview').click(function () {
+            var id = $(this).attr('id');
+
+            var id_trx_org_doc = $('#ListOfTrxOrganizationDoc_' + id + '__id_trx_org_doc').val();
+
+            $.ajax({
+                url: "@Url.Action("GetTrxOrganizationDocUploadById", "AJAX")",
+                data: {
+                    id_trx_org_doc: id_trx_org_doc
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

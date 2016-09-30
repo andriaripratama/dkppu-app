@@ -1,0 +1,51 @@
+﻿@model List<DKUPPU.ViewModels.MstLicInstrumentRatingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>AirCraft or SIM</th>
+
+                        <th>Check Date</th>
+
+                        <th>Valid Until</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int j = 0;}
+                    @foreach (DKUPPU.ViewModels.MstLicInstrumentRatingViewModel item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DropDownList("MstLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, new { @class = "form-control", id = "MstLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type" })
+                                <input type="hidden" name="MstLicInstrumentRatingViewModel[@j].id_mst_lic_instrument_rating" id="MstLicInstrumentRatingViewModel_@j.ToString()__id_mst_lic_instrument_rating" value="@Html.DisplayFor(m => m[j].id_mst_lic_instrument_rating)">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="MstLicInstrumentRatingViewModel[@j].checked_date" id="MstLicInstrumentRatingViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="MstLicInstrumentRatingViewModel[@j].expired_date" id="MstLicInstrumentRatingViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)">
+                            </td>
+                        </tr>
+                        j++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>

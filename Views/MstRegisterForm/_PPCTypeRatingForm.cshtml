@@ -1,0 +1,57 @@
+﻿@model List<DKUPPU.ViewModels.MstPPCTypeRattingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Type Ratting</th>
+                    <th>Aircraft Or SIM</th>
+                    <th>Check Date</th>
+                    <th>Expire Date</th>
+                    <th>Position/PIC</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int j = 0;}
+                @foreach (DKUPPU.ViewModels.MstPPCTypeRattingViewModel item in Model)
+                {
+                    <tr id="MstPPCTypeRattingViewModel_@j">
+                        <td>
+                            <input type="hidden" name="MstPPCTypeRattingViewModel[@j].id_ppc_ratting" id="MstPPCTypeRattingViewModel_@j.ToString()__id_ppc_ratting" value="@Html.DisplayFor(m => m[j].id_ppc_ratting)">
+                            <input type="text" class="form-control" name="MstPPCTypeRattingViewModel[@j].type_ratting" id="MstPPCTypeRattingViewModel_@j.ToString()__type_ratting" value="@Html.DisplayFor(m => m[j].type_ratting)">
+
+                        </td>
+                        <td>
+                            @Html.DropDownList("MstPPCTypeRattingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, new { @class = "form-control", id = "MstPPCTypeRattingViewModel_" + j.ToString() + "__id_air_sim_type" })
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="MstPPCTypeRattingViewModel[@j].check_date" id="MstPPCTypeRattingViewModel_@j.ToString()__check_date" value="@Html.DisplayFor(m => m[j].check_date)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="MstPPCTypeRattingViewModel[@j].expire_date" id="MstPPCTypeRattingViewModel_@j.ToString()__expire_date" value="@Html.DisplayFor(m => m[j].expire_date)">
+                        </td>
+                        <td>
+                            @Html.DropDownList("MstPPCTypeRattingViewModel[" + j.ToString() + "].position_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control", id = "MstPPCTypeRattingViewModel_" + j.ToString() + "__position_pic" })
+                            @*<input type="text" class="form-control date-picker" name="MstPPCTypeRattingViewModel[@j].position_pic" id="MstPPCTypeRattingViewModel_@j.ToString()__position_pic" value="@Html.DisplayFor(m => m[j].position_pic)">*@
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>

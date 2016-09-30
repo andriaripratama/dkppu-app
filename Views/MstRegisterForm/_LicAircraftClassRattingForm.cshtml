@@ -1,0 +1,44 @@
+﻿@model List<DKUPPU.ViewModels.MstAircraftClassRattingViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Class Ratting</th>
+                <th>Date Of Issue</th>
+                <th>Authorize</th>
+            </tr>
+        </thead>
+        <tbody id="MstLicAircraftTypeRattingViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="@j">
+                    <td>
+                        <input type="hidden" name="MstAircraftClassRattingViewModel[@j].id_class_ratting" id="MstAircraftClassRattingViewModel@j.ToString()__id_class_ratting">
+                        <input type="text" class="form-control" name="MstAircraftClassRattingViewModel[@j].class_rating" id="MstAircraftClassRattingViewModel@j.ToString()__class_rating" placeholder="Class Ratting">
+                    </td>
+                    <td><input type="text" class="form-control date-picker" name="MstAircraftClassRattingViewModel[@j].issued_date" id="MstAircraftClassRattingViewModel@j.ToString()__issued_date" placeholder="   /   /  "></td>
+                    <td><input type="text" class="form-control date-picker" name="MstAircraftClassRattingViewModel[@j].authorize_ins_signature" id="MstAircraftClassRattingViewModel@j.ToString()__authorize_ins_signature" placeholder="   /   /  "></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>

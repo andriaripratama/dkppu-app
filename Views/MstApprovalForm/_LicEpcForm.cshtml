@@ -1,0 +1,57 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicEpcViewModel>
+@{
+    Layout = null;
+    
+    string sopType = ViewBag.sop_type == null ? string.Empty : ViewBag.sop_type;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Level</th>
+
+                        <th>Date of Exam</th>
+
+                        <th>Expiry Date</th>
+                    </tr>
+                </thead>
+                <tbody id="TrxLicEpcViewModel">
+                    @{
+                        int j = 0;
+                        string vreadonly = "";
+                        string vrequered = "";
+                    }
+                    @foreach (DKUPPU.ViewModels.TrxLicEpcViewModel item in Model)
+                    {
+                        vreadonly = "readonly='readonly'";
+                        vrequered = "";
+                        if ((item.is_history == false || item.is_history == true) && ViewBag.activity_id == "ACT01")
+                        {
+                            vreadonly = "";
+                            vrequered = (sopType == "WL22") ? string.Empty : "required-value";
+                        }
+                        <tr id="TrxLicEpcViewModel_@j">
+                            <td>
+                                <input type="text" class="form-control" name="TrxLicEpcViewModel[@j].level" id="TrxLicEpcViewModel_@j.ToString()__level" value="@Html.DisplayFor(m => m[j].level)" readonly="readonly">
+                                <input type="hidden" name="TrxLicEpcViewModel[@j].id_trx_lic_epc" id="TrxLicEpcViewModel_@j.ToString()__id_trx_lic_epc" value="@Html.DisplayFor(m => m[j].id_trx_lic_epc)">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered date-picker" name="TrxLicEpcViewModel[@j].date_of_exam" id="TrxLicEpcViewModel_@j.ToString()__date_of_exam" value="@Html.DisplayFor(m => m[j].date_of_exam)" @vreadonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered date-picker" name="TrxLicEpcViewModel[@j].expiry_date" id="TrxLicEpcViewModel_@j.ToString()__expiry_date" value="@Html.DisplayFor(m => m[j].expiry_date)" @vreadonly>
+                            </td>
+                        </tr>
+                        j++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+
+

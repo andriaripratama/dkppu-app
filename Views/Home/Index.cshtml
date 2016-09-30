@@ -1,0 +1,149 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MstApplicantViewModel>
+@{
+    ViewBag.Title = "Applicant List";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <button class="btn bg-color-blue txt-color-white" id="btn-add-license" data-target="#Add-License" data-toggle="modal">
+            <i class="fa fa-user fa-4x"></i>
+        </button>
+        <button class="btn bg-color-blue txt-color-white" id="btn-add-aircraft" data-target="#Add-Aircraft" data-toggle="modal">
+            <i class="fa fa-plane fa-4x"></i>
+        </button>
+        <button class="btn bg-color-blue txt-color-white" id="btn-add-aircraft1" data-target="#Add-Aircraft1" data-toggle="modal">
+            <i class="fa fa-plane fa-4x"></i>
+        </button>
+        <button class="btn bg-color-red txt-color-white pull-right" id="btn-checkout" data-target="#Checkout-Ppl" data-toggle="modal">
+            <i class="fa fa-shopping-cart fa-4x"></i>
+        </button>
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <input class="form-control" id="search-value-index" name="search-value-index" placeholder="Search" />
+    </div>
+    <div class="col-xs-2">
+        <button id="src-lecense" class="btn btn-primary btn-sm">Search</button>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-xs-12" id="list-license">
+        @Html.Partial("_AplicantList", Model)
+    </div>
+    <div class="col-xs-12 col-md-12 text-right">
+        @Html.Raw(ViewBag.Pagination)
+    </div>
+</div>
+
+
+<div id="Checkout-Ppl" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+
+<div id="Add-License" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+
+<div id="Add-Aircraft" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<div id="Add-Aircraft1" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<script type="text/javascript">
+    $(function () {
+        /* button search */
+        $('#src-lecense').click(function () {
+            var value = $('#search-value-index').val();
+            var status = $('#Status').val();
+            getNewApplicantList(value, status);
+        });
+
+        /*Add button*/
+        $('#btn-add-license').click(function () {
+            loadPopup();
+        });
+        //Add Aircraft Certificate
+        $('#btn-add-aircraft').click(function () {
+            AddAircraftCertificatePopup();
+        });
+        /*checkout button*/
+        $('#btn-checkout').click(function () {
+            checkupPopup();
+        });
+
+        
+
+        function loadPopup() {
+            $.ajax({
+                url: "@Url.Action("AddLicense", "Home")",
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#Add-License').html(img);
+                },
+                success: function (data) {
+                    $('#Add-License').html(data);
+                }
+            });
+        }
+
+        function AddAircraftCertificatePopup() {
+            $.ajax({
+                url: "@Url.Action("AddAircraftCertificate", "Home")",
+                dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="modal-dialog modal-lg">' +
+                            '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#Add-Aircraft').html(img);
+            }
+                ,
+            success: function (data) {
+                $('#Add-Aircraft').html(data);
+            }
+        });
+    }
+
+        function getNewApplicantList(value, status) {
+            $.ajax({
+                url: '@Url.Action("GetApplicantListByStatus", "Home")',
+                data: {
+                    srcValue: value
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="row">' +
+                                '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#list-license').html(img);
+                },
+                success: function (data) {
+                    $('#list-license').html(data);
+                }
+            });
+        }
+
+        function checkupPopup() {
+            $.ajax({
+                url: "@Url.Action("Checkout", "Home")",
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#Checkout-Ppl').html(img);
+                },
+                success: function (data) {
+                    $('#Checkout-Ppl').html(data);
+                }
+            });
+        }
+    });
+</script>

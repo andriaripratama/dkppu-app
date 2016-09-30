@@ -1,0 +1,72 @@
+﻿@using BotDetect.Web.UI.Mvc;
+@using DKUPPU.Helpers;
+@using DKUPPU.ViewModels
+@model LoginViewModel
+@{
+    ViewBag.Title = "Log in";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    MvcCaptcha registrationCaptcha = CaptchaHelper.GetRegistrationCaptcha();
+}
+<link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+
+@using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "smart-form client-form", role = "form", @autocomplete = "off" }))
+{
+    <header><strong>Sign In</strong></header>
+    @Html.AntiForgeryToken()
+    <fieldset>
+        @if (ViewBag.Errors != null)
+        {
+            <section>
+                @Html.ValidationSummary(true, "Please Fix Following Errors : ", new { @class = "text-danger" })
+                <label class="text-danger">@ViewBag.Errors</label>
+            </section>
+        }
+
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-user"></i>
+                @Html.TextBoxFor(m => m.Username, new { @placeholder = "Username", @autocomplete = "off" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-user txt-color-teal"></i> Please enter username</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Username, null, new { @class = "text-danger" })
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-lock"></i>
+                @Html.PasswordFor(m => m.Password, new { @placeholder = "Password", @autocomplete = "off" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-lock txt-color-teal"></i> Enter your password</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+        </section>
+        <section>
+            @Html.Captcha(registrationCaptcha)
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-lock"></i>
+                @Html.TextBoxFor(m => m.CaptchaCode, new { @class = "form-control captchaVal", @placeholder = "Captcha Code", @autocomplete = "off" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-lock txt-color-teal"></i> Enter Captcha Code</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.CaptchaCode, null, new { @class = "text-danger" })
+        </section>
+        <section class="hidden">
+            <label class="checkbox" style="text-align:left">
+                @Html.CheckBoxFor(m => m.RememberMe)
+                <i></i>Stay signed in
+            </label>
+        </section>
+        <div class="note" style="text-align:left">
+            <a href="@Url.Action("ForgotPassword","Account")">Forgot password?</a><br />
+            <a href="~/Reports/User's guides online.pdf" class="hidden">User's Guides</a>
+        </div>
+
+    </fieldset>
+    <footer>
+        <button type="submit" class="btn btn-primary xs">
+            Login
+        </button>
+    </footer>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

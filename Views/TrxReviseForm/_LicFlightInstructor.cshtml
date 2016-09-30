@@ -1,0 +1,31 @@
+﻿@model DKUPPU.ViewModels.TrxLicFlightInstructorViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">CFI Number *</label>
+                <div class="col-md-5">
+                    <input type="hidden" name="TrxLicFlightInstructorViewModel.id_trx_lic_flight_instructor" id="TrxLicFlightInstructorViewModel_id_trx_lic_flight_instructor" class="form-control" value="@Html.DisplayFor(m => m.id_trx_lic_flight_instructor)" />
+                    <input name="TrxLicFlightInstructorViewModel.cfi_number" id="TrxLicFlightInstructorViewModel_cfi_number" class="form-control required-value" placeholder="Input Number" value="@Html.DisplayFor(m => m.cfi_number)" required readonly="readonly" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">The period of validity *</label>
+                <div class="col-md-5">
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicFlightInstructorViewModel.valid_from_date" id="TrxLicFlightInstructorViewModel_valid_from_date" class="form-control date-picker required-value" placeholder="Input From Date" value="@Html.DisplayFor(m => m.valid_from_date)" required />
+                    </div>
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicFlightInstructorViewModel.valid_until_date" id="TrxLicFlightInstructorViewModel_valid_until_date" class="form-control date-picker required-value" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.valid_until_date)" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

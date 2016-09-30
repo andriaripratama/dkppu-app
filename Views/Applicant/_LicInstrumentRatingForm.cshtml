@@ -1,0 +1,162 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel>
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsInstrumentRatingReadOnly == null ? true : (ViewBag.IsInstrumentRatingReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+@if (!isReadOnly)
+{
+    <table>
+        <tbody>
+            <tr>
+                <td style="padding-bottom: 5px; text-align: right;">
+                    <a class="pull-right btn btn-primary btn-xs" id="add-lic-instrument-rating-form"><i class="fa fa-plus"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped" id="lic-instrument-rating-form-table">
+        <thead>
+            <tr>
+                <th>Aircraft or SIM</th>
+                <th>Check Date</th>
+                <th>Expiry Date</th>
+            </tr>
+        </thead>
+        <tbody id="LicInstrumentRatings">
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("LicInstrumentRatings[0].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "LicInstrumentRatings_0__id_air_sim_type", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("LicInstrumentRatings[0].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "LicInstrumentRatings_0__id_air_sim_type" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicInstrumentRatings[0].checked_date" id="LicInstrumentRatings_0__checked_date" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicInstrumentRatings[0].expired_date" id="LicInstrumentRatings_0__expired_date" value="" @disabledHTML />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel item in Model)
+                    {
+                        <tr id="LicInstrumentRatings_@i">
+                            <td>
+                                <input type="hidden" name="LicInstrumentRatings[@i].id_trx_lic_instrument_rating" id="LicAircraftCategoryRatings_@i.ToString()__id_trx_lic_instrument_rating" value="@Html.DisplayFor(x => x[i].id_trx_lic_instrument_rating)">
+
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("LicInstrumentRatings[" + i.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "LicInstrumentRatings_" + i.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("LicInstrumentRatings[" + i.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "LicInstrumentRatings_" + i.ToString() + "__id_air_sim_type" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.id_air_sim_type))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#LicInstrumentRatings_@i.ToString()__id_air_sim_type option[value=@item.id_air_sim_type]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicInstrumentRatings[@i].checked_date" id="LicInstrumentRatings_@i.ToString()__checked_date" value="@Html.DisplayFor(x => x[i].checked_date)" @disabledHTML />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicInstrumentRatings[@i].expired_date" id="LicInstrumentRatings_@i.ToString()__expired_date" value="@Html.DisplayFor(x => x[i].expired_date)" @disabledHTML />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(function () {
+        $('#add-lic-instrument-rating-form').click(function () {
+            var rowIndex = 0;
+
+            $('#lic-instrument-rating-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var licInstrumentRatingFormFirstRowObj = $('#lic-instrument-rating-form-table > tbody').find("tr:first");
+            var licInstrumentRatingFormNewRowObj = licInstrumentRatingFormFirstRowObj.clone();
+
+            $.each(licInstrumentRatingFormNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+                $(this).val('');
+            });
+
+            $.each(licInstrumentRatingFormNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(licInstrumentRatingFormNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#lic-instrument-rating-form-table > tbody > tr').last().after(licInstrumentRatingFormNewRowObj);
+        });
+
+        $("#rmv-lic-instrument-rating-form").click(function () {
+            var rowCount = $("#LicInstrumentRatings >tr").length;
+            if (rowCount > 1) {
+                $("#LicInstrumentRatings tr:last").remove();
+            }
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

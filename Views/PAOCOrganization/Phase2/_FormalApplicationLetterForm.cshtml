@@ -1,0 +1,81 @@
+﻿@model DKUPPU.ViewModels.TrxOrganizationAppLetterViewModel
+
+@{
+    Layout = null;
+
+    bool isFormalApplicationLetterDisable = ViewBag.IsFormalApplicationLetterDisable == null ? false : (ViewBag.IsFormalApplicationLetterDisable ? true : false);
+    string tagFormalApplicationLetterHide = !isFormalApplicationLetterDisable ? string.Empty : "hidden='hidden'";
+}
+
+<div class="form-horizontal">
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.file_name_AOC)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.file_name_AOC, "file", "TrxOrganizationAppLetterViewModel.file_name_AOC", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control", @type = "file" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.official_name)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.official_name, "text", "TrxOrganizationAppLetterViewModel.official_name", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.email_address)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.email_address, "text", "TrxOrganizationAppLetterViewModel.email_address", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.primary_operating_base)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.primary_operating_base, "text", "TrxOrganizationAppLetterViewModel.primary_operating_base", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group" @tagFormalApplicationLetterHide>
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.ListOfTrxOrganizationManagement)
+        </label>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <a id="addOrganizationManagement" role="button" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @if (isFormalApplicationLetterDisable)
+            {
+                @Html.LabelFor(model => model.ListOfTrxOrganizationManagement)
+            }
+            &nbsp;
+        </label>
+        <div class="col-md-8">
+            @Html.Partial("../PAOCOrganization/Phase2/_OrganizationManagementForm", Model.ListOfTrxOrganizationManagement)
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.nature_porposed_operation)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.nature_porposed_operation, "text", "TrxOrganizationAppLetterViewModel.nature_porposed_operation", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.desire_date_for_operation)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.desire_date_for_operation, "text", "TrxOrganizationAppLetterViewModel.desire_date_for_operation", isFormalApplicationLetterDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+</div>

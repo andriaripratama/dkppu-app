@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Issue</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicAircraftTypeRatingViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicAircraftTypeRatingViewModel_@j">
+                    <td>@Html.DropDownList("TrxLicAircraftTypeRatingViewModel[" + j.ToString() + "].type_rating_name", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, new { @class = "form-control", id = "TrxLicAircraftTypeRatingViewModel_" + j.ToString() + "__type_rating_name" })</td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicAircraftTypeRatingViewModel[@j].issued_date" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__issued_date" required="required"></td>
+                    <td></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+

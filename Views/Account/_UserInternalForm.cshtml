@@ -1,0 +1,334 @@
+﻿@model DKUPPU.ViewModels.UserInternalViewModel
+@{
+    Layout = null;
+}
+
+@Html.HiddenFor(m=> m.org_type)
+<div class="form-group">
+    @Html.LabelFor(model => model.id_org, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.id_org, (IEnumerable<SelectListItem>)ViewBag.IdOrg, "Select Organization Name", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.id_org, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.id_role, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.id_role, (IEnumerable<SelectListItem>)ViewBag.IdRole, "Select Role", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.id_role, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.id_approval_group, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.id_approval_group, (IEnumerable<SelectListItem>)ViewBag.IdApprovalGroup, "Select Role", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.id_approval_group, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.username, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.username, new { @class = "form-control"})
+        @Html.ValidationMessageFor(m => m.username, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.password, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.PasswordFor(model => model.password, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.password, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.full_name, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.full_name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.full_name, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.email, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.email, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.email, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.employee_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.employee_number, new { @class = "form-control is-required" })
+        @Html.ValidationMessageFor(m => m.employee_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.phone_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.phone_number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.phone_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.mobile_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.mobile_number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.mobile_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.place_of_birth, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-4">
+        @Html.TextBoxFor(model => model.place_of_birth, new { @class = "form-control is-required" })
+        @Html.ValidationMessageFor(model => model.place_of_birth, "", new { @class = "text-danger" })
+    </div>
+    @Html.LabelFor(model => model.date_of_birth, htmlAttributes: new { @class = "control-label col-md-1 text-right" })
+    <div class="col-md-3">
+        <div class="input-group">
+            @Html.EditorFor(model => model.date_of_birth, new { htmlAttributes = new { @class = "form-control date-picker is-required" } })
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+        </div>
+        @Html.ValidationMessageFor(model => model.date_of_birth, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.id_gender, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @{ string isChecked = "";}
+        @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.IdGender)
+        {
+            if (Model != null && Model.id_gender != null)
+            {
+                if (Model.id_gender == item.id_lookup)
+                {
+                    isChecked = "checked='checked'";
+                }
+                else
+                {
+                    isChecked = "";
+                }
+            }
+
+            <label class="radio radio-inline">
+                <input type="radio" name="id_gender" value="@item.id_lookup" @isChecked />
+                <i></i>
+                @item.lookup_value
+            </label>
+        }
+        @Html.ValidationMessageFor(model => model.id_gender, "", new { @class = "text-danger" })
+    </div>
+
+</div>
+@*<div class="form-group">
+    @Html.LabelFor(model => model.npwp_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.npwp_number, new { @class = "form-control is-numeric" })
+        @Html.ValidationMessageFor(m => m.npwp_number, null, new { @class = "text-danger" })
+    </div>
+</div>*@
+<div class="form-group">
+    @Html.LabelFor(model => model.image_user, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-4">
+        <input type="file" name="_image_user_file" class="btn btn-warning" id="id_card_number" />
+        <div class="col-md-8">
+            <label for="id_card_number" class="control-label col-md-10">Please upload a photo with red background, face 80 % , and a collared shirt</label>
+        </div>
+    </div>
+    @if (Model.is_image_user_exsist == "EXIST")
+    {
+        <div class="col-md-2">
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="img-user" data-toggle="modal">View Image</a>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var minDate = new Date('1/1/1900');
+        var todaysDate = new Date();
+        var maxDate = new Date((todaysDate.getFullYear() - 15),
+                               todaysDate.getMonth(),
+                               todaysDate.getDate());
+
+        $('.date-picker').datepicker({
+            minDate: minDate,
+            maxDate: maxDate,
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        // View Document Upload
+        $('.view-document').click(function () {
+            var typeDoc = $(this).attr('data-type');
+            var img = '';
+            switch (typeDoc) {
+                case 'img-user':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "images" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+
+            }
+        });
+
+        $("#org_type").change(function () {
+            var org_type = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetOrganizationByType","AJAX")',
+                data: { org_type: org_type },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_org").empty();
+                    $("#id_org").append("<option value=''>Select Organization Name</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_org").append("<option value='" + item.id_lookup + "'>" + item.lookup_value + "</option>");
+                    });
+                },
+            });
+        });
+
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.is-required'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            // check for numeric
+            $.each($form.find('.is-numeric'), function (i, val) {
+                if (!MustNumber($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+        });
+
+        //validasi is required
+        $('.is-required').keyup(function () {
+            IsRequired($(this));
+        });
+
+        $('.is-numeric').keyup(function () {
+            MustNumber($(this));
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().parent().removeClass('has-error');
+            $(object).parent().parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if (!numericReg.test(value)) {
+                    $(object).after('<span class="help-block">Numeric characters only.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    var value = parseInt(value);
+                    $(object).val(value);
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = false;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+    });
+</script>
+
+

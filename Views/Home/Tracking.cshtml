@@ -1,0 +1,128 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicenseNotesViewModel>
+@{
+    ViewBag.Title = "Tracking";
+}
+
+<br />
+<div class="row">
+    <div class="col-xs-4">
+        <input class="form-control" id="search-value-index" name="search-value-index" placeholder="Registration No." />
+    </div>
+    <div class="col-xs-3">
+        <button id="btn-search" class="btn btn-primary btn-sm">Search</button>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-2">
+        <b>User Name</b>
+    </div>
+    <div class="col-xs-6" id="username_label">-</div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-2">
+        <b>Applicant Name</b>
+    </div>
+    <div class="col-xs-6" id="fullname_label">-</div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-2">
+        <b>Organization</b>
+    </div>
+    <div class="col-xs-6" id="organization_label">-</div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-2">
+        <b>License Name</b>
+    </div>
+    <div class="col-xs-6" id="licensename_label">-</div>
+</div>
+<br />
+<div class="row">
+    <div class="col-xs-2">
+        <b>Created Date</b>
+    </div>
+    <div class="col-xs-6" id="createddate_label">-</div>
+</div>
+<br />
+<div class="jarviswidget jarviswidget-color-greenDark" data-widget-editbutton="false">
+    <header>
+        <span class="widget-icon"><i class="fa fa-table"></i></span>
+        <h2>Tracking</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="table-responsive">
+                <table id="table-tracking" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>User</th>
+                            <th>Log Type</th>
+                            <th>Date</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-tracking">
+                        @{
+                            if (Model.Count == 0)
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="4">No Data Found.</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+        <!-- end widget content -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        /* button search */
+        $('#btn-search').click(function () {
+            var value = $('#search-value-index').val().trim();
+
+            getTrackingList(value);
+        });
+
+        function getTrackingList(value) {
+            $.ajax({
+                url: '@Url.Action("GetTrackingList", "AJAX")',
+                data: {
+                    reg_no: value
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#tbody-tracking').empty();
+
+                    if(data.length == 0){
+                        $('#tbody-tracking').append('<tr><td class="text-center" colspan="4">No Data Found.</td></tr>');
+                    }
+                    else {
+                        $.each(data.dataTable, function (i, data) {
+                            $('#tbody-tracking').append('<tr><td>' + (i + 1) + '</td><td>' + data.created_by + '</td><td>' + data.activity_name + ' (' + data.log_type + ')</td><td>' + data.created_date_text + '</td><td>' + data.notes + '</td></tr>');
+                        });
+                        
+                        $('#username_label').html(data.username);
+                        $('#fullname_label').html(data.fullname);
+                        $('#organization_label').html(data.organization);
+                        $('#licensename_label').html(data.licensename);
+                        $('#createddate_label').html(data.createddate);
+                    }
+                }
+            });
+        }
+    });
+</script>

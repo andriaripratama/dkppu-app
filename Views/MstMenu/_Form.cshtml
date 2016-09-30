@@ -1,0 +1,112 @@
+﻿@model DKUPPU.ViewModels.MstMenuViewModel
+@{
+    Layout = null;
+}
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @{ string isChecked = "";}
+        @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.MenuType)
+        {
+            if(Model != null)
+            {
+                if (Model.menu_type == item.id_lookup)
+                {
+                    isChecked = "checked='checked'";
+                }
+                else
+                {
+                    isChecked = "";
+                }
+            }
+            
+            <label class="radio radio-inline">
+                <input type="radio" name="menu_type" value="@item.id_lookup" @isChecked />
+                <i></i>
+                @item.lookup_value
+            </label>
+        }
+        @Html.ValidationMessageFor(model => model.menu_type, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+
+<div class="form-group">
+    @Html.LabelFor(model => model.parent_id, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.parent_id, (IEnumerable<SelectListItem>)ViewBag.ParentId, "Select Parent Menu", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.parent_id, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_name, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_name, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_name, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_title, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_title, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_title, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_icon, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_icon, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_icon, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_action, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_action, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_action, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_controller, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_controller, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_controller, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_params, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_params, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_params, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.menu_order, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.menu_order, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.menu_order, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.is_sa, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        <div class="checkbox">
+            <label>
+                @Html.EditorFor(model => model.is_sa)
+                @Html.ValidationMessageFor(model => model.is_sa, "", new { @class = "text-danger" })
+            </label>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.is_active, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-8">
+        <div class="checkbox">
+            <label>
+                @Html.EditorFor(model => model.is_active)
+                @Html.ValidationMessageFor(model => model.is_active, "", new { @class = "text-danger" })
+            </label>           
+        </div>
+    </div>
+</div>

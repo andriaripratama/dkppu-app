@@ -1,0 +1,164 @@
+﻿@model IEnumerable<DKUPPU.Models.t_mst_organization>
+
+@using DKUPPU.Helpers;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.org_code)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.address)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.address_rt)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.address_rw)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_npwp_no)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_tdp_no)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_phone_no)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_fax_no)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.org_website)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.owner_fullname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.is_active)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.created_by)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.created_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.updated_by)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.updated_date)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_mst_loc_country.country_name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_mst_loc_village.id_subdist)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_mst_lookup.lookup_group)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_mst_organization_certificate.id_org_type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_mst_organization2.id_trx_org)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.t_trx_organization.id_org_parent)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    string created_date_text = DateHelper.Display(item.created_date);
+    string updated_date_text = DateHelper.Display(item.updated_date);
+    
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_code)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.address)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.address_rt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.address_rw)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_npwp_no)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_tdp_no)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_phone_no)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_fax_no)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.org_website)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.owner_fullname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.is_active)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.created_by)
+        </td>
+        <td>
+            @created_date_text
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.updated_by)
+        </td>
+        <td>
+            @updated_date_text
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_mst_loc_country.country_name)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_mst_loc_village.id_subdist)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_mst_lookup.lookup_group)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_mst_organization_certificate.id_org_type)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_mst_organization2.id_trx_org)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.t_trx_organization.id_org_parent)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.id_org }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id_org }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id_org })
+        </td>
+    </tr>
+}
+
+</table>

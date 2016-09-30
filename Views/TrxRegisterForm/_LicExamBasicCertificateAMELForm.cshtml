@@ -1,0 +1,38 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        @{
+            int j = 0;
+        }
+        @foreach (DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel item in Model)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-6">Number Of Certificate - @Html.DisplayFor(m => m[j].id_basic_certificate_value)</th>
+                            <th class="col-lg-3">Type</th>
+                            <th class="col-lg-3">Group Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel type in Model[j].RatingLicenseExam)
+                        {
+                            <tr>
+                                <td><input type="text" class="form-control" name="TrxLicExamBasicCertificateViewModel[@j].id_basic_certificate_value" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__id_basic_certificate_value" value="@Html.DisplayFor(x => type.id_basic_certificate_value)" readonly="readonly" /></td>
+                                <td><input type="text" class="form-control" name="TrxLicExamBasicCertificateViewModel[@j].aircraft_type_rating" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__aircraft_type_rating" value="@Html.DisplayFor(x => type.aircraft_type_rating)" readonly="readonly" /></td>
+                                <td><input type="text" class="form-control" readonly="readonly" /></td>
+                            </tr>
+                        }
+                        
+                    </tbody>
+                </table>
+            </div>
+            j++;
+        }
+    </div>
+</div>
+

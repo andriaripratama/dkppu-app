@@ -1,0 +1,206 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>
+@{
+    Layout = null;
+    
+    string hasLicenseMedicalCertificateHistory = ViewBag.HasLicenseMedicalCertificateHistory == null ? "false" : (ViewBag.HasLicenseMedicalCertificateHistory ? "true" : "false");
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Medical Class</th>
+                <th>From</th>
+                <th>Until</th>
+            </tr>
+        </thead>
+        <tbody id="table-medical">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string datepicker = "";
+                string skill01 = "";
+                string from_date = "";
+                string until_date = "";
+
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                datepicker = "";
+                skill01 = "";
+                from_date = "";
+                until_date = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    from_date = "from-date";
+                    until_date = "until-date";
+                    datepicker = "date-picker";
+                    skill01 = "SKILL01";
+                }
+                <tr id="tr-@j" class="old-tr">
+                    <td>
+                        <select name="TrxLicMedicalCertificateViewModel[@j].med_certi_no" id="TrxLicMedicalCertificateViewModel_@j.ToString()__med_certi_no" class="form-control required-value-dropdown" @vreadonly>
+                            <option value="@item.med_certi_no">@item.med_certi_name</option>
+                        </select>
+
+                        <input type="hidden" name="TrxLicMedicalCertificateViewModel[@j].id_trx_lic_med_certi" id="TrxLicMedicalCertificateViewModel_@j.ToString()__id_trx_lic_med_certi" value="@Html.DisplayFor(m => m[j].id_trx_lic_med_certi)">
+                    </td>
+                    <td>
+                        <input type="text" name="TrxLicMedicalCertificateViewModel[@j].from_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__from_date" class="form-control @vrequered date-skill01 @from_date @skill01" value="@Html.DisplayFor(m => m[j].from_date)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="TrxLicMedicalCertificateViewModel[@j].until_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__until_date" class="form-control @vrequered date-filed @until_date @datepicker" value="@Html.DisplayFor(m => m[j].until_date)" @vreadonly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        var isLicenseMedicalCertificateHistory = '@hasLicenseMedicalCertificateHistory';
+
+        if (isLicenseMedicalCertificateHistory == "false")
+            GetMedicalClass($('#TrxLicMedicalCertificateViewModel_0__med_certi_no'), '@ViewBag.sop_type');
+
+        var VSKILL01 = $('#val-SKILL01').attr('data-date');
+        
+        $('.SKILL01').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL01,
+            //...
+        });
+        
+        $('#add-medical-certificate').click(function (e) {
+            var $tabelData = $('#table-medical');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-medical-certificate", function (e) {
+            var $tabelData = $('#table-medical');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var suffixFromLast = $trNew.find(':input:last').attr('name').match(/\d+/);
+
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffixFromLast + ']', '[' + (parseInt(suffixFromLast) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffixFromLast + '_', '_' + (parseInt(suffixFromLast) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+                $.each($trNew.find('select'), function (i, val) {
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffixFromLast + ']', '[' + (parseInt(suffixFromLast) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffixFromLast + '_', '_' + (parseInt(suffixFromLast) + 1) + '_');
+                    $(this).attr('id', newID);
+                    $(this).removeAttr('readonly');
+                });
+
+                $.each($trNew.find('.date-filed'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true
+                    });
+                });
+                $.each($trNew.find('.date-skill01'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        minDate: VSKILL01,
+                    });
+                });
+
+                //var med_no = '';
+                //var x = '@ViewBag.sop_type';
+                /*
+                if (x == 'WL01' || x == 'WL02' || x == 'WL03' || x == 'WL04' || x == 'WL28' || x == 'WL29' || x == 'WL14' || x == 'WL15' || x == 'WL16') {
+                    med_no = 'SECOND';
+                }
+                else if (x== 'WL05' || x== 'WL06' || x== 'WL07' || x== 'WL08' || x== 'WL09') {
+                    med_no = 'FIRST';
+                }
+                else if (x== 'WL11' || x== 'WL12' || x== 'WL13' || x== 'WL17' || x== 'WL18' || x== 'WL19') {
+                    med_no = 'THIRD';
+                }
+                */
+                $.each($trNew.find('#TrxLicMedicalCertificateViewModel_' + (parseInt(suffixFromLast) + 1) + '__med_certi_no'), function (i, val) {
+                    GetMedicalClass(this, '@ViewBag.sop_type');
+                });
+                $.each($trNew.find('#TrxLicMedicalCertificateViewModel_' + (parseInt(suffixFromLast) + 1) + '__from_date'), function (i, val) {
+                    $(this).addClass('from-date');
+                });
+
+                $.each($trNew.find('#TrxLicMedicalCertificateViewModel_' + (parseInt(suffixFromLast) + 1) + '__until_date'), function (i, val) {
+                    $(this).addClass('until-date');
+                });
+
+                $trLast.after($trNew);
+            }
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+        function GetMedicalClass(e, id_sop_type) {
+            $.ajax({
+                url: '@Url.Action("GetMedicalClass", "AJAX")',
+                dataType: 'JSON',
+                data: {
+                    id_sop_type: id_sop_type
+                },
+                success: function (data) {
+                    $(e).empty();
+
+                    $.each(data, function (i, data) {
+                        $(e).append('<option value="' + data.med_certi_no + '"' + (i == 0 ? 'selected = "selected"' : "") + '>' + data.med_certi_name + '</option>');
+                    });
+                }
+            });
+        }
+    });
+</script>
+

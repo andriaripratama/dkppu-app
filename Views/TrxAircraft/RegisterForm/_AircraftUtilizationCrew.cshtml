@@ -1,0 +1,134 @@
+﻿
+@model List<DKUPPU.ViewModels.AircraftUtilizationCrewViewModel>
+@{
+    Layout = null;
+
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Aircraft Type</th>
+
+                <th>Daily (Hour)</th>
+
+                <th>Weekly (Hour)</th>
+
+                <th>Monthly (Hour)</th>
+            </tr>
+        </thead>
+        <tbody id="table-crew">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+    
+            }
+            @foreach (DKUPPU.ViewModels.AircraftUtilizationCrewViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+               
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                   
+                }
+                <tr id="tr-@j" class="old-tr">
+                    <td>
+                        @Html.DropDownList("AircraftUtilizationCrewViewModel[" + j.ToString() + "].aircraft_type", (IEnumerable<SelectListItem>)ViewBag.DropAircraft, "Select Aircraft", new { @class = "form-control required-value aircraft_type", id = "AircraftUtilizationCrewViewModel_" + j.ToString() + "__aircraft_type" })
+                        @*<input type="text" name="AircraftUtilizationCrewViewModel[@j].aircraft_type" id="AircraftUtilizationCrewViewModel_@j.ToString()__aircraft_type" class="form-control required-value" value="@Html.DisplayFor(m => m[j].aircraft_type)" @vreadonly>*@
+                        <input type="hidden" name="AircraftUtilizationCrewViewModel[@j].id_aircraftUtilization" id="AircraftUtilizationCrewViewModel_@j.ToString()__id_aircraftUtilization" value="@Html.DisplayFor(m => m[j].id_aircraftUtilizationCrew)">
+                    </td>
+                    <td>
+                        <input type="number" name="AircraftUtilizationCrewViewModel[@j].daily" id="AircraftUtilizationCrewViewModel_@j.ToString()__daily" class="form-control required-value" value="@Html.DisplayFor(m => m[j].daily)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="number" name="AircraftUtilizationCrewViewModel[@j].weekly" id="AircraftUtilizationCrewViewModel_@j.ToString()__weekly" class="form-control required-value" value="@Html.DisplayFor(m => m[j].weekly)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="number" name="AircraftUtilizationCrewViewModel[@j].monthly" id="AircraftUtilizationCrewViewModel_@j.ToString()__monthly" class="form-control required-value" value="@Html.DisplayFor(m => m[j].monthly)" @vreadonly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('#add-crew-utilization').click(function (e) {
+            var $tabelData = $('#table-crew');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-crew-utilization", function (e) {
+            var $tabelData = $('#table-crew');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+               
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__med_certi_no'), function (i, val) {
+                   
+                    $(this).attr('readonly', 'readonly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__daily'), function (i, val) {
+                    $(this).addClass('daily');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__weekly'), function (i, val) {
+                    $(this).addClass('weekly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__monthly'), function (i, val) {
+                    $(this).addClass('monthly');
+                });
+
+                $trLast.after($trNew);
+
+
+
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>
+
+

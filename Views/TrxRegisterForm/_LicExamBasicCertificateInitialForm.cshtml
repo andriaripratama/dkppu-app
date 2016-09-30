@@ -1,0 +1,47 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        @{
+            int j = 0;
+        }
+        @foreach (DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel item in Model)
+        {
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-6">Number Of Certificate - @Html.DisplayFor(m => m[j].id_basic_certificate_value)</th>
+                            <th class="col-lg-3">Type</th>
+                            <th class="col-lg-3">Group Rating</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            @if (Model[j].is_selected == true)
+                            {
+                                <td><input type="text" class="form-control" name="TrxLicExamBasicCertificateViewModel[@j].id_basic_certificate_value" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__id_basic_certificate_value" value="@Html.DisplayFor(m => m[j].id_basic_certificate_value)" readonly="readonly" /></td>
+                            }
+                            else
+                            {
+                                <td><input type="text" class="form-control" readonly="readonly" /></td>
+                            }
+                            
+                            <td>
+                                <input type="text" class="form-control" readonly="readonly" />
+                                <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].id_basic_certificate" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__id_basic_certificate" value="@Html.DisplayFor(m => m[j].id_basic_certificate)" />
+                                <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].is_selected" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__is_selected" value="@Model[j].is_selected.ToString()" />
+                                <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].is_passed" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__is_passed" value="@Model[j].is_passed.ToString()" />
+                            </td>
+                            <td><input type="text" class="form-control" readonly="readonly" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            j++;
+        }
+    </div>
+</div>
+

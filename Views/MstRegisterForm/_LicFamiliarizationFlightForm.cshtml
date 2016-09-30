@@ -1,0 +1,41 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicFamiliarizationFlightViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicFamiliarizationFlightViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="MstLicFamiliarizationFlightViewModel_@j">
+                    <td>@Html.DropDownList("TrxLicFamiliarizationFlightViewModel[" + j.ToString() + "].rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, new { @class = "form-control", id = "TrxLicFamiliarizationFlightViewModel_" + j.ToString() + "__rating", disabled = "disabled" })</td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicFamiliarizationFlightViewModel[@j].checked_date" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__checked_date" required="required"></td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicFamiliarizationFlightViewModel[@j].expired_date" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__expired_date" required="required"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+

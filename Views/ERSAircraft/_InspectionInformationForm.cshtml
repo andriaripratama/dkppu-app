@@ -1,0 +1,52 @@
+﻿@model DKUPPU.ViewModels.ERSAircraftViewModel
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    @if (Model.wf_activity_name == "ACT01") 
+    {
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            Inspector
+        </label>
+        <div class="col-md-8">
+            <select class="form-control" id="inspector_id" name="inspector_id">
+                <option value="">Select Inspector</option>
+                @foreach (var item in Model.ListOfInspector)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    }
+    else
+    {
+        <div class="row form-group">
+            <label class="col-md-4 control-label text-left">
+                @Html.LabelFor(model => model.inspection_file)
+            </label>
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.inspection_file, new { htmlAttributes = new { @type = "file", @class = "form-control" } })
+            </div>
+        </div>
+        <div class="row form-group">
+            <label class="col-md-4 control-label text-left">
+                @Html.LabelFor(model => model.inspection_file_type)
+            </label>
+            <div class="col-md-8">
+                <section>
+                    <div class="inline-group">
+                        @foreach (var item in Model.ListOfInspectionFileType)
+                        {
+                            <label class="radio radio-inline">
+                                <input type="radio" name="inspection_file_type" value="@item.id_lookup">
+                                <i></i>@item.lookup_value
+                            </label>
+                        }
+                    </div>
+                </section>
+            </div>
+        </div>
+    }
+</div>

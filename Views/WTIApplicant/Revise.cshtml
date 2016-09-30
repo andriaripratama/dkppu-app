@@ -1,0 +1,191 @@
+﻿@model DKUPPU.ViewModels.WTIApprovalViewModel
+@{
+    ViewBag.Title = "Written Exam Revise";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Approval Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_applicant)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_category)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_sop_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+                @Html.HiddenFor(model => model.TrxWfViewModel.sn)
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>License Detail</legend>
+                            @Html.DisplayFor(model => model.id_sop_type_value)
+                        </fieldset>
+                    </div>
+                </div>
+                
+                @*<div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-left"></label>
+                        <div class="col-md-10">
+                            @{ string vchecked = ""; }
+                            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.license_type_exam)
+                            {
+                                vchecked = "";
+                                if (item.id_lookup == Model.TrxLicWrittenExamViewModel.license_type) { vchecked = "checked"; }
+                                <label class="radio radio-inline">
+                                    <input id="TrxLicWrittenExamViewModel.license_type" type="radio" class="radio-license-type-exam radiobox" name="license_type" value="@Html.DisplayFor(a=>item.id_lookup)" @vchecked disabled />
+                                    <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>*@
+
+                <div>
+                    @Html.Partial("../TrxReviseForm/_WrittenExamForm", Model.TrxLicWrittenExamViewModel)
+                </div>
+
+                <fieldset>
+                    <legend>Upload Document</legend>
+                    @Html.Partial("../TrxReviseForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                </fieldset>
+
+                <div id="error">
+                    <input type="checkbox" id="checkbox-disclaimer" />
+                    I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                </div>
+                <div class="form-actions">
+                    <button id="submit" class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var hasError = 0;
+
+        //Add Item
+        $('form').submit(function () {
+            //return false;
+            $form = $('form:first');
+            var value = $(this).val();
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            if ($form.find('.has-error').length > 0 || hasError > 0) {
+                return false;
+            }
+        });
+
+        //Validasi type doc
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+
+                $(object).parent().find('span').remove();
+                $(object).parent().parent().removeClass('has-error');
+                $(object).parent().parent().removeClass('has-success');
+
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: '+allowedExtensions.join(", ")+'</span>');
+                    $(object).parent().parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+    });
+</script>

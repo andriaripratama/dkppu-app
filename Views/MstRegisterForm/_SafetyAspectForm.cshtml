@@ -1,0 +1,51 @@
+﻿@model DKUPPU.ViewModels.MstSafetyAspectForm
+
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody id="MstSafetyAspectForm">
+
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.safety_program, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.safety_program" id="model.safety_program" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.change_management, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.change_management" id="model.change_management" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.internal_audit, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.internal_audit" id="model.internal_audit" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.audit_corrective, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.accidence_incident" id="model.accidence_incident" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.audit_corrective, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.accidence_incident" id="model.accidence_incident" />
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

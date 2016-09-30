@@ -1,0 +1,42 @@
+﻿@model DKUPPU.ViewModels.MstApplicantViewModel
+@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Data Applicant</h4>
+        </div>
+        <div class="modal-body">
+            @if (Model != null)
+            {
+                @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model)
+                <script>
+                    $(function () {
+                        $('#Approved').removeClass('disabled');
+                        $('#Revised').addClass('disabled');
+                        $('#id_applicant').val('@Html.DisplayFor(model => model.id_applicant)');
+                    })
+                </script>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h1>The employee not found, please revise this submission</h1>
+                    </div>
+                </div>
+                <script>
+                    $(function () {
+                        $('#Approved').addClass('disabled');
+                        $('#Revised').removeClass('disabled');
+                    })
+                </script>
+            }
+        </div>
+        <div class="modal-footer">
+            <a role="button" id="btn-checkout-cancel" class="btn btn-danger" aria-hidden="true" data-dismiss="modal">OK</a>
+        </div>
+    </div>
+</div>

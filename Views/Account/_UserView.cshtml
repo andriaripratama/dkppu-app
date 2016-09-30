@@ -1,0 +1,162 @@
+﻿@model DKUPPU.ViewModels.UserApprovalViewModel
+@{
+    Layout = null;
+}
+<table class="table table-striped">
+    <tr>
+        <th class="col-md-2"></th>
+        <th width="3"></th>
+        <td>
+            <img src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "images" })" alt="User" height="300" />
+        </td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.org_type)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.org_type)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_org)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_org)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.full_name)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.full_name)</td>
+    </tr>
+    <tr hidden="hidden">
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.employee_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.employee_number)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_gender)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_gender)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.place_of_birth)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.place_of_birth)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.date_of_birth)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.date_of_birth_text)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_nationality)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_nationality)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_state)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_state)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_district)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_district)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_subdist)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_subdist)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.id_village)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.id_village)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.address)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.address), &nbsp; RT. @Html.DisplayFor(m => m.address_rt) &nbsp; RW. @Html.DisplayFor(m => m.address_rw)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.pos_code)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.pos_code)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.phone_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.phone_number)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.extension_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.extension_number)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.mobile_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.mobile_number)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.fax_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.fax_number)</td>
+    </tr>
+    @*<tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.npwp_number)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.npwp_number)</td>
+    </tr>*@
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(m => m.email)</th>
+        <th>:</th>
+        <td>@Html.DisplayFor(m => m.email)</td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(model => model.id_card_number)</th>
+        <th>:</th>
+        <td>
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="idcard" data-toggle="modal">View Image</a>
+        </td>
+    </tr>
+    <tr>
+        <th class="col-md-2">@Html.DisplayNameFor(model => model.letter_of_assignment)</th>
+        <th>:</th>
+        <td>
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="letter" data-toggle="modal">View Image</a>
+        </td>
+    </tr>
+</table>
+
+<div id="documet-view" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+                <h4>Document Preview</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="preview-doc">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.view-document').click(function () {
+            var typeDoc = $(this).attr('data-type');
+            var img = '';
+            switch (typeDoc) {
+                case 'idcard':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "idcard" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+                case 'letter':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "letter" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+
+            }
+        });
+    });
+</script>

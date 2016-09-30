@@ -1,0 +1,507 @@
+﻿@model DKUPPU.ViewModels.BCEFormViewModel
+@{
+    ViewBag.Title = Model.TrxLicenseViewModel.id_sop_type_value;
+    ViewBag.License_no = Model.TrxLicenseViewModel.license_no;
+    ViewBag.wf_activity_name = Model.wf_activity_name;
+    if (Model.exam_date != null)
+    {
+        ViewBag.IsDocumentUploadStatusDisabled = true;
+    }
+}
+@if (Model.wf_activity_name == "ACTV")
+{
+    <style>
+        input {
+            background-color: transparent !important;
+            border: none !important;
+        }
+    </style>
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>
+            @if (Model.wf_activity_name == "ACTV")
+            {
+                <text>View Form</text>
+            }
+            else
+            {
+                <text>Approval Form</text>
+            }
+        </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_applicant)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_category)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.delivery_code)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_sop_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.created_by)
+                @Html.HiddenFor(model => model.Applicant.job_name)
+                @Html.HiddenFor(model => model.Applicant.full_name)
+                @Html.HiddenFor(model => model.Applicant.id_applicant)
+                @Html.HiddenFor(model => model.Applicant.id_card)
+
+                <fieldset>
+                    <legend>Exam Details</legend>
+                    @Html.DisplayFor(a => a.TrxLicenseViewModel.id_sop_type_value)
+                </fieldset>
+                <fieldset style="display:none;">
+                    <legend>Choose Basic Certificate</legend>
+                    <div id="error-basic">
+
+                    </div>
+                    @Html.Partial("../TrxRegisterForm/_LicBasicCertificateForm", Model.TrxLicExamBasicCertificateViewModel)
+                </fieldset>
+                string readonlyDate = "";
+                string readonlyDate1 = "";
+                string disabledPass = "";
+                string vchecked = "";
+                if (Model.exam_date != null)
+                {
+                    readonlyDate1 = "readonly='readonly'";
+                }
+                else
+                {
+                    disabledPass = "disabled='disabled'";
+                }
+                if (Model.is_passed != null)
+                {
+                    readonlyDate = "readonly='readonly'";
+                    disabledPass = "disabled='disabled'";
+                }
+
+                readonlyDate = "";
+                if (Model.wf_activity_name != "ACT01")
+                {
+                    readonlyDate = "readonly='readonly'";
+                }
+
+
+                if (ViewBag.UploadDocumentForm == true)
+                {
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                        @Html.Partial("../MstApprovalForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                    </fieldset>
+                }
+
+                <fieldset>
+                    <legend>Exam Details</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left" for="RegistrationNumber">Exam Date </label>
+                                    <div class="col-md-5">
+                                        <input name="exam_date" id="exam_date" class="form-control date-picker" value="@Html.DisplayFor(a => a.exam_date)" @readonlyDate1 />
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <div class="form-horizontal">
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label text-left" for="exam_number">Exam Number </label>
+                                                <div class="col-md-5">
+                                                    <input name="exam_number" id="exam_number" class="form-control" value="@Html.DisplayFor(a => a.exam_number)" @readonlyDate1 />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="col-md-2 control-label text-left" for="exam_attandance_number">Attandance Number </label>
+                                                <div class="col-md-5">
+                                                    <input name="exam_attandance_number" id="exam_attandance_number" class="form-control" value="@Html.DisplayFor(a => a.exam_attandance_number)" readonly="readonly" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left" for="RegistrationNumber">Exam Place </label>
+                                    <div class="col-md-5">
+                                        <input name="exam_place" id="exam_place" class="form-control" value="@Html.DisplayFor(a => a.exam_place)" @readonlyDate1 />
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input class="btn btn-primary disabled" type="submit" name="tellToUser" id="tell-to-user" value="Tell To User" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+
+                <fieldset>
+                    <legend>Exam Result</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left" for="RegistrationNumber">Pass </label>
+                                    <div class="col-md-5">
+                                        <div class="row" style="margin-left:10px">
+                                            <div class="col-xs-3">
+                                                <label class="radio">
+                                                    @if (Model.is_passed == true)
+                                                    {
+                                                        vchecked = "checked='checked'";
+                                                    }
+                                                    else
+                                                    {
+                                                        vchecked = "";
+                                                    }
+                                                    <input type="radio" name="is_passed" id="is_passed" class="radio-pass" value="True" @vchecked @disabledPass>
+                                                    <i></i>
+                                                    Pass
+                                                </label>
+                                            </div>
+                                            <div class="col-xs-3">
+                                                <label class="radio">
+                                                    @if (Model.is_passed == false)
+                                                    {
+                                                        vchecked = "checked='checked'";
+                                                    }
+                                                    else
+                                                    {
+                                                        vchecked = "";
+                                                    }
+                                                    <input type="radio" name="is_passed" id="is_passed" class="radio-pass" value="false" @vchecked @disabledPass>
+
+                                                    <i></i>
+                                                    Fail
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left" for="RegistrationNumber">Total Score </label>
+                                    <div class="col-md-5">
+                                        <input name="total_score" id="total_score" class="form-control" value="@Html.DisplayFor(a => a.total_score)" @readonlyDate />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+
+                if (ViewBag.CreateNote != false)
+                {
+                    <fieldset>
+                        <legend>Notes</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+                if (Model.TrxLicenseViewModel.id_wf_status == "WFS05" && ViewBag.ViewAcceptName == true)
+                {
+                    <fieldset>
+                        <legend>Taken By</legend>
+                        <table>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.TrxLicenseViewModel.id_card_accepted)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.TrxLicenseViewModel.id_card_accepted, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                }
+                <fieldset>
+                    @if (ViewBag.Logs == true && !DKUPPU.Helpers.SessionLoginHelper.IsExnternal())
+                    {
+                        <legend>Logs</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_LogNotesForm", Model.TrxLicenseNotesViewModel)
+                            </div>
+                        </div>
+                    }
+                    @*@if (ViewBag.GenerateLicense == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_GenerateLicenseNumber", Model.TrxLicenseViewModel)
+                                </div>
+                            </div>
+                        }*@
+                    @if (ViewBag.UploadLicenseScan == true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_UploadLicenseScan", Model.TrxLicenseUploadViewModel)
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.CheckingRegNo == true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_CheckingRegistrationNumber", Model.TrxLicenseUploadViewModel)
+                            </div>
+                        </div>
+                    }
+
+                </fieldset>
+                <div class="form-actions">
+                    @if (ViewBag.WFActions != null)
+                    {
+                        string disabled = "";
+                        if (Model.wf_activity_name == "ACT04" || Model.wf_activity_name == "ACT01" || Model.wf_activity_name == "ACT06")
+                        {
+                            disabled = "disabled";
+                        }
+                        foreach (DKUPPU.Helpers.WorkflowAction action in ViewBag.WFActions as List<DKUPPU.Helpers.WorkflowAction>)
+                        {
+                            if (action.kode == null)
+                            {
+                                <a class="btn btn-primary" name="action_@action.kode" id="action_@action.kode">@action.name Exam</a>
+                            }
+                            else
+                            {
+                                <input class="btn btn-primary @disabled" data-submit="false" type="submit" name="action_@action.kode" id="action_@action.kode" value="@action.name" onclick="javascript: return RejectConfirmation(this);" />
+                            }
+                        }
+                    }
+                    @if (Model.TrxLicenseViewModel.is_draft == true)
+                    {
+                        <button id="DeleteButton" type="button" class="btn btn-danger"> Delete </button>
+                        <script>
+                            $(document).ready(function () {
+                                $('#DeleteButton').click(function () {
+                                    $.ajax({
+                                        url: '@Url.Action("DeleteTrxLicenseById", "AJAX")',
+                                        data: {
+                                            p_id_trx_license: $('#TrxLicenseViewModel_id_trx_license').val()
+                                        },
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            if (data.resultOperation) {
+                                                window.location.href = data.urlSuccess;
+                                            } else {
+                                                alert(data.messageFail);
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    }
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Back </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>
+@if (Model.wf_activity_name == "ACT01" && Model.exam_date == null)
+{
+    <script>
+        $(function () {
+            $('.date-picker').datepicker({
+                //options
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                //...
+                minDate: new Date(),
+            });
+        });
+
+        $('#exam_place').val("At Ministry of Transportation, Floor 22");
+    </script>
+}
+@if (Model.wf_activity_name == "ACT04")
+{
+    <script>
+        $(function () {
+
+            $('#action_').click(function () {
+                var ReportUrl = "@Html.DisplayFor(a => a.TrxLicenseViewModel.report_url)";
+                var id_mst_license = "@Model.TrxLicenseViewModel.id_mst_license";
+                ReportUrl = ReportUrl.replace('{0}', id_mst_license);
+                ReportUrl = ReportUrl.replace(/&amp;/g, '&');
+                window.open(ReportUrl);
+                $('#action_Y').attr('data-submit', 'true');
+                $('#action_Y').removeClass('disabled');
+            });
+
+            $('form').submit(function () {
+                var isValid = $('#action_Y').attr('data-submit');
+                if (isValid == 'false') {
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+@if (Model.exam_date != null)
+{
+    if (Model.wf_activity_name == "ACT01")
+    {
+        <script>
+            $(function () {
+                CheckingDoc();
+
+                $('.satisfied').click(function () {
+                    CheckingDoc();
+                });
+                $('.un-satisfied').click(function () {
+                    CheckingDoc();
+                });
+                $('.radio-pass').click(function () {
+                    CheckingDoc();
+                });
+
+                function CheckingDoc() {
+                    var IsValid = false;
+                    var lengthSatisfied = $('.satisfied').length;
+                    var lengthSatisfiedChecked = $('.satisfied:checked').length;
+                    //var lengthUnSatisfied = $('.un-satisfied').length;
+                    var lengthUnSatisfiedChecked = $('.un-satisfied:checked').length;
+                    var lengthPass = $('.radio-pass:checked').length;
+
+                    if (lengthSatisfiedChecked == lengthSatisfied && lengthPass > 0) {
+                        enebelButtonProcesed();
+                    }
+                    else if (((lengthUnSatisfiedChecked + lengthSatisfiedChecked) == lengthSatisfied) && lengthUnSatisfiedChecked > 0) {
+                        enebelButtonRevise();
+                    }
+                    else {
+                        DesableAll();
+                    }
+                }
+
+                function enebelButtonProcesed() {
+                    $('#action_Y').removeClass('disabled');
+                    $('#action_R').addClass('disabled');
+                    $('#action_N').addClass('disabled');
+                }
+                function DesableAll() {
+                    $('#action_Y').addClass('disabled');
+                    $('#action_R').addClass('disabled');
+                    $('#action_N').addClass('disabled');
+                }
+                function enebelButtonRevise() {
+                    $('#action_Y').addClass('disabled');
+                    $('#action_R').removeClass('disabled');
+                    $('#action_N').removeClass('disabled');
+                }
+            })
+        </script>
+    }
+}
+else
+{
+    <script>
+        $(function () {
+            CheckingDoc();
+            $('.satisfied').click(function () {
+                CheckingDoc();
+            });
+            $('.un-satisfied').click(function () {
+                CheckingDoc();
+            });
+            $('#exam_date').change(function () {
+                CheckingDoc();
+            });
+            function CheckingDoc() {
+                var IsValid = false;
+                $('#exam_date').parent().find('span').remove();
+                $('#exam_date').parent().removeClass('has-error');
+                var lengthSatisfied = $('.satisfied').length;
+                var lengthSatisfiedChecked = $('.satisfied:checked').length;
+                //var lengthUnSatisfied = $('.un-satisfied').length;
+                var lengthUnSatisfiedChecked = $('.un-satisfied:checked').length;
+                if (lengthSatisfiedChecked == lengthSatisfied && $('#exam_date').val().length > 0) {
+                    $.ajax({
+                        url: "@Url.Action("CheckingDataPerDate", "AJAX")",
+                        data: {
+                            exam_date: $('#exam_date').val(),
+                            id_trx_license: $('#TrxLicenseViewModel_id_trx_license').val()
+                        },
+                        dataType: 'JSON',
+                        success: function (data) {
+                            if (data == '1') {
+                                DesableTellToUser();
+                                $('#exam_date').after('<span class="help-block">Qouta is full</span>');
+                                $('#exam_date').parent().addClass('has-error');
+                                $('#exam_attandance_number').val('');
+                            }
+                            else if (data == '2') {
+                                DesableTellToUser();
+                                $('#exam_date').after('<span class="help-block">Date is invalid</span>');
+                                $('#exam_date').parent().addClass('has-error');
+                                $('#exam_attandance_number').val('');
+                            }
+                            else {
+                                if (data != null) {
+                                    $('#exam_attandance_number').val(data);
+                                }
+                                enebelTellToUser();
+                            }
+                        }
+                    });
+
+                }
+                else if (((lengthUnSatisfiedChecked + lengthSatisfiedChecked) == lengthSatisfied) && lengthUnSatisfiedChecked > 0) {
+                    DesableTellToUser();
+                    enebelButtonRevise();
+                }
+                else {
+                    DesableTellToUser();
+                    DesableAll();
+                }
+            }
+
+            function enebelTellToUser() {
+                $('#tell-to-user').removeClass('disabled');
+            }
+            function DesableTellToUser() {
+                $('#tell-to-user').addClass('disabled');
+            }
+            function enebelButtonRevise() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').removeClass('disabled');
+                $('#action_N').removeClass('disabled');
+            }
+            function DesableAll() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').addClass('disabled');
+                $('#action_N').addClass('disabled');
+            }
+        })
+    </script>
+}

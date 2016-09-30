@@ -1,0 +1,64 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox">
+    </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_phase)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+
+            bool isDocumentCompliancePhaseFormVisible = ViewBag.IsDocumentCompliancePhaseFormVisible == null ? false : (ViewBag.IsDocumentCompliancePhaseFormVisible ? true : false);
+
+            <div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase1/_InformationForm", Model.TrxOrganizationInitialCerViewModel)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Formal Application Letter</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase2/_FormalApplicationLetterForm", Model.TrxOrganizationAppLetterViewModel)
+                <fieldset>
+                    <legend>Formal Application Attachments</legend>
+                    @Html.Partial("../PAOCOrganization/Phase1/_DocUploadApprovalForm", Model.ListOfTrxOrganizationDoc)
+                </fieldset>                
+                @if (isDocumentCompliancePhaseFormVisible == true)
+                {
+                    <fieldset>
+                        <legend>Approval Letter</legend>
+                        @Html.Partial("../PAOCOrganization/Phase1/_DocCertificationUploadApprovalForm", Model.ListOfTrxOrganizationDocCertification)
+                    </fieldset>
+                }
+                <fieldset>
+                    <legend>Notes</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                        </div>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Logs</legend>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            @Html.Partial("../PAOCOrganization/Phase1/_LogNotesApprovalForm", Model.ListOfTrxOrganizationNotes)
+                        </div>
+                    </div>
+                </fieldset>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" value="submit" name="btn_submit" type="submit">Submit</button>
+                    <button class="btn btn-default" id="id_save" value="save" name="btn_submit" type="submit">Save</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

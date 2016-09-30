@@ -1,0 +1,62 @@
+﻿@model List<DKUPPU.ViewModels.TrxOrganizationManagementViewModel>
+@{
+    Layout = null;
+
+    bool isOrganizationManagementDisable = ViewBag.IsOrganizationManagementDisable == null ? false : (ViewBag.IsOrganizationManagementDisable ? true : false);
+    string tagOrganizationManagementDisable = isOrganizationManagementDisable ? "hidden='hidden'": string.Empty;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Position</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th width="40px" @tagOrganizationManagementDisable></th>
+            </tr>
+        </thead>
+        <tbody id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement">
+            @if (isOrganizationManagementDisable)
+            {
+                int i = 0;
+
+                foreach (DKUPPU.ViewModels.TrxOrganizationManagementViewModel item in Model)
+                {
+                    <tr id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_@i">
+                        <td>
+                            <input name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[@i].name_personal_position" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_@i.ToString()__name_personal_position" class="form-control input-sm" disabled="disabled" value="@Html.DisplayFor(a => item.name_personal_position)" />
+                        </td>
+                        <td>
+                            <input name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[@i].personal_name" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_@i.ToString()__personal_name" class="form-control input-sm" disabled="disabled" value="@Html.DisplayFor(a => item.personal_name)" />
+                        </td>
+                        <td>
+                            <input name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[@i].personal_description" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_@i.ToString()__personal_description" class="form-control input-sm" disabled="disabled" value="@Html.DisplayFor(a => item.personal_description)" />
+                        </td>
+                    </tr>
+
+                    i++;
+                }
+            }
+            else
+            {
+            <tr id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_0">
+                <td>
+                    <select name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[0].id_personal_position" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_0__id_personal_position" class="form-control input-sm invisible">
+                        <option value="">Select</option>
+                    </select>
+                </td>
+                <td>
+                    <input name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[0].personal_name" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_0__personal_name" class="form-control input-sm invisible" />
+                </td>
+                <td>
+                    <input name="TrxOrganizationAppLetterViewModel.ListOfTrxOrganizationManagement[0].personal_description" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_0__personal_description" class="form-control input-sm invisible" />
+                </td>
+                <td>
+                    <a role="button" id="TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement_0__remove" class="management-personnel-name-remove-row btn btn-xs btn-danger invisible"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

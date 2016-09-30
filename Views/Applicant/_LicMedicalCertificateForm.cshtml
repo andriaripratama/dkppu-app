@@ -1,0 +1,155 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsMedicalCertificateReadOnly == null ? true : (ViewBag.IsMedicalCertificateReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+<div class="table-responsive">
+    @if (!isReadOnly)
+    {
+    <table>
+        <tbody>
+            <tr>
+                <td style="padding-bottom: 5px;">
+                    <a class="pull-right btn btn-primary btn-xs" id="add-medical-certificate-form"><i class="fa fa-plus"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    }
+
+    <table class="table table-bordered table-striped" id="medical-certificate-form-table">
+        <thead>
+            <tr>
+                <th>Medical Class</th>
+                <th>From</th>
+                <th>Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicMedicalCertificateViewModel">
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("LicMedicalCertificates[0].med_certi_no", (IEnumerable<SelectListItem>)ViewBag.CertificateClasses, "Select Item", new { @class = "form-control", id = "LicMedicalCertificates_0__med_certi_no", @disabled = "disabled" })
+                            }
+                            else 
+                            {
+                                @Html.DropDownList("LicMedicalCertificates[0].med_certi_no", (IEnumerable<SelectListItem>)ViewBag.CertificateClasses, "Select Item", new { @class = "form-control", id = "LicMedicalCertificates_0__med_certi_no" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicMedicalCertificates[0].from_date" id="LicMedicalCertificates_0__from_date" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicMedicalCertificates[0].until_date" id="LicMedicalCertificates_0__until_date" value="" @disabledHTML />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel item in Model)
+                    {
+                        <tr id="LicAircraftCategoryRatings_@i">
+                            <td>
+                                <input type="hidden" name="LicMedicalCertificates[@i].id_trx_lic_med_certi" id="LicMedicalCertificates_@i.ToString()__id_trx_lic_med_certi" value="@Html.DisplayFor(x => x[i].id_trx_lic_med_certi)" @disabledHTML />
+
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("LicMedicalCertificates[" + i.ToString() + "].med_certi_no", (IEnumerable<SelectListItem>)ViewBag.CertificateClasses, "Select Item", new { @class = "form-control", id = "LicMedicalCertificates_" + i.ToString() + "__med_certi_no", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("LicMedicalCertificates[" + i.ToString() + "].med_certi_no", (IEnumerable<SelectListItem>)ViewBag.CertificateClasses, "Select Item", new { @class = "form-control", id = "LicMedicalCertificates_" + i.ToString() + "__med_certi_no" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.med_certi_no))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#LicMedicalCertificates_@i.ToString()__med_certi_no option[value="@item.med_certi_no"]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicMedicalCertificates[@i].from_date" id="LicMedicalCertificates_@i.ToString()__from_date" value="@Html.DisplayFor(x => x[i].from_date)" @disabledHTML />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicMedicalCertificates[@i].until_date" id="LicInstrumentRatings_@i.ToString()__until_date" value="@Html.DisplayFor(x => x[i].until_date)" @disabledHTML />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('#add-medical-certificate-form').click(function () {
+            var rowIndex = 0;
+
+            $('#medical-certificate-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var medicalCertificateFormFirstRowObj = $('#medical-certificate-form-table > tbody').find("tr:first");
+            var medicalCertificateFormNewRowObj = medicalCertificateFormFirstRowObj.clone();
+
+            $.each(medicalCertificateFormNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+                $(this).val('');
+            });
+
+            $.each(medicalCertificateFormNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(medicalCertificateFormNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#medical-certificate-form-table > tbody > tr').last().after(medicalCertificateFormNewRowObj);
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

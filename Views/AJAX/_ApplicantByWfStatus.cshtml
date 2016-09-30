@@ -1,0 +1,480 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.SpWfSelectTrxLicenseViewModel>
+@{
+    if (ViewBag.NoLayout != true)
+    {
+        Layout = null;
+    }
+    ViewBag.Title = "Applicant List";
+    List<DKUPPU.ViewModels.MstMenuViewModel> MenuIcon = new List<DKUPPU.ViewModels.MstMenuViewModel>();
+    List<DKUPPU.ViewModels.MstMenuViewModel> ButtonPrinScan = new List<DKUPPU.ViewModels.MstMenuViewModel>();
+}
+<style>
+    table > thead > tr > th {
+        cursor: pointer;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.Name != null)
+        {
+            MenuIcon = DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name, "MN03");
+            foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)MenuIcon.OrderBy(a => a.menu_order))
+            {
+                if (menuIconItem.menu_title == "Checkout")
+                {
+                    <button class="btn bg-color-greenLight txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+                else
+                {
+                    <button class="btn bg-color-blue txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+            }
+        }
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.Name != null)
+        {
+            if ((string)ViewBag.WfStatus == "WFS07" || (string)ViewBag.WfStatus == "WFS08")
+            {
+                ButtonPrinScan = DKUPPU.DAL.MstMenuDAL.GetButtonPrintAndScant(User.Identity.Name, "MN04", (string)ViewBag.WfStatus);
+                foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)ButtonPrinScan.OrderBy(a => a.menu_order))
+                {
+                    <button id="@Html.DisplayFor(a => menuIconItem.menu_name)" data-status="@Html.DisplayFor(a => menuIconItem.menu_params)" class="btn bg-color-blue txt-color-white" title="@Html.DisplayFor(a => menuIconItem.menu_title)">
+                        <i class="fa fa-@Html.DisplayFor(a => menuIconItem.menu_icon) fa-4x"></i>
+                    </button>
+                }
+            }
+        }
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <input class="form-control" id="search-value-index" value="@ViewBag.srcValue" name="search-value-index" placeholder="Search" />
+    </div>
+    <div class="col-xs-2">
+        <button id="src-lecense" class="btn btn-warning btn-sm ">Search</button>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-xs-12" id="list-license" data-wf="@ViewBag.WfStatus">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>List All Application </h2>
+
+            </header>
+
+            <!-- widget div-->
+            <div id="table-list">
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="table-responsive">
+                        <table id="table-applicant" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="RegNo" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.RegNo)
+                                    </th>
+                                    <th id="NIK" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.NIK)
+                                    </th>
+                                    <th id="IdentityType" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.IdentityType)
+                                    </th>
+                                    <th id="FullName" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.FullName)
+                                    </th>
+                                    <th id="LicenseName" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.LicenseName)
+                                    </th>
+                                    <th id="Job" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.Job)
+                                    </th>
+                                    @if (ViewBag.IsInternal == true)
+                                    {
+                                        <th id="OrgName" data-desc="True">
+                                            @Html.DisplayNameFor(model => model.OrgName)
+                                        </th>
+                                    }
+                                    <th id="Nationality" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.Nationality)
+                                    </th>
+                                    <th id="PaymentStatus" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.PaymentStatus)
+                                    </th>
+                                    <th id="InvoiceNumber" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.InvoiceNumber)
+                                    </th>
+                                    <th id="ExpiredDate" data-desc="True" hidden="hidden">
+                                        @Html.DisplayNameFor(model => model.ExpiredDate)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicant-list-data">
+                                @foreach (DKUPPU.ViewModels.SpWfSelectTrxLicenseViewModel item in Model)
+                                {
+                                    <tr id="" @(item.is_exam ? "style=color:green;" : string.Empty)>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.RegNo)
+                                        </td>
+                                        <td>
+                                            @if (item.FormUrl != null)
+                                            {
+                                                <a href="@Html.DisplayFor(modelItem=>item.FormUrl)">@Html.DisplayFor(modelItem => item.NIK)</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => item.NIK)
+                                            }
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IdentityType)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.FullName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.LicenseName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Job)
+                                        </td>
+                                        @if (ViewBag.IsInternal == true)
+                                        {
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.OrgName)
+                                            </td>
+                                        }
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Nationality)
+                                        </td>
+                                        <td>
+                                            @if (item.PaymentStatus == "UNPAID")
+                                            {
+                                                <span class="label label-warning arrowed">Unpaid</span>
+                                            }
+                                            else if (item.PaymentStatus == "PAID")
+                                            {
+                                                <span class="label label-primary arrowed">Paid</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-primary arrowed">@item.PaymentStatus</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @{
+                                            string invoiceNumber = "-";
+
+                                            if (!string.IsNullOrEmpty(item.InvoiceNumber))
+                                            {
+                                                @Html.DisplayFor(modelItem => item.InvoiceNumber);
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => invoiceNumber);
+                                            }
+                                            }
+                                        </td>
+                                        <td hidden="hidden">
+                                            @Html.DisplayFor(modelItem => item.ExpiredDate)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="dt-toolbar-footer">
+                            <div class="col-xs-2 col-sm-2" id="total-row">
+                                <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                            </div>
+                            <div class="col-xs-10 col-sm-10">
+                                <div class="dataTables_paginate paging_simple_numbers" id="pagination-applicant">
+                                    @Html.Raw(ViewBag.Pagination)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+        <!-- end widget -->
+    </div>
+</div>
+
+<div id="modal-all-modul" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+
+@if (MenuIcon != null)
+{
+    foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in MenuIcon)
+    {
+        <script>
+            $(function () {
+                $('#' + '@menuIconItem.menu_name').click(function () {
+                    $.ajax({
+                        url: "@Url.Action(menuIconItem.menu_action, menuIconItem.menu_controller)",
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div class="modal-dialog modal-lg">' +
+                                        '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#modal-all-modul').html(img);
+                        },
+                        success: function (data) {
+                            $('#modal-all-modul').html(data);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+}
+@if (ButtonPrinScan != null)
+{
+    if ((string)ViewBag.WfStatus == "WFS07" || (string)ViewBag.WfStatus == "WFS08")
+    {
+        ButtonPrinScan = DKUPPU.DAL.MstMenuDAL.GetButtonPrintAndScant(User.Identity.Name, "MN04", (string)ViewBag.WfStatus);
+        foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)ButtonPrinScan.OrderBy(a => a.menu_order))
+        {
+            <script>
+                $('#@Html.DisplayFor(a => menuIconItem.menu_name)').click(function () {
+                    var wfstatus = $(this).attr("data-status");
+                    var menu_name = $(this).attr("data-name");
+                    var srcValue = "";
+                    $.ajax({
+                        url: "@Url.Action(menuIconItem.menu_action, menuIconItem.menu_controller)",
+                        data: {
+                            wfStatus: wfstatus
+                        },
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div>' +
+                                        '<div><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#render-body').html(img);
+                        },
+                        success: function (data) {
+                            $('#render-body').html(data);
+                        }
+                    });
+                });
+            </script>
+        }
+    }
+}
+@if (ViewBag.IsInternal == true)
+{
+    <script type="text/javascript">
+        $(function () {
+
+            /* button search */
+            var propertyOrder = "InvoiceDate";
+            var isDescending = "False";
+            $('#src-lecense').click(function () {
+                var srcValue = $('#search-value-index').val();
+                var wfStatus = $('#list-license').attr("data-wf");
+                var menuParent = "@ViewBag.MenuParent";
+                getListData(menuParent, wfStatus, 1, 10, srcValue, propertyOrder, isDescending);
+            });
+            $('#pagination-applicant').on("click", "li.page", function (e) {
+                var page = $(this).attr('link');
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                var menuParent = "@ViewBag.MenuParent";
+                getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#table-applicant>thead>tr>th').click(function (e) {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                var menuParent = "@ViewBag.MenuParent";
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-applicant>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            function getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending) {
+                $.ajax({
+                    url: '@Url.Action("GetApplicantByWfStatusInternalReturnJson", "AJAX")',
+                    data: {
+                        menuParent: menuParent,
+                        wfStatus: wfStatus,
+                        page: page,
+                        pageSize: pageSize,
+                        srcValue: srcValue,
+                        propertyOrder: propertyOrder,
+                        isDescending: isDescending
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#table-list').after(img);
+                    },
+                    success: function (data) {
+                        var table_row = '';
+                        $.each(data.dataTable, function (i, value) {
+                            table_row += '<tr>';
+                            table_row += '<td>' + value.RegNo + '</td>';
+                            if (value.FormUrl != undefined) {
+                                table_row += '<td><a href=' + value.FormUrl + '>' + value.NIK + '</a></td>';
+                            } else {
+                                table_row += '<td>' + value.NIK + '</td>';
+                            }
+                            table_row += '<td>' + value.IdentityType + '</td>';
+                            table_row += '<td>' + value.FullName + '</td>';
+                            table_row += '<td>' + value.LicenseName + '</td>';
+                            table_row += '<td>' + value.Job + '</td>';
+                            table_row += '<td>' + value.OrgName + '</td>';
+                            table_row += '<td>' + value.Nationality + '</td>';
+                            if (value.PaymentStatus == "UNPAID") {
+                                table_row += '<td><span class="label label-warning arrowed">Unpaid</span></td>'
+                            }
+                            else {
+                                table_row += '<td><span class="label label-primary arrowed">Paid</span></td>';
+                            }
+                            table_row += '<td>' + value.InvoiceNumber + '</td>';
+                            table_row += '<td>' + value.ExpiredDate + '</td>';
+                            table_row += '</tr>';
+                        });
+                        $('#applicant-list-data').html(table_row);
+                        $('#pagination-applicant').html(data.pagination);
+                        $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                });
+            }
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(function () {
+            /* button search */
+            var propertyOrder = "CreateDate";
+            var isDescending = "True";
+            $('#src-lecense').click(function () {
+                var srcValue = $('#search-value-index').val();
+                var wfStatus = $('#list-license').attr("data-wf");
+                var menuParent = "@ViewBag.MenuParent";
+                getListData(menuParent, wfStatus, 1, 10, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#pagination-applicant').on("click", "li.page", function (e) {
+                var page = $(this).attr('link');
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                var menuParent = "@ViewBag.MenuParent";
+                getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#table-applicant>thead>tr>th').click(function (e) {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                var menuParent = "@ViewBag.MenuParent";
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-applicant>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            function getListData(menuParent, wfStatus, page, pageSize, srcValue, propertyOrder, isDescending) {
+                $.ajax({
+                    url: '@Url.Action("GetApplicantByWfStatusExternalReturnJson", "AJAX")',
+                    data: {
+                        menuParent: menuParent,
+                        wfStatus: wfStatus,
+                        page: page,
+                        pageSize: pageSize,
+                        srcValue: srcValue,
+                        propertyOrder: propertyOrder,
+                        isDescending: isDescending
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#table-list').after(img);
+                    },
+                    success: function (data) {
+                        var table_row = '';
+                        $.each(data.dataTable, function (i, value) {
+                            table_row += '<tr>';
+                            table_row += '<td>' + value.RegNo + '</td>';
+                            if (value.FormUrl != undefined) {
+                                table_row += '<td><a href=' + value.FormUrl + '>' + value.NIK + '</a></td>';
+                            } else {
+                                table_row += '<td>' + value.NIK + '</td>';
+                            }
+                            table_row += '<td>' + value.IdentityType + '</td>';
+                            table_row += '<td>' + value.FullName + '</td>';
+                            table_row += '<td>' + value.LicenseName + '</td>';
+                            table_row += '<td>' + value.Job + '</td>';
+                            table_row += '<td>' + value.Nationality + '</td>';
+                            if (value.PaymentStatus == "UNPAID") {
+                                table_row += '<td><span class="label label-warning arrowed">Unpaid</span></td>'
+                            }
+                            else {
+                                table_row += '<td><span class="label label-primary arrowed">Paid</span></td>';
+                            }
+                            table_row += '<td>' + value.InvoiceNumber + '</td>';
+                            table_row += '<td>' + value.ExpiredDate + '</td>';
+                            table_row += '</tr>';
+                        });
+                        $('#applicant-list-data').html(table_row);
+                        $('#pagination-applicant').html(data.pagination);
+                        $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                });
+            }
+        });
+    </script>
+}
+

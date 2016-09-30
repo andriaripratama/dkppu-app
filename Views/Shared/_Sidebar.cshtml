@@ -1,0 +1,117 @@
+﻿@{
+    List<DKUPPU.ViewModels.MstMenuViewModel> MenuSidebar = new List<DKUPPU.ViewModels.MstMenuViewModel>();
+}
+<!-- User info -->
+<div class="login-info" style="background-color:#333333">
+    <span>
+        <!-- User image size is adjusted inside CSS, it should stay as it -->
+
+        <a href="javascript:void(0);" id="show-shortcut" data-action="toggleShortcut">
+            @{
+                var photo = Url.Action("ImageUser", "Account");
+                var user = DKUPPU.DAL.UserManagementDAL.GetCurrentUser(User.Identity.Name);
+                if (photo == null)
+                {
+                    <img src="~/Images/pilot.png" alt="me" class="online" />
+                }
+                else
+                {
+                    <img src="@photo" alt="me" class="online" />
+                }
+                if (user != null)
+                {
+                    <span>@user.FullName</span>
+                }
+                else
+                {
+                    <span></span>
+                }
+            }
+        </a>
+
+    </span>
+</div>
+<!-- end user info -->
+<!-- NAVIGATION : This navigation is also responsive-->
+<nav style="background-color:#333333">
+    @if (User.Identity.Name != null)
+    {
+        MenuSidebar = DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name, "MN01");
+        <ul>
+            @foreach (DKUPPU.ViewModels.MstMenuViewModel sidebarItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)MenuSidebar)
+            {
+                <li class="active open">
+                    <a href="#">
+                        <i class="fa fa-lg fa-fw fa-@sidebarItem.menu_icon"></i>
+                        <span class="menu-item-parent">@sidebarItem.menu_title</span>
+                    </a>
+                    @if (sidebarItem.ChildMenu != null)
+                    {
+                        var childMenu = sidebarItem.ChildMenu;
+                        <ul style="background-color:#333333; display: block;">
+                            @foreach (DKUPPU.ViewModels.MstMenuViewModel item in childMenu.OrderBy(x => x.menu_order))
+                            {
+                                string url = "#";
+                                if (item.menu_action != "AJAX")
+                                { url = Url.Action(item.menu_action, item.menu_controller); }
+                                <li id="@Html.DisplayFor(m=>item.menu_params)" class="@Html.DisplayFor(m => sidebarItem.menu_name)" data-name="@item.menu_name" style="background-color:#333333">
+                                    <a href="@url">
+                                        @item.menu_title
+                                        @if (item.count_notification != null && item.count_notification > 0)
+                                        {
+                                            <span class="badge pull-right inbox-badge bg-color-orange">@item.count_notification</span>
+                                        }
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
+                </li>
+            }
+        </ul>
+    }
+
+</nav>
+<span class="minifyme" data-action="minifyMenu" style="background-color:#333333">
+    <i class="fa fa-arrow-circle-left hit"></i>
+</span>
+@if (MenuSidebar != null)
+{
+    foreach (DKUPPU.ViewModels.MstMenuViewModel item in MenuSidebar.Where(a => a.menu_action != null && a.menu_controller != null))
+    {
+        <script>
+            $(function () {
+                $('.' + '@item.menu_name').click(function () {
+                    var wfstatus = $(this).attr("id");
+                    var menu_name = $(this).attr("data-name");
+                    var srcValue = "";
+                    var total_data = $(this).find('span').html();
+
+                    if (typeof (total_data) == 'undefined' || total_data == null) {
+                        total_data = -1;
+                    }
+
+                    $.ajax({
+                        url: "@Url.Action(item.menu_action, item.menu_controller)",
+                        data: {
+                            wfStatus: wfstatus,
+                            totalData: total_data
+                        },
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div>' +
+                                        '<div><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#render-body').html(img);
+                        },
+                        success: function (data) {
+                            $('#render-body').html(data);
+
+                            if (wfstatus == 'WFS05') $("#" + wfstatus).find('span').remove();
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+}

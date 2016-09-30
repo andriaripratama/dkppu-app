@@ -1,0 +1,111 @@
+﻿@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal" id="add-license-applicant">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="LicenseType">Year</label>
+                <div class="col-md-5">
+                    @Html.DropDownList("year", (IEnumerable<SelectListItem>)ViewBag.YearList, "Select Year", new { @class = "form-control required-value" })
+                </div>
+                <div class="col-md-5">
+                    <button id="ok-dashboard" class="btn btn-primary btn-sm">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="grafik-idWfStatus">
+        </div>
+    </div>
+</div>
+<div class="row" style="padding-top:20px">
+    <div class="col-xs-12">
+        <a href="@Url.Action("Index","Dashboard")" class="btn btn-sm btn-default pull-right">Back</a>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#ok-dashboard').click(function () {
+            var year = $('#year').val();
+            getListData(year);
+        });
+        function getListData(year) {
+            $.ajax({
+                url: '@Url.Action("GetLicenseByYear", "Dashboard")',
+                data: {
+                    year: year
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-idWfStatus').append(img);
+                },
+                success: function (data) {
+                    var label = [];
+                    var total = [];
+                    $.each(data.data, function (i, data) {
+                        label[i] = data.name;
+                        total[i] = data.y;
+                    });
+                    $('#grafik-idWfStatus').highcharts({
+                        chart: {
+                            zoomType: 'xy',
+                            margin: 75,
+                        },
+                        title: {
+                            text: 'Grafik License in (' + data.year + ')'
+                        },
+                        xAxis: {
+                            categories: label,
+                            title: {
+                                text: null
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total',
+                                align: 'center'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        plotOptions: {
+                            column: {
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                depth: 25
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        legend: {
+                            itemStyle: { "display": "none" }
+                        },
+                        series: [{
+                            name: 'License',
+                            type: 'column',
+                            data: total
+                        }, {
+                            name: 'License',
+                            type: 'line',
+                            data: total
+                        }]
+                    });
+                    $('.loader').remove();
+                }
+            });
+        }
+    });
+</script>

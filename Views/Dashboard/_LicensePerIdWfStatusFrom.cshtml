@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal" id="add-license-applicant">
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="LicenseType">License Type</label>
+                <div class="col-md-5">
+                    @Html.DropDownList("license_type", (IEnumerable<SelectListItem>)ViewBag.LicenseType, "Select License Type", new { @class = "form-control required-value" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label" for="LicenseType">License Name</label>
+                <div class="col-md-5">
+                    @Html.DropDownList("sop_type", (IEnumerable<SelectListItem>)ViewBag.SOPType, "Select License Name", new { @class = "form-control required-value" })
+                </div>
+                <div class="col-md-5">
+                    <button id="ok-dashboard" class="btn btn-primary btn-sm">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12">
+        <div id="grafik-idWfStatus">
+        </div>
+    </div>
+</div>
+<div class="row" style="padding-top:20px">
+    <div class="col-xs-12">
+        <a href="@Url.Action("Index","Dashboard")" class="btn btn-sm btn-default pull-right">Back</a>
+    </div>
+</div>
+<script>
+    $(function () {
+        //license_type
+        $('#license_type').change(function () {
+            $('#sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetSOPTypeByLicenseType", "Home")',
+                data: {
+                    id_license_type: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#sop_type').empty();
+                    $('#sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#sop_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+        $('#ok-dashboard').click(function () {
+            var id_sop_type = $('#sop_type').val();
+            getListData(id_sop_type);
+        });
+        function getListData(id_sop_type) {
+            $.ajax({
+                url: '@Url.Action("GetLicensePerIdWfStatus", "Dashboard")',
+                data: {
+                    id_sop_type: id_sop_type
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-idWfStatus').append(img);
+                },
+                success: function (data) {
+                    var label = [];
+                    var total = [];
+                    $.each(data, function (i, data) {
+                        label[i] = data.lookup_value;
+                        total[i] = data.total;
+                    });
+                    $('#grafik-idWfStatus').highcharts({
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie',
+                            options3d: {
+                                enabled: true,
+                                alpha: 45,
+                                beta: 0
+                            }
+                        },
+                        title: {
+                            text: 'Grafik ' + data.sop_name + ' Per Status'
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                depth: 35,
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        series: [{
+                            name: data.sop_name,
+                            colorByPoint: true,
+                            data: data.data
+                        }]
+                    });
+                    $('.loader').remove();
+                }
+            });
+        }
+    });
+</script>

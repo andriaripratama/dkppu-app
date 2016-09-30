@@ -1,0 +1,59 @@
+﻿@model DKUPPU.ViewModels.MortageRecord
+
+<div class="form-group">
+    <label class="col-md-3 control-label text-left">
+        @Html.LabelFor(model => model.Mortage_Document)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Mortage_Document, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label text-left">
+        @Html.LabelFor(model => model.Name_Mortgage1)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Name_Mortgage1, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label text-center">
+        @Html.LabelFor(model => model.Address1)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Address1, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label text-left">
+        @Html.LabelFor(model => model.Name_Mortgage2)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Name_Mortgage2, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label text-center">
+        @Html.LabelFor(model => model.Address2)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Address2, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<br />
+<div class="form-group">
+    <label class="col-md-3 control-label text-left">
+        @Html.LabelFor(model => model.Reference_Mortgage)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.Reference_Mortgage, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-3 control-label text-left">
+        @Html.LabelFor(model => model.Date)
+    </label>
+    <div class="col-md-2">
+        <input name="MortageRecord.Date" id="MortageRecord.Date" class="form-control date-picker required-value" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.Date)" required />
+    </div>
+</div>

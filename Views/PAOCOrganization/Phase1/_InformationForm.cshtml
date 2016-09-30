@@ -1,0 +1,99 @@
+﻿@model DKUPPU.ViewModels.TrxOrganizationInitialCerViewModel
+
+@{
+    Layout = null;
+
+    bool isInformationDisable = ViewBag.IsInformationDisable == null ? false : (ViewBag.IsInformationDisable ? true : false);
+    string tagInformationDisable = ViewBag.IsInformationDisable == null ? string.Empty : (ViewBag.IsInformationDisable ? "disabled = 'disabled'" : string.Empty);
+    string tagInformationHide = ViewBag.IsInformationDisable == null ? string.Empty : (ViewBag.IsInformationDisable ? "hidden='hidden'" : string.Empty);
+}
+
+<div class="form-horizontal">
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.porpose_startup_date)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.porpose_startup_date, "datetime", "TrxOrganizationInitialCerViewModel.porpose_startup_date", isInformationDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled", @name = "TrxOrganizationInitialCerViewModel.porpose_startup_date" } } : (object)new { htmlAttributes = new { @class = "form-control date-picker" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.porpose_type_operation)
+        </label>
+        <div class="col-md-8">
+            <section>
+                <div class="inline-group">
+                    @foreach (var item in Model.ListOfPorposeTypeOperation)
+                    {
+                        <label class="radio radio-inline">
+                            <input type="radio" name="TrxOrganizationInitialCerViewModel.porpose_type_operation" value="@item.id_lookup" @tagInformationDisable @(item.id_lookup == Model.porpose_type_operation ? "checked='checked'" : "")>
+                            <i></i>@item.lookup_value
+                        </label>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.id_airline_type)
+        </label>
+        <div class="col-md-8">
+            @Html.DropDownList("TrxOrganizationInitialCerViewModel.id_airline_type", Model.ListOfAirlinesType, "Select Airlines Type", isInformationDisable ? (object)new { @class = "form-control", @disabled = "disabled" } : (object)new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="row form-group" @tagInformationHide>
+        <label class="col-md-4 control-label text-left">
+            &nbsp;
+        </label>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <a id="addAirlineTypeDetail" role="button" class="btn btn-primary btn-xs disabled"><i class="fa fa-plus"></i></a>
+            </div><br />
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            &nbsp;
+        </label>
+        <div class="col-md-8">
+            @Html.Partial("../PAOCOrganization/Phase1/_AirlineTypeDetailForm", Model.ListOfTrxOrganizationAirlineType)
+        </div>
+    </div>
+    <div class="row form-group" @tagInformationHide>
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.ListOfTrxOrganizationAircraftType)
+        </label>
+        <div class="col-md-8">
+            <div class="pull-right">
+                <a id="addAircraftTypeModel" role="button" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+            </div><br />
+        </div>
+    </div>
+    <div class="row form-group">
+        @if (isInformationDisable)
+        {
+            <label class="col-md-4 control-label text-left">
+                @Html.LabelFor(model => model.ListOfTrxOrganizationAircraftType)
+            </label>
+        }
+        else
+        {
+            <label class="col-md-4 control-label text-left">
+                &nbsp;
+            </label>
+        }
+        <div class="col-md-8">
+            @Html.Partial("../PAOCOrganization/Phase1/_AircraftTypeModelForm", Model.ListOfTrxOrganizationAircraftType)
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.main_base)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.main_base, "text", "TrxOrganizationInitialCerViewModel.main_base", isInformationDisable ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+</div>

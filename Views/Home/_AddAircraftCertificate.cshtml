@@ -1,0 +1,90 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Add Aircraft Certificate</h4>
+        </div>
+        <div class="modal-body" id="add-aircraft-form">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">Certification Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("aircraft_certificate_type", (IEnumerable<SelectListItem>)ViewBag.CertificateType, "Select Certification Type", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">SOP Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("aircraft_sop_type", (IEnumerable<SelectListItem>)ViewBag.SOPType, "Select SOP Type", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2"></label>
+                    <div class="col-md-5">
+                        <input class="form-control" id="search-value" name="search-value" placeholder="Search" />
+                    </div>
+                    <div class="col-md-5">
+                        <button id="add-aircraft" class="btn btn-primary btn-sm">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="list-aircraft-add">
+
+            </div>
+        </div>
+    </div>
+    <div id="submit-loader"></div>
+</div>
+<script>
+    $(function () {
+        $('#add-aircraft').click(function () {
+            var certificate_type = $("#aircraft_certificate_type").val();
+            var sop_type = $('#aircraft_sop_type').val();
+            addForm(sop_type);
+        });
+
+        //license_type
+        $('#aircraft_certificate_type').change(function () {
+            $('#aircraft_sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetSOPTypeByLicenseType", "Home")',
+                data: {
+                    id_license_type: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#aircraft_sop_type').empty();
+                    $('#aircraft_sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#aircraft_sop_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        function addForm(certificate_type, sop_type) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetNewAirCraftForm", "Home")',
+                data: {
+                    id_sop_type: sop_type,
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #FFF;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                    $('#add-aircraft-form').html(img);
+                },
+                success: function (response) {
+                    window.location.href = response.Url;
+                }
+            });
+        }
+    });
+</script>

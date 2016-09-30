@@ -1,0 +1,591 @@
+﻿@model DKUPPU.ViewModels.PPPAircraftRegisterFormViewModel
+@{
+    ViewBag.Title = "Persetujuan Pengadaan Pesawat";
+}
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        
+            <hr class="simple">
+        <div>
+            <fieldset>
+                <div id="aircraft-applicant">
+                    @Html.Partial("../MstRegisterForm/_DataOrganizationForm", Model.MstOrganizationViewModel)
+                </div>
+            </fieldset>
+        </div>
+            <!--Data Applicant Begin-->
+            @*@Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.id_trx_license)*@
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.id_trx_aircraft)
+                @Html.HiddenFor(model => model.id_aircraft_certificate)
+                @Html.HiddenFor(model => model.id_aircraft_model)
+                @Html.HiddenFor(model => model.id_license_type)
+                @Html.HiddenFor(model => model.id_sop_type)
+
+                <div>
+                    <br />
+                    <ul id="myTab1" class="nav nav-tabs bordered">
+                        <li class="active">
+                            <a href="#s1" data-toggle="tab"><i class="glyphicon glyphicon-th-large"></i> Application Information</a>
+                        </li>
+                        <li>
+                            <a href="#s2" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft Information</a>
+                        </li>
+                        <li>
+                            <a href="#s3" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft Transportation Information</a>
+                        </li>
+                        <li>
+                            <a href="#s4" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Human Resource</a>
+                        </li>
+                        <li>
+                            <a href="#s5" data-toggle="tab"><i class="glyphicon glyphicon-book"></i> Document </a>
+                        </li>
+                    </ul>
+                    <div id="myTabContent1" class="tab-content padding-10">
+                        <div class="tab-pane fade in active" id="s1">                     
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        1.Applicant Data
+                                    </legend>
+                                    <div id="aircraft-applicant">
+                                        @Html.Partial("../TrxAircraft/RegisterForm/_RegisterApplicantDataForm", Model.RegisterApplicantData)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="form-group">
+                               <br />
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        2. Purpose Properement or aircraft
+                                    </legend>
+                                    <div id="aircraft-data">
+                                        @Html.Partial("../TrxRegisterForm/_PurposeProcurementofAircraft", Model.PurposeProcurementViewModel)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <br />
+                            <div>
+                                <fieldset>
+                                    <b>
+                                        The number and type of aircraft operated in accordance opspec/acl lasst revision owned for AOC holder /OC/PSC
+                                    </b>
+                                    <div id="aircraft-data">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label text-left">
+                                                @Html.LabelFor(model => model.Aircraft_type.no_type_owned)
+                                            </label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.Aircraft_type.no_type_owned, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label text-left">
+                                                @Html.LabelFor(model => model.Aircraft_type.no_type_controlled)
+                                            </label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.Aircraft_type.no_type_controlled, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <br />
+                            <div>
+                                <fieldset>
+                                    <b>
+                                        The number and type of aircraft operated in accordance opspec/acl lasst revision owned for AOC holder /OC/PSC
+                                    </b>
+                                    <div id="aircraft-data">
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label text-left">
+                                                @Html.LabelFor(model => model.Aircraft_type.demand_estimates_target)
+                                            </label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.Aircraft_type.demand_estimates_target, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label text-left">
+                                                @Html.LabelFor(model => model.Aircraft_type.plan_approval)
+                                            </label>
+                                            <div class="col-md-7">
+                                                @Html.EditorFor(model => model.Aircraft_type.plan_approval, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <br />
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-5 control-label text-left">
+                                                @Html.LabelFor(model => model.Aircraft_type.financial_statment)
+                                            </label>
+                                            <div class="col-md-7">
+                                                <input type="file" class="control-label text-left" name="model.financial_statment" id="model.financial_statment" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <br />
+                            <div>
+                                <fieldset>
+                                    <b>
+                                        Facilities & Basic Aircraft
+                                    </b>
+                                    <div id="aircraft-data">
+                                        @Html.Partial("../MstRegisterForm/_FasiliesResisterForm", Model.fasilitiesregister)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <b>
+                                        Safety Aspect
+                                    </b>
+                                    <br />
+                                    <div id="aircraft-data">
+                                        @Html.Partial("../MstRegisterForm/_SafetyAspectForm", Model.MstSafetyAspectForm)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <b>
+                                        Other Information
+                                    </b>
+                                    <div id="aircraft-data">
+                                        <br />
+                                        @Html.TextAreaFor(model => model.RegisterApplicantData.description, new { @class = "form-control required-value", @cols = 30, @rows = 4 })
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade" id="s2">
+                            <div class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.validation_tcn)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.validation_tcn, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.id_manufacture)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @{
+                                        int j = 0;
+                                        string vreadonly = "";
+                                        string vrequered = "";
+                                        string datepicker = "";
+                                        string from_date = "";
+                                        string until_date = "";
+                                        }
+                                        @Html.DropDownList("Aircraft_data[" + j.ToString() + "].id_manufacture", (IEnumerable<SelectListItem>)ViewBag.manufacturer_name, "Select Manufacture", new { @class = "form-control required-value aircraft_type", id = "Aircraft_data_" + j.ToString() + "_id_manufacture" })
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.aircraft_type)
+                                    </label>
+                                    <div class="col-md-5">
+
+
+                                        @Html.DropDownList("Aircraft_data[" + j.ToString() + "].aircraft_type", (IEnumerable<SelectListItem>)ViewBag.DropAircraft, "Select Aircraft", new { @class = "form-control required-value aircraft_type", id = "Aircraft_data_" + j.ToString() + "__aircraft_type" })
+
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.id_aircraft_model)
+                                    </label>
+                                    <div class="col-md-5">
+                                        <div class="inline-group">
+                                            <label class="radio-inline">
+                                                <input type="radio" name="radio-model" checked="checked">
+                                                <i></i>Fixed Wing
+                                            </label>
+                                            <label class="radio-inline">
+                                                <input type="radio" name="radio-model">
+                                                <i></i>Helicopter
+                                            </label>
+                                            <label class="radio radio-inline">
+                                                <input type="radio" name="radio-model">
+                                                <i></i>Other
+                                                @Html.TextBoxFor(model => model.id_aircraft_model, new { htmlAttributes = new { @class = "form-control col-sm-2" } })
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.aircraft_category)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.aircraft_category, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.serial_number)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.serial_number, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.year_of_production)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.year_of_production, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.TypeTotalEngine)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.TypeTotalEngine, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.TypeNumberProppeler)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.TypeNumberProppeler, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.seats)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.seats, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.amount_pilot)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.amount_pilot, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.flight_endurence)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.flight_endurence, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.takeoff_weight)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.takeoff_weight, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.landing_weight)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.landing_weight, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.fuilfillment_equipment)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.fuilfillment_equipment, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.fuilfillment)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_data.fuilfillment, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_data.description)
+                                    </label>
+                                    <br />
+
+                                    <div class="col-md-5">
+                                        @Html.TextAreaFor(model => model.Aircraft_data.description, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="s3">
+                            <div class="form-horizontal">
+
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_type.demand_estimates)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_type.demand_estimates, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_type.plan_approval)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_type.plan_approval, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-4 control-label text-left">
+                                        @Html.LabelFor(model => model.Aircraft_type.financial_report)
+                                    </label>
+                                    <div class="col-md-5">
+                                        @Html.EditorFor(model => model.Aircraft_type.financial_report, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+
+                                <!--Aircraft Utilization-->
+                                <fieldset>
+                                    <legend>
+                                        Aircraft Utilization
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-aircraft-utilization"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-aircraft-utilization"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="aircraft-utilization">
+                                        @Html.Partial("../TrxRegisterForm/_AircraftUtilization", Model.AircraftUtilizationViewModel)
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        Total Crews
+                                    </legend>
+                                    <div id="">
+                                        @Html.Partial("../MstRegisterForm/_TotalCrewsRegisterForm", Model.TotalCrewViewModel)
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        Utilization Crews
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-crew-utilization"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-crew-utilization"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="crew-utilization">
+                                        @Html.Partial("../TrxRegisterForm/_AircraftUtilizationCrew", Model.AircraftUtilizationCrewViewModel)
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+
+
+                        <div class="tab-pane fade" id="s4">
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        List of Pilot Personnel
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-list-pilot"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-list-pilot"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="list-pilot">
+                                        @Html.Partial("../MstRegisterForm/_ListOfPilotPersonel", Model.ListOfPilotPersonnel)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        List of Engineering & Maintenance Personnel
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-list-engineering"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-list-engineering"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="list-engineering">
+                                        @Html.Partial("../MstRegisterForm/_ListOfEngineeringMaintenancePersonel", Model.ListOfEngineering)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        List of Flight Attendant Personnel
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-list-flight"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-list-flight"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="list-flight">
+                                        @Html.Partial("../MstRegisterForm/_ListOfFlightAttendantPersonnel", Model.ListOfFlight)
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div>
+                                <fieldset>
+                                    <legend>
+                                        List of Flight Attendant Personnel
+                                        <a class="pull-right btn btn-primary btn-xs" id="add-list-foo"><i class="fa fa-plus"></i></a>
+                                        <a class="pull-right btn btn-danger btn-xs remove-list-foo"><i class="fa fa-trash-o"></i></a>
+                                    </legend>
+                                    <div id="list-foo">
+                                        @Html.Partial("../MstRegisterForm/_ListFOOPersonnel", Model.ListOfFoo)
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+
+
+                        <div class="tab-pane fade" id="s5">
+
+                            <div class="form-horizontal">
+
+
+                                <div class="form-group">
+
+                                </div>
+
+
+                                <div class="form-group">
+
+                                    <div class="col-md-5">
+                                        <fieldset>
+                                            <legend>Upload Document</legend>
+                                            @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                                        </fieldset>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="row col-md-12">
+
+                    <div id="error" class="col-md-12">
+                        <input type="checkbox" required="required" />
+                        I hereby certify that the information above given are correct and the undersigned will comply what Republic of Indonesia Avoation Law Number 1 Year 2009 and other applicable regulations
+                        <br />
+                        <br />
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" type="submit"> Submit </button>
+                    <a href="#" class="btn btn-danger"> Back </a>
+                </div>
+            }
+
+
+</div>
+        <script>
+            $(function () {
+                // datepicker
+                $('.date-picker').datepicker({
+                    //options
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    //...
+                });
+            });
+
+            $('form').submit(function () {
+                //return false;
+                var hasError = 0;
+                $form = $('form:first');
+
+                //validasi file type
+                $.each($form.find('input[type="file"]'), function (i, val) {
+                    if (!FileValidation($(this))) {
+                        hasError = hasError + 1;
+                    }
+                    if (!FileSize($(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                //validasi is required
+                //$.each($form.find('.required-value'), function (i, val) {
+                //    if (!IsRequired($(this))) {
+                //        hasError = hasError + 1;
+                //    }
+                //});
+                //$.each($form.find('.required-value-dropdown'), function (i, val) {
+                //    if (!IsRequired($(this))) {
+                //        hasError = hasError + 1;
+                //    }
+                //});
+
+                //validasi numeric
+
+                //validasi date form - until
+                if (!FromUntilValidate()) {
+                    hasError = hasError + 1;
+                }
+                $.each($form.find('.from-date'), function (i, val) {
+                    var suffix = parseInt($(this).attr('id').match(/\d+/));
+                    var objec_until = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__until_date');
+                    if (!FromUntilValidate($(this), objec_until)) {
+                        hasError = hasError + 1;
+                    }
+                });
+                $.each($form.find('.until-date'), function (i, val) {
+                    var suffix = parseInt($(this).attr('id').match(/\d+/));
+                    var objec_from = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__from_date');
+                    if (!FromUntilValidate(objec_from, $(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                //if hasError has value more than 0 that return false
+                if (hasError > 0) {
+                    return false;
+                }
+                //return false;
+            });
+
+        </script>

@@ -1,0 +1,31 @@
+﻿@model DKUPPU.ViewModels.MstLookupViewModel
+@{
+    Layout = null;
+}
+<table class="table table-striped">
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.id_lookup)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.id_lookup)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.lookup_group)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.lookup_group)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.lookup_abbr)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.lookup_abbr)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.lookup_value)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.lookup_value)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.is_active)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.is_active)</td>
+    </tr>
+</table>

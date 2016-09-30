@@ -1,0 +1,45 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox">
+    </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_phase)
+
+            <div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase1/_InformationForm", Model.TrxOrganizationInitialCerViewModel)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Formal Application Letter</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase2/_FormalApplicationLetterForm", Model.TrxOrganizationAppLetterViewModel)
+                <fieldset>
+                    <legend>Formal Application Attachments</legend>
+                    @Html.Partial("../PAOCOrganization/Phase1/_DocUploadRegisterForm", Model.ListOfMstOrganizationDocument)
+                </fieldset>
+                <div id="error" class="row form-group">
+                    <div class="col-md-8">
+                        <input type="checkbox" required="required" />
+                        I hereby certify that the above information given are true and correct
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" value="submit" name="btn_submit" type="submit">Submit</button>
+                    <button class="btn btn-default" id="id_save" value="save" name="btn_submit" type="submit">Save</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

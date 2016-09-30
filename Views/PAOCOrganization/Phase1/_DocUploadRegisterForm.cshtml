@@ -1,0 +1,36 @@
+﻿@model List<DKUPPU.ViewModels.MstOrganizationDocumentViewModel>
+@{
+    Layout = null;
+    string required = "";
+    string bintang = "";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @{
+                int i = 0;
+            }
+            
+            @foreach (DKUPPU.ViewModels.MstOrganizationDocumentViewModel item in Model)
+            {
+                required = "";
+                bintang = "";
+                
+                if (item.is_mandatory)
+                {
+                    required = "required-value";
+                    bintang = "*";
+                }
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-left" for="sertificate_no">@Html.DisplayFor(m => m[i].label_name) @bintang</label>
+                    <div class="col-md-4">
+                        <input type="file" class="form-control btn btn-default @required" data-validation="@required" name="[@i].File" id="@i.ToString()__File" />
+                        <input type="hidden" name="ListOfMstOrganizationDocument[@i].id_doc_category" id="ListOfMstOrganizationDocument_@i.ToString()__id_doc_category" value="@Html.DisplayFor(m => m[i].id_doc_category)" />
+                    </div>
+                </div>
+                
+                i++;    
+            }
+        </div>
+    </div>
+</div>

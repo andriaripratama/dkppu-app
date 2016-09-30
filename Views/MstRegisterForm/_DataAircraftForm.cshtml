@@ -1,0 +1,60 @@
+﻿@model DKUPPU.ViewModels.MstAircraftViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-6">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.organization_name)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.organization_name)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.address)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.address)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.postal_code)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.postal_code)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.province)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.province)</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-6">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.telp)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.telp)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.fax)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.fax)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.web)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.web)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.email)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.email)</td>
+            </tr>           
+        </table>
+        <table>
+            <tr>
+                <td class="col-xs-6">@Html.DisplayNameFor(modelItem => modelItem.registration_date)</td>
+                <td class="col-xs-6">@Html.DisplayFor(modelItem => modelItem.registration_date)</td>
+            </tr>
+        </table>
+    </div>
+</div>

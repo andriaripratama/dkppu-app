@@ -1,0 +1,358 @@
+﻿@model DKUPPU.ViewModels.WTIRegisterFormViewModel
+@{
+    ViewBag.Title = "Written Exam Register";
+}
+
+<script>
+    window.hasError = 0;
+</script>
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Register Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                @Html.HiddenFor(model => model.id_trx_license)
+                @Html.HiddenFor(model => model.id_applicant)
+                @Html.HiddenFor(model => model.id_license_category)
+                @Html.HiddenFor(model => model.id_license_type)
+                @Html.HiddenFor(model => model.id_sop_type)
+                @Html.HiddenFor(model => model.is_have_exam)
+
+                @*@Html.HiddenFor(model => model.TrxLicWrittenExamViewModel.license_type)
+                    @Html.HiddenFor(model => model.TrxLicWrittenExamViewModel.exam_type)*@
+
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset>
+                            <legend>License Detail</legend>
+                            @Html.DisplayFor(model => model.id_sop_type_value)
+                        </fieldset>
+                    </div>
+                </div>
+                @*<div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-md-2 text-left"></label>
+                            <div class="col-md-10">
+                                @{ string vchecked = ""; }
+                                @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.license_type_exam)
+                                {
+                                    vchecked = "";
+                                    if (item.id_lookup == Model.TrxLicWrittenExamViewModel.license_type) { vchecked = "checked"; }
+                                    <label class="radio radio-inline">
+                                        <input id="TrxLicWrittenExamViewModel.license_type" type="radio" class="radio-license-type-exam radiobox" name="license_type" value="@Html.DisplayFor(a=>item.id_lookup)" @vchecked disabled />
+                                        <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                                    </label>
+                                }
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div style="margin-bottom:20px"></div>
+                <div>
+                    @Html.Partial("../MstRegisterForm/_WrittenExamForm", Model.TrxLicWrittenExamViewModel)
+                    @*@if (!(Model.TrxLicWrittenExamViewModel.exam_type == null || Model.TrxLicWrittenExamViewModel.exam_type == ""))
+                        {
+                            <script>
+                                $(function () {
+                                    $('#TrxLicWrittenExamViewModel_exam_type option[value=@Model.TrxLicWrittenExamViewModel.exam_type]').attr('selected', 'selected');
+                                })
+                            </script>
+                        }*@
+                </div>
+                <div style="margin-bottom:20px"></div>
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-2 control-label text-left" for="exam">Have Exam before</label>
+                        <div class="col-md-5">
+                            <label class="checkbox checkbox-inline">
+                                <input type="checkbox" id="cbx_is_have_exam" class="have-exam">yes &nbsp;
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div id="InputScore" style="display:none;">
+                    <fieldset>
+                        <legend>Input Score Per Subject</legend>
+                        @Html.Partial("../MstRegisterForm/_WrittenExamResultForm", Model.TrxLicWrittenExamResultViewModel)
+                    </fieldset>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset>
+                            <legend>Upload Document</legend>
+                            @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div id="error">
+                    <input type="checkbox" id="checkbox-disclaimer" />
+                    I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+
+            <!--End Form-->
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+
+        $('#cbx_is_have_exam').click(function () {
+            if ($(this).is(':checked')) {
+                $('#InputScore').show();
+                $('#is_have_exam').val(true);
+                $('.result-value').addClass('required-value');
+                $('.result-value').attr('required', 'required');
+            } else {
+                $('#InputScore').hide();
+                $('.result-value').removeClass('required-value');
+                $('.result-value').removeAttr('required');
+                $('#is_have_exam').val(false);
+            }
+        });
+
+        $('#TrxLicWrittenExamViewModel_is_have_license').click(function () {
+            if ($(this).is(':checked')) {
+                $('#is_have_license').val(true);
+                $('#TrxLicWrittenExamViewModel_license_name').removeAttr('disabled');
+            } else {
+                $('#TrxLicWrittenExamViewModel_license_name').attr('disabled', 'disabled');
+                $('#is_have_license').val(false);
+            }
+        });
+
+        $('.radio-license-type-exam').click(function () {
+            $.ajax({
+                url: '@Url.Action("GetExamTypeList", "AJAX")',
+                data: {
+                    lookup_group: $(this).val(),
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#TrxLicWrittenExamViewModel_exam_type').empty();
+                    $('#TrxLicWrittenExamViewModel_exam_type').append('<option value="">Select Exam.</option>');
+                    $.each(data, function (i, data) {
+                        $('#TrxLicWrittenExamViewModel_exam_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#TrxLicWrittenExamViewModel_exam_type').change(function () {
+            $.ajax({
+                url: '@Url.Action("GetReqLicenseTypeByLicenseType", "AJAX")',
+                data: {
+                    exam_type: $(this).val(),
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#TrxLicWrittenExamViewModel_license_name').empty();
+                    $('#TrxLicWrittenExamViewModel_license_name').append('<option value="">Select license.</option>');
+                    $.each(data, function (i, data) {
+                        $('#TrxLicWrittenExamViewModel_license_name').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#TrxLicWrittenExamViewModel_license_name').change(function () {
+            $.ajax({
+                url: '@Url.Action("GetOldLicenseByIdApplicanAndLicenseType", "AJAX")',
+                data: {
+                    id_applicant: $('#id_applicant').val(),
+                    id_license_type: $(this).val()
+                },
+                dataType: 'json',
+                success: function (data) {
+                    $('#TrxLicWrittenExamViewModel_license_number_choose').empty();
+                    $('#TrxLicWrittenExamViewModel_license_number_choose').append('<option value="">Select license.</option>');
+                    $.each(data, function (i, data) {
+                        $('#TrxLicWrittenExamViewModel_license_number_choose').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#TrxLicWrittenExamViewModel_license_number_choose').change(function () {
+            $('#TrxLicWrittenExamViewModel_license_number').val($(this).val())
+        });
+
+        var hasError = 0;
+        //validasi numeric
+        if (!MustNumber($('#TrxLicWrittenExamViewModel_total_flight_hour'))) {
+            hasError = hasError + 1;
+        }
+        //Add Item
+        $('form').submit(function () {
+            //return false;
+            $form = $('form:first');
+            var value = $(this).val();
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            //validasi numeric
+            if (!MustNumber($('#TrxLicWrittenExamViewModel_total_flight_hour'))) {
+                hasError = hasError + 1;
+            }
+            if ($form.find('.has-error').length > 0 || hasError > 0) {
+                return false;
+            }
+        });
+
+        //Validasi type doc
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function FileValidation(object) {
+            var IsValid = true;
+
+            var allowedExtensions = ["jpg", "pdf", "png", "jpeg"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = false;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if (!numericReg.test(value)) {
+                    $(object).after('<span class="help-block">Numeric characters only.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    var value = parseInt(value);
+                    $(object).val(value);
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+    });
+</script>

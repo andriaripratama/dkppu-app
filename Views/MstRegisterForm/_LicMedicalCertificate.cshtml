@@ -1,0 +1,46 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Certifiacte No</th>
+                <th>Date Of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicMedicalCertificateViewModel">
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel item in Model)
+            {
+                <tr>
+                    <td>
+                        <input type="text" class="form-control" name="TrxLicMedicalCertificateViewModel[@j].med_certi_no" id="MstLicMedicalCertificateViewModel_@j.ToString()__med_certi_no" value="@Html.DisplayFor(m => m[j].med_certi_no)">
+                        <input type="hidden" name="TrxLicMedicalCertificateViewModel[@j].id_trx_lic_med_certi" id="MstLicMedicalCertificateViewModel_@j.ToString()__id_trx_lic_med_certi" value="@Html.DisplayFor(m => m[j].id_trx_lic_med_certi)">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control date-picker" name="TrxLicMedicalCertificateViewModel[@j].from_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__from_date" value="@Html.DisplayFor(m => m[j].from_date)">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control date-picker" name="TrxLicMedicalCertificateViewModel[@j].until_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__until_date" value="@Html.DisplayFor(m => m[j].until_date)">
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>

@@ -1,0 +1,43 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MstLicRecurrentTypeOfAircraftViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Chckes</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="MstLicRecurrentTypeOfAircraftViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="MstLicRecurrentTypeOfAircraftViewModel_@j">
+                    <td>@Html.DropDownList("MstLicRecurrentTypeOfAircraftViewModel[" + j.ToString() + "].rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, new { @class = "form-control", id = "MstLicRecurrentTypeOfAircraftViewModel_" + j.ToString() + "__rating", disabled = "disabled" })</td>
+                    <td><input type="text" class="form-control date-picker" name="MstLicRecurrentTypeOfAircraftViewModel[@j].checked_date" id="MstLicRecurrentTypeOfAircraftViewModel@j.ToString()__checked_date" required="required"></td>
+                    <td><input type="text" class="form-control date-picker" name="MstLicRecurrentTypeOfAircraftViewModel[@j].expired_date" id="MstLicRecurrentTypeOfAircraftViewModel@j.ToString()__expired_date" required="required"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+
+
+

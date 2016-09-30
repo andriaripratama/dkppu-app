@@ -1,0 +1,26 @@
+﻿@model DKUPPU.ViewModels.MstRoleViewModel
+@{
+    Layout = null;   
+}
+<table class="table table-striped">
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.Name)</td>
+        <td width="5">:</td>
+        <td class="text-left">@Html.DisplayFor(m => m.Name)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.role_name)</td>
+        <td width="5">:</td>
+        <td class="text-left">@Html.DisplayFor(m => m.role_name)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.description)</td>
+        <td width="5">:</td>
+        <td class="text-left">@Html.DisplayFor(m => m.description)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.is_active)</td>
+        <td width="5">:</td>
+        <td class="text-left">@Html.DisplayFor(m => m.is_active)</td>
+    </tr>
+</table>

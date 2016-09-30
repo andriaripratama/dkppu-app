@@ -1,0 +1,303 @@
+﻿<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">-->
+
+    <title>@ViewBag.Title - DKPPU Application</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- Basic Styles -->
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/font-awesome.min.css">
+
+    <!-- SmartAdmin Styles : Caution! DO NOT change the order -->
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/smartadmin-production-plugins.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/smartadmin-production.min.css">
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/smartadmin-skins.min.css">
+
+    <!-- SmartAdmin RTL Support  -->
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/smartadmin-rtl.min.css">
+
+    <!-- We recommend you use "your_style.css" to override SmartAdmin
+         specific styles this will also ensure you retrain your customization with each SmartAdmin update.
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/your_style.css"> -->
+    <!-- Demo purpose only: goes with demo.js, you can delete this css when designing your own WebApp -->
+    @*<link rel="stylesheet" type="text/css" media="screen" href="~/Content/smartAdmin/css/demo.min.css">*@
+
+    <!-- #FAVICONS -->
+    <link rel="shortcut icon" href="~/Images/logo.png" type="image/x-icon">
+    <link rel="icon" href="~/Images/logo.png" type="image/x-icon">
+
+    <!-- GOOGLE FONT -->
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+
+    <!-- Specifying a Webpage Icon for Web Clip
+         Ref: https://developer.apple.com/library/ios/documentation/AppleApplications/Reference/SafariWebContent/ConfiguringWebApplications/ConfiguringWebApplications.html -->
+    <link rel="apple-touch-icon" href="img/splash/sptouch-icon-iphone.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="img/splash/touch-icon-ipad.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="img/splash/touch-icon-iphone-retina.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="img/splash/touch-icon-ipad-retina.png">
+
+    <!-- iOS web-app metas : hides Safari UI Components and Changes Status Bar Appearance -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <!-- Startup image for web apps -->
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-landscape.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:landscape)">
+    <link rel="apple-touch-startup-image" href="img/splash/ipad-portrait.png" media="screen and (min-device-width: 481px) and (max-device-width: 1024px) and (orientation:portrait)">
+    <link rel="apple-touch-startup-image" href="img/splash/iphone.png" media="screen and (max-device-width: 320px)">
+    <script src="~/Content/smartAdmin/js/jquery.2.1.1.min.js"></script>
+    @Scripts.Render("~/bundles/modernizr")
+    <style>
+        a {
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body class="">
+
+
+    @Html.Partial("_Navbar")
+
+    <aside id="left-panel" style="color:#333333">
+
+
+        @Html.Partial("_Sidebar")
+
+
+    </aside>
+    <!-- END NAVIGATION -->
+    <!-- MAIN PANEL -->
+    <div id="main" role="main">
+
+        @Html.Partial("_Breadcrumb")
+
+        <!-- MAIN CONTENT -->
+        <div id="content">
+            @Html.Partial("_DateSkillValidate")
+            <!-- widget grid -->
+            <section id="widget-grid" class="">
+                @RenderSection("featured", required: false)
+                <div id="render-body">
+                    @RenderBody()
+                </div>
+            </section>
+            <!-- end widget grid -->
+
+        </div>
+        <!-- END MAIN CONTENT -->
+
+    </div>
+    <!-- END MAIN PANEL -->
+    <!-- PAGE FOOTER -->
+
+    <div class="page-footer" style="background-color:#333333">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6">
+                <span class="txt-color-white">DKPPU <span class="hidden-xs"> - Web Application Framework</span> © 2014-2015</span>
+            </div>
+
+        </div>
+    </div>
+    @Html.Partial("_Shortcut")
+    <script data-pace-options='{ "restartOnRequestAfter": true }' src="~/Content/smartAdmin/js/plugin/pace/pace.min.js"></script>
+
+    <!-- Link to Google CDN's jQuery + jQueryUI; fall back to local -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        function RejectConfirmation(e) {
+            if (e.name == 'action_N') {
+                var result = confirm("Do you want to reject the license ?");
+
+                if (result) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (e.name == 'action_Y') {
+                var result = confirm("Do you want to " + e.val().totoLowerCase() + " the license ?");
+
+                if (result) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else if (e.name == 'action_R') {
+                var result = confirm("Do you want to revise the license ?");
+
+                if (result) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            }
+            else
+                return true;
+        }
+
+        if (!window.jQuery) {
+            document.write('<script src="~/Content/smartAdmin/js/libs/jquery-2.1.1.min.js"><\/script>');
+        }
+    </script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script>
+        if (!window.jQuery.ui) {
+            document.write('<script src="~/Content/smartAdmin/js/libs/jquery-ui-1.10.3.min.js"><\/script>');
+        }
+        $(function () {
+
+            $('form input').keypress(function (e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $('#checkbox-disclaimer').each(function () {
+                this.setCustomValidity('Please click here to indicate that you responsible about the validity of the data above');
+            });
+
+            $('#checkbox-disclaimer').change(function () {
+                if ($(this).is(':checked')) {
+                    this.setCustomValidity('');
+                }
+                else {
+                    this.setCustomValidity('Please click here to indicate that you responsible about the validity of the data above');
+                }
+            });
+
+            $(':input[type!="password"]').keyup(function () {
+                var value = $(this).val().toUpperCase();
+                $(this).val(value);
+            });
+
+            $(':input.hasDatepicker').each(function () {
+                /*
+                jQuery(this).on("keypress keyup blur", function (event) {
+                    $(this).val($(this).val().replace(/[^\d].+/, ""));
+                    if ((!event.which < 48 || !event.which > 57)) {
+                        event.preventDefault();
+                    }
+                });
+                */
+
+                $(this).keypress(function (e) {
+                    var key = e.charCode || e.keyCode;
+
+                    if (key == 13) {
+                        // enter key do nothing
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+                
+                $(this).keydown(function (e) {
+                    var key = e.charCode || e.keyCode;
+
+                    if (key == 13)
+                    {
+                        // enter key do nothing
+                    }
+                    else
+                    {
+                        e.preventDefault();
+                    }
+                });
+
+                $(this).keyup(function (e) {
+                    var key = e.charCode || e.keyCode;
+
+                    if (key == 13) {
+                        // enter key do nothing
+                    }
+                    else {
+                        e.preventDefault();
+                    }
+                });
+            });
+        })
+    </script>
+
+    <!-- IMPORTANT: APP CONFIG -->
+    <script src="~/Content/smartAdmin/js/app.config.js"></script>
+
+    <!-- JS TOUCH : include this plugin for mobile drag / drop touch events-->
+    <script src="~/Content/smartAdmin/js/plugin/jquery-touch/jquery.ui.touch-punch.min.js"></script>
+
+    <!-- BOOTSTRAP JS -->
+    <script src="~/Content/smartAdmin/js/bootstrap/bootstrap.min.js"></script>
+
+    <!-- CUSTOM NOTIFICATION -->
+    <script src="~/Content/smartAdmin/js/notification/SmartNotification.min.js"></script>
+
+    <!-- JARVIS WIDGETS -->
+    <script src="~/Content/smartAdmin/js/smartwidgets/jarvis.widget.min.js"></script>
+
+    <!-- EASY PIE CHARTS -->
+    <script src="~/Content/smartAdmin/js/plugin/easy-pie-chart/jquery.easy-pie-chart.min.js"></script>
+
+    <!-- SPARKLINES -->
+    <script src="~/Content/smartAdmin/js/plugin/sparkline/jquery.sparkline.min.js"></script>
+
+    <!-- JQUERY VALIDATE -->
+    <script src="~/Content/smartAdmin/js/plugin/jquery-validate/jquery.validate.min.js"></script>
+
+    <!-- JQUERY MASKED INPUT -->
+    <script src="~/Content/smartAdmin/js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+
+    <!-- JQUERY SELECT2 INPUT -->
+    <script src="~/Content/smartAdmin/js/plugin/select2/select2.min.js"></script>
+
+    <!-- JQUERY UI + Bootstrap Slider -->
+    <script src="~/Content/smartAdmin/js/plugin/bootstrap-slider/bootstrap-slider.min.js"></script>
+
+    <!-- browser msie issue fix -->
+    <script src="~/Content/smartAdmin/js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+
+    <!-- FastClick: For mobile devices -->
+    <script src="~/Content/smartAdmin/js/plugin/fastclick/fastclick.min.js"></script>
+
+
+    <!-- MAIN APP JS FILE -->
+    <script src="~/Content/smartAdmin/js/app.min.js"></script>
+
+    <!-- ENHANCEMENT PLUGINS : NOT A REQUIREMENT -->
+    <!-- Voice command : plugin -->
+    <script src="~/Content/smartAdmin/js/speech/voicecommand.min.js"></script>
+
+    <!-- SmartChat UI : plugin -->
+    <script src="~/Content/smartAdmin/js/smart-chat-ui/smart.chat.ui.min.js"></script>
+    <script src="~/Content/smartAdmin/js/smart-chat-ui/smart.chat.manager.min.js"></script>
+
+    <!-- PAGE RELATED PLUGIN(S) -->
+    <!-- Flot Chart Plugin: Flot Engine, Flot Resizer, Flot Tooltip -->
+    <script src="~/Content/smartAdmin/js/plugin/flot/jquery.flot.cust.min.js"></script>
+    <script src="~/Content/smartAdmin/js/plugin/flot/jquery.flot.resize.min.js"></script>
+    <script src="~/Content/smartAdmin/js/plugin/flot/jquery.flot.time.min.js"></script>
+    <script src="~/Content/smartAdmin/js/plugin/flot/jquery.flot.tooltip.min.js"></script>
+
+    <!-- Vector Maps Plugin: Vectormap engine, Vectormap language -->
+    <script src="~/Content/smartAdmin/js/plugin/vectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="~/Content/smartAdmin/js/plugin/vectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <!-- Full Calendar -->
+    <script src="~/Content/smartAdmin/js/plugin/moment/moment.min.js"></script>
+    <script src="~/Content/smartAdmin/js/plugin/fullcalendar/jquery.fullcalendar.min.js"></script>
+    
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

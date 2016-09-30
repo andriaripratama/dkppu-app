@@ -1,0 +1,50 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Aircraft / SIM</th>
+                <th>Date Of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicCompetencyCheckViewModel">
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel item in Model.OrderBy(a => a.updated_date))
+            {
+                <tr id="TrxLicCompetencyCheckViewModel_@j">
+                    <td>
+                        <input type="hidden" name="TrxLicCompetencyCheckViewModel[@j].id_rating" id="TrxLicCompetencyCheckViewModel_@j.ToString()__id_rating" required="required" value="@Html.DisplayFor(a => item.id_rating)">
+                        <input type="hidden" name="TrxLicCompetencyCheckViewModel[@j].id_trx_lic_competency_check" id="TrxLicCompetencyCheckViewModel_@j.ToString()__id_trx_lic_competency_check" value="@Html.DisplayFor(a => item.id_trx_lic_competency_check)">
+                        <input type="text" class="form-control" name="TrxLicCompetencyCheckViewModel[@j].rating" id="TrxLicCompetencyCheckViewModel_@j.ToString()__rating" required="required" readonly="readonly" value="@Html.DisplayFor(a => item.rating)">
+                    </td>
+                    <td>
+                        @Html.DropDownList("TrxLicCompetencyCheckViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, new { @class = "form-control AircraftOrSIM", id = "TrxLicCompetencyCheckViewModel_" + j.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                        @if (!(item.id_air_sim_type == null || item.id_air_sim_type == ""))
+                        {
+                            <script>
+                                $(function () {
+                                    $('#TrxLicCompetencyCheckViewModel_@j.ToString()__id_air_sim_type option[value=@item.id_air_sim_type]').attr('selected', 'selected');
+                                })
+                            </script>
+                        }
+
+                        @*<input type="text" class="form-control" name="TrxLicCompetencyCheckViewModel[@j].id_air_sim_type" id="TrxLicCompetencyCheckViewModel_@j.ToString()__id_air_sim_type" required="required" readonly="readonly" value="@Html.DisplayFor(a => item.id_air_sim_type)">*@
+                    </td>
+                    <td>
+                        <input type="text" class="form-control date-picker" name="TrxLicCompetencyCheckViewModel[@j].checked_date" id="TrxLicCompetencyCheckViewModel_@j.ToString()__checked_date" required="required" readonly="readonly" value="@Html.DisplayFor(a => item.checked_date)">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control date-picker" name="TrxLicCompetencyCheckViewModel[@j].expired_date" id="TrxLicCompetencyCheckViewModel_@j.ToString()__expired_date" required="required" readonly="readonly" value="@Html.DisplayFor(a => item.expired_date)">
+                    </td>
+                </tr>
+                        j++;
+            }
+        </tbody>
+
+    </table>
+</div>

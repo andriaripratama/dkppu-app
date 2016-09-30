@@ -1,0 +1,282 @@
+﻿@model DKUPPU.ViewModels.MutationApplicant
+@{
+    ViewBag.Title = "Mutation Employee";
+    string vrequired = "";
+    if (ViewBag.SubTitle == "Register")
+    {
+        vrequired = "required-value";
+    }
+
+    string fileSize = ViewBag.DocUploadFileSize == null ? string.Empty : ViewBag.DocUploadFileSize;
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>@ViewBag.SubTitle Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                
+                <input type="hidden" id="DocUploadFormFileSize" value="@fileSize" />
+                
+                <div class="form-horizontal">
+                    <fieldset>
+                        <legend>Information</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.applicant_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.applicant_name, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.HiddenFor(model => model.id_last_mst_license)
+                                @Html.HiddenFor(model => model.id_trx_mutation)
+                                @Html.ValidationMessageFor(model => model.applicant_name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Previous Organization</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.old_id_org_type, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.old_id_org_type, (IEnumerable<SelectListItem>)ViewBag.OrgType, "Select Organization Type", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.old_id_org_type, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.old_id_org, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.DropDownListFor(model => model.old_id_org, (IEnumerable<SelectListItem>)ViewBag.IdOrg, "Select Organization Name",  new { @class = "form-control" } )
+                                @Html.ValidationMessageFor(model => model.old_id_org, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Current Organization</legend>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.new_id_org_type_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.new_id_org_type_name, new { htmlAttributes = new { @class = "form-control", @readonly="readonly" } })
+                                @Html.ValidationMessageFor(model => model.new_id_org_type_name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.new_id_org_name, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.new_id_org_name, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                                @Html.ValidationMessageFor(model => model.new_id_org_name, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.last_license_number, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.last_license_number, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.last_license_number, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.last_license_doc, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                        <div class="col-md-5">
+                            <input type="file" class="btn btn-default @vrequired" name="last_license_doc_file" id="last_license_doc_file" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.letter_recruitment, htmlAttributes: new { @class = "col-md-2 control-label text-left" })
+                        <div class="col-md-5">
+                            <input type="file" class="btn btn-default @vrequired" name="letter_recruitment_file" id="letter_recruitment_file" />
+                        </div>
+                    </div>
+                </div>
+                <div id="error">
+                    <input type="checkbox" id="checkbox-disclaimer" />
+                    I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                </div>
+                <div class="form-actions">
+                    <button id="submit-button-form" class="btn btn-primary disabled" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var license_no = $('#last_license_number').val();
+        if (license_no.length > 0) {
+            checkLicenseNo(license_no);
+        }
+
+        $("#old_id_org_type").change(function () {
+            var org_type = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetOrganizationByType","AJAX")',
+                data: { org_type: org_type },
+                dataType: 'json',
+                beforSend: function () {
+                    $("#old_id_org").empty();
+                },
+                success: function (data) {
+                    $("#old_id_org").empty();
+                    $("#old_id_org").append("<option value=''>Select Organization Name</option>");
+                    $.each(data, function (index, item) {
+                        $("#old_id_org").append("<option value='" + item.id_lookup + "'>" + item.lookup_value + "</option>");
+                    });
+                },
+            });
+        });
+        $('#last_license_number').change(function () {
+            var license_no = $(this).val();
+            checkLicenseNo(license_no);
+        });
+
+        function checkLicenseNo(license_no) {
+            if (license_no.length > 0) {
+                $.ajax({
+                    url: '@Url.Action("CheckLicenseNumberIsExists", "MutationApplicant")',
+                    data: { license_no: license_no },
+                    dataType: 'json',
+                    success: function (data) {
+                        $("#submit-button-form").addClass('disabled');
+                        $('#last_license_number').parent().find('span').remove();
+                        $('#last_license_number').parent().removeClass('has-error');
+                        $('#last_license_number').parent().removeClass('has-success');
+                        if (!(data == '' || data.length == 0 || data == null)) {
+                            $("#submit-button-form").removeClass('disabled');
+                            $("#id_last_mst_license").val(data);
+                            $('#last_license_number').after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                            $('#last_license_number').parent().addClass('has-success');
+                        } else {
+                            $("#submit-button-form").addClass('disabled');
+                            $('#last_license_number').after('<span class="help-block">License number not found</span>');
+                            $('#last_license_number').parent().addClass('has-error');
+                        }
+                    },
+                });
+            } else {
+                $("#submit-button-form").addClass('disabled');
+                $('#last_license_number').after('<span class="help-block">Is required</span>');
+                $('#last_license_number').parent().addClass('has-error');
+            }
+        }
+
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+            //return false;
+        });
+
+        //validasi is required
+        $('.required-value').change(function () {
+            IsRequired($(this));
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png", "jpeg"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+    });
+</script>

@@ -1,0 +1,56 @@
+﻿@model List<DKUPPU.ViewModels.JobAidApproval>
+@{
+    Layout = null;
+    string isJobAidReadOnly = (ViewBag.isJobAidReadOnly) == null ? string.Empty : (ViewBag.isJobAidReadOnly) ? "readonly = 'readonly'" : string.Empty;
+    
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th width="40%">@Html.DisplayNameFor(model => model[0].name)</th>
+                <th width="20%">@Html.DisplayNameFor(model => model[0].date_completed)</th>
+                <th width="20%">@Html.DisplayNameFor(model => model[0].reference_document)</th>
+                <th width="20%">@Html.DisplayNameFor(model => model[0].cpm)</th>
+            </tr>
+        </thead>
+        <tbody id="JobAidApproval">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string datepicker = "";
+
+            }
+            @foreach (DKUPPU.ViewModels.JobAidApproval item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                datepicker = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    datepicker = "date-picker";
+
+                }
+                <tr id="JobAidApproval_@j" class="old-tr">
+                    <td>
+                        <input type="hidden" name="ListJobAidApproval[@j].id_subject_demontration" id="ListJobAidApproval_@j.ToString()__id" value="@Html.DisplayFor(m => m[j].id_subject_demontration)">
+                        <input type="text" class="form-control required-value name" name="ListJobAidApproval[@j].name" id="ListJobAidApproval_@j.ToString()__name" value="@Html.DisplayFor(m => m[j].name)" readonly="readonly" />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @vrequered @datepicker date-field" name="ListJobAidApproval[@j].date_completed" id="ListJobAidApproval_@j.ToString()__date_completed" value="@Html.DisplayFor(m => m[j].date_completed)" @vreadonly @isJobAidReadOnly />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="ListJobAidApproval[@j].reference_document" id="ListJobAidApproval_@j.ToString()__reference_document" value="@Html.DisplayFor(a => item.reference_document)" @vreadonly @isJobAidReadOnly>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control" name="ListJobAidApproval[@j].cpm" id="ListJobAidApproval_@j.ToString()__cpm" value="@Html.DisplayFor(a => item.cpm)" @vreadonly @isJobAidReadOnly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>

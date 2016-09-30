@@ -1,0 +1,105 @@
+﻿@model List<DKUPPU.ViewModels.TrxAircraftOtherDocViewModel>
+@{
+    Layout = null;
+    string required = "";
+    string bintang = "";
+    int j = 0;
+}
+<div class="table-responsive">
+<table class="table-bordered">
+    <thead>
+        <tr>
+            <th>Other Document</th>
+        </tr>
+    </thead>
+    <tbody id="TrxAircraftOtherDocViewModel">
+        <tr class="" id="TrxAircraftOtherDocViewModel_0">
+            <td>
+                <label class="col-md-4 control-label text-left" for="@j.ToString()__File">@Html.DisplayFor(m => m[j].doc_file_name) @bintang</label>
+                <div class="col-md-5">
+                    <input type="file" class="btn btn-default @required" data-validation="@required" name="[@j].File" id="@j.ToString()__File" />
+                    <input type="hidden" name="TrxAircraftOtherDocViewModel[@j].id_doc_category" id="TrxAircraftOtherDocViewModel_@j.ToString()__id_doc_category" value="@Html.DisplayFor(m => m[j].id_doc_category)" />
+                    <input type="hidden" name="TrxAircraftOtherDocViewModel[@j].id_trx_aircraft_doc_other" id="TrxAircraftOtherDocViewModel_@j.ToString()__id_trx_aircraft_doc_other" value="@Html.DisplayFor(m => m[j].id_trx_aircraft_doc_other)" />
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</div>
+
+<script>
+    $(function () {
+        $('#add-other-doc').click(function (e) {
+            var $uplodData = $('#uplodDoc');
+            addRow(e, '#uplodDoc');
+        });
+        $('div').on("click", "a.remove-other-doc", function (e) {
+            var $uplodDocs = $('#uplodDoc');
+            removeRow(e, $uplodDocs);
+        });
+
+        function addRow(e, tableName) {
+            e.preventDefault();
+
+            var trLast = $('#' + tableName).find("tr:last");
+            var trNew = $('#' + tableName + '_0').clone();
+            var suffix = $('#' + tableName + ' > tr').length;
+            
+
+            if (suffix > 1) {
+                $.each($('#' + tableName).find("tr > td > input"), function (i, val) {
+                    if (i > 0 && $(this).val() == '');
+                });
+            }
+
+           
+                var oldNTr = trNew.attr('id');
+                var newNTr = oldNTr.replace('_0', '_' + suffix);
+
+                $('#' + tableName + '_0').hide();
+
+                trNew.attr('id', newNTr);
+                trNew.removeAttr('style');
+
+                $.each(trNew.find('td'), function (i, val) {
+                    var compObject = $(this).children('[id*=' + tableName + '_]');
+                    var compName = compObject.attr('name');
+                    var compID = compObject.attr('id');
+
+                    if (typeof compName != 'undefined') {
+                        compName = compName.replace('[0]', '[' + parseInt(suffix) + ']');
+                        compObject.attr('name', compName);
+                        compObject.addClass('required-value-dropdown');
+                    }
+
+                    if (typeof compID != 'undefined') {
+                        compID = compID.replace('_0_', '_' + parseInt(suffix) + '_');
+
+                        compObject.attr('id', compID);
+                        compObject.removeClass('invisible');
+                    }
+                });
+
+                trLast.after(trNew);
+
+              
+            
+        }
+
+        @*function addRow(e, $uplodDoc) {
+            e.preventDefault();
+            var div = document.createElement('div');
+
+            div.className = 'row';
+
+            div.innerHTML =
+                ' <label class="col-md-4 control-label text-left" for="@j.ToString()__File">@Html.DisplayFor(m => m[j].doc_file_name) @bintang</label><div class="col-md-5"><input type="file" class="btn btn-default @required" data-validation="@required" name="[@j].File" id="@j.ToString()__File" /><input type="hidden" name="TrxAircraftOtherDocViewModel[@j].id_doc_category" id="TrxAircraftOtherDocViewModel_@j.ToString()__id_doc_category" value="@Html.DisplayFor(m => m[j].id_doc_category)" /><input type="hidden" name="TrxAircraftOtherDocViewModel[@j].id_trx_aircraft_doc_other" id="TrxAircraftOtherDocViewModel_@j.ToString()__id_trx_aircraft_doc_other" value="@Html.DisplayFor(m => m[j].id_trx_aircraft_doc_other)" /></div> <br />';
+
+            document.getElementById('uplodDoc').appendChild(div);
+        }
+
+        function removeRow(e, $uplodDocs) {
+            document.getElementById('uplodDoc').removeChild(div.$uplodDocs);
+        }*@
+    })
+</script>

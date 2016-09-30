@@ -1,0 +1,167 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicEpcViewModel>
+@{
+    Layout = null; 
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsEPCReadOnly == null ? true : (ViewBag.IsEPCReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+<div class="table-responsive">
+    @if (!isReadOnly)
+    {
+    <table>
+        <tbody>
+            <tr>
+                <td style="padding-bottom: 5px; text-align: right;">
+                    <a class="pull-right btn btn-primary btn-xs" id="add-lic-epc-form"><i class="fa fa-plus"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    }
+    
+    <table class="table table-bordered table-striped" id="lic-epc-form-table">
+        <thead>
+            <tr>
+                <th>Level</th>
+                <th>Date of Test</th>
+                <th>Date of Expired</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicEpcViewModel">
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                        @if (isReadOnly)
+                        {
+                            @Html.DropDownList("LicEPCs[0].level", (IEnumerable<SelectListItem>)ViewBag.Levels, "Select Item", new { @class = "form-control", id = "LicEPCs_0__level", @disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.DropDownList("LicEPCs[0].level", (IEnumerable<SelectListItem>)ViewBag.Levels, "Select Item", new { @class = "form-control", id = "LicEPCs_0__level" })
+                        }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicEPCs[0].date_of_exam" id="LicEPCs_0__date_of_exam" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicEPCs[0].expiry_date" id="LicEPCs_0__expiry_date" value="" @disabledHTML />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicEpcViewModel item in Model)
+                    {
+                        <tr id="LicEPCs_@i">
+                            <td>
+                                <input type="hidden" name="LicEPCs[@i].id_trx_lic_epc" id="LicEPCs_@i.ToString()__id_trx_lic_epc" value="@Html.DisplayFor(x => x[i].id_trx_lic_epc)" @disabledHTML />
+                                
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("LicEPCs[" + i.ToString() + "].level", (IEnumerable<SelectListItem>)ViewBag.Levels, "Select Item", new { @class = "form-control", id = "LicEPCs_" + i.ToString() + "__level", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("LicEPCs[" + i.ToString() + "].level", (IEnumerable<SelectListItem>)ViewBag.Levels, "Select Item", new { @class = "form-control", id = "LicEPCs_" + i.ToString() + "__level" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.level.ToString()))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#LicEPCs_@i.ToString()__level option[value=@item.level]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicEPCs[@i].date_of_exam" id="LicEPCs_@i.ToString()__date_of_exam" value="@Html.DisplayFor(x => x[i].date_of_exam)" @disabledHTML />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicEPCs[@i].expiry_date" id="LicEPCs_@i.ToString()__expiry_date" value="@Html.DisplayFor(x => x[i].expiry_date)" @disabledHTML />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('div').on("change", ":input.epcChanged", function (e) {
+            var suffix = $(this).attr('name').match(/\d+/);
+            var value = $(this).val();
+            if (value == 6) {
+                $('#LicEPCs_' + suffix + '__expiry_date').val('00/00/0000').attr('readonly', 'readonly');
+            }
+            else {
+                $('#LicEPCs_' + suffix + '__expiry_date').val('').removeAttr('readonly');
+            }
+        });
+
+        $('#add-lic-epc-form').click(function () {
+            var rowIndex = 0;
+
+            $('#lic-epc-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var licEpcFormFirstRowObj = $('#lic-epc-form-table > tbody').find("tr:first");
+            var licEpcFormNewRowObj = licEpcFormFirstRowObj.clone();
+
+            $.each(licEpcFormNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(licEpcFormNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(licEpcFormNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#lic-epc-form-table > tbody > tr').last().after(licEpcFormNewRowObj);
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

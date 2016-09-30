@@ -1,0 +1,105 @@
+﻿@model List<DKUPPU.ViewModels.PSNAAircraftInspectionReportViewModel>
+
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        Inspection Report
+    </label>
+    <div class="col-md-8">
+        <div class="pull-right">
+            <a id="addInspectionReport" role="button" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+        </div><br />
+    </div>
+</div>
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        &nbsp;
+    </label>
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th width="40px"></th>
+                    </tr>
+                </thead>
+                <tbody id="PSNAAircraftInspectionReportViewModel">
+                    <tr id="PSNAAircraftInspectionReportViewModel_0">
+                        <td>
+                            <input class="form-control invisible" id="PSNAAircraftInspectionReportViewModel_0__file_name" name="PSNAAircraftInspectionReportViewModel[0].file_name" type="file" value="">
+                        </td>
+                        <td>
+                            <a role="button" id="PSNAAircraftInspectionReportViewModel_0__remove" class="inspection-report-remove-row btn btn-xs btn-danger invisible"><i class="fa fa-trash-o"></i></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#addInspectionReport').click(function (e) {
+            addRow(e, 'PSNAAircraftInspectionReportViewModel');
+        });
+
+        $('div').on("click", "a.inspection-report-remove-row", function (e) {
+            e.preventDefault();
+
+            var trRemove = $(this).parent().parent().attr('id');
+            var trIndexId = trRemove.match(/\d+/);
+
+            RemoveRow(e, 'PSNAAircraftInspectionReportViewModel', trIndexId);
+
+            return false;
+        });
+
+        function addRow(e, tableName) {
+            e.preventDefault();
+
+            $('#' + tableName + '_0').hide();
+
+            var $trLast = $('#' + tableName).find("tr:last");
+            var $trNew = $('#' + tableName + '_0').clone();
+            var suffix = $('#' + tableName + ' > tr').length;
+            var oldNTr = $trNew.attr('id');
+            var newNTr = oldNTr.replace('_0', '_' + parseInt(suffix));
+
+            $trNew.attr('id', newNTr);
+            $trNew.removeAttr('style');
+
+            $.each($trNew.find('td'), function (i, val) {
+                var compObject = $(this).children('[id*=' + tableName + '_]');
+                var compName = compObject.attr('name');
+                var compID = compObject.attr('id');
+
+                if (typeof compName != 'undefined') {
+                    compName = compName.replace('[0]', '[' + parseInt(suffix) + ']');
+                    compObject.attr('name', compName);
+                    compObject.addClass('required-value');
+                }
+
+                if (typeof compID != 'undefined') {
+                    compID = compID.replace('_0_', '_' + parseInt(suffix) + '_');
+
+                    compObject.attr('id', compID);
+                    compObject.removeClass('invisible');
+                }
+            });
+
+            $trLast.after($trNew);
+        }
+
+        function RemoveRow(e, tableName, indexId) {
+            e.preventDefault();
+
+            $("#" + tableName + '_' + indexId).remove();
+
+            var x = $('#' + tableName + ' > tr').length;
+
+            if (x == 1) $('#' + tableName + '_0').show();
+
+            return false;
+        }
+    });
+</script>

@@ -1,0 +1,243 @@
+﻿@model DKUPPU.ViewModels.PPRVSMsaAircraftViewModel
+
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="content">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Register Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../TrxAircraft/RegisterForm/_DataOrganizationForm", Model.Organization)
+             @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model => model.id_trx_aircraft)
+                    @Html.HiddenFor(model => model.id_aircraft_certificate)
+                    @*@Html.HiddenFor(model => model.id_aircraft_model)*@
+                    @Html.HiddenFor(model => model.id_sop_type)
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.registration_number, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @*@Html.DropDownListFor(model => model.registration_number, (IEnumerable<SelectListItem>)ViewBag.DropRegNo, "Nomor Registrasi ", new { @class = "form-control required-value" })*@
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.aircraft_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.aircraft_type, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.serial_number, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.serial_number, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.registration_marks, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.registration_marks, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.operator_aircraft, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.operator_aircraft, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.operator_address, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.TextAreaFor(model => model.operator_address, new { @class = "form-control required-value" } )
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.vartical_separation_min_ft, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.vartical_separation_min_ft, new { htmlAttributes = new { @class = "form-control required-value" } }) 
+                        </div><div class="col-md-1">FT</div>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.vartical_separation_min_ft, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div><div class="col-md-1">m</div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.represenative_name, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.represenative_name, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.represenative_hp, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.represenative_hp, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+
+                        @Html.LabelFor(model => model.email, htmlAttributes: new { @class = "control-label col-md-1 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.email, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        @Html.LabelFor(model => model.identity_card, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.identity_card, new { htmlAttributes = new { @class = "form-control required-value" } })
+                        </div>
+                    </div>
+                    <!--Percobaan-->
+                    <div class="row col-md-12">
+                        <fieldset>
+                            <legend>Upload Document</legend>
+                            @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                        </fieldset>
+                        <div id="error" class="col-md-12">
+                            <input type="checkbox" required="required" />
+                            I hereby certify that the information above given are correct and the undersigned will comply what Republic of Indonesia Avoation Law Number 1 Year 2009 and other applicable regulations
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="#" class="btn btn-danger"> Back </a>
+                </div>
+
+            }
+
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+    });
+
+    $('form').submit(function () {
+        //return false;
+        var hasError = 0;
+        $form = $('form:first');
+
+        //validasi file type
+        $.each($form.find('input[type="file"]'), function (i, val) {
+            if (!FileValidation($(this))) {
+                hasError = hasError + 1;
+            }
+            if (!FileSize($(this))) {
+                hasError = hasError + 1;
+            }
+        });
+
+        //validasi is required
+        $.each($form.find('.required-value'), function (i, val) {
+            if (!IsRequired($(this))) {
+                hasError = hasError + 1;
+            }
+        });
+
+        //return false;
+    });
+
+    //file type validation
+    function FileValidation(object) {
+        var IsValid = true;
+        $(object).parent().find('span').remove();
+        $(object).parent().removeClass('has-error');
+        $(object).parent().removeClass('has-success');
+
+        var allowedExtensions = ["jpg", "pdf", "png"];
+
+        var value = $(object).val(),
+                    file = value.toLowerCase(),
+                    extension = file.substring(file.lastIndexOf('.') + 1);
+        if ($(object).val().length > 0) {
+            if ($.inArray(extension, allowedExtensions) == -1) {
+                $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            } else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+        }
+        return IsValid;
+    }
+
+    // validasi file size document upload
+    function FileSize(object) {
+        var IsValid = true;
+        if ($(object).val().length > 0) {
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var file = $(object)[0].files[0];
+            var maxFileSize = $('#DocUploadFormFileSize').val();
+
+            if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                $(object).after('<span class="help-block">The file size to big</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            } else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+        }
+        return IsValid;
+    }
+
+    //validasi is required
+    function IsRequired(object) {
+        var IsValid = true;
+        $(object).parent().find('span').remove();
+        $(object).parent().removeClass('has-error');
+        $(object).parent().removeClass('has-success');
+        var value = $(object).val();
+        if (value.length <= 0) {
+            $(object).after('<span class="help-block">Is required.</span>');
+            $(object).parent().addClass('has-error');
+            IsValid = false;
+        }
+        else {
+            $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+            $(object).parent().addClass('has-success');
+            IsValid = true;
+        }
+        return IsValid;
+    }
+
+
+</script>

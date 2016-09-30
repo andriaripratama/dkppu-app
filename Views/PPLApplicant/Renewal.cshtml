@@ -1,0 +1,493 @@
+﻿@model DKUPPU.ViewModels.PPLRegisterFormViewModel
+@{
+    ViewBag.Title = "PPL Renewal";
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Register Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    <!--ID Primary-->
+                    @Html.HiddenFor(model => model.id_trx_license)
+                    @Html.HiddenFor(model => model.id_applicant)
+                    @Html.HiddenFor(model => model.id_license_category)
+                    @Html.HiddenFor(model => model.id_license_type)
+                    @Html.HiddenFor(model => model.id_sop_type)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ppl_license_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.ppl_license_no, (IEnumerable<SelectListItem>)ViewBag.ppl_license_no, "Select PPL No.", new { @class = "form-control required-value-dropdown" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.radio_phone_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.radio_phone_no, new { htmlAttributes = new { @class = "form-control required-value", @readonly = "readonly" } })
+                        </div>
+                        @Html.LabelFor(model => model.total_flying_hours, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.total_flying_hours, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            @Html.HiddenFor(model => model.aircraft_category_rating)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.aircraft_category_rating, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-10">
+                            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.aircraft_category_rating)
+                            {
+                                <label class="radio radio-inline">
+                                    <input id="radio-aircraft-ratting-@item.lookup_value" type="radio" class="radio-aircraft-ratting radiobox" name="aircraft_category_rating" value="@Html.DisplayFor(a=>item.lookup_value)" disabled="disabled" />
+                                    <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <!--List Aircarft Ratting Button Add and Remove-->
+                    <!--List Aircarft Ratting-->
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-9" id="list-aircraft-class-ratting"></div>
+                    </div>
+                    <!--PPC Type Ratting-->
+                    <div class="form-group">
+                        <div class="col-md-11" id="control-ppc-ratting">
+
+                        </div>
+                    </div>
+                    <!--PPC Type Ratting-->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ppc_type_ratting, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-9" id="list-ppc-ratting">
+                        </div>
+                    </div>
+                    @if (Model.TrxLicInstrumentRatingViewModel != null)
+                    {
+                        if (Model.TrxLicInstrumentRatingViewModel.Count > 0)
+                        {
+                            int instrumentRatingCount = Model.TrxLicInstrumentRatingViewModel.Count();
+                            bool buttonVisible = instrumentRatingCount == 0 ? false : (string.IsNullOrEmpty(Model.TrxLicInstrumentRatingViewModel[0].id_trx_license) ? false : true);
+                            string buttonVisibleTag = buttonVisible ? string.Empty : "invisible";
+                            
+                            <fieldset>
+                                <legend>
+                                    Instrument Rating
+                                    <a class="pull-right btn btn-primary btn-xs add-instrument @buttonVisibleTag"><i class="fa fa-plus"></i></a>
+                                    <a class="pull-right btn btn-danger btn-xs remove-instrument @buttonVisibleTag"><i class="fa fa-trash-o"></i></a>
+                                </legend>
+                                <!--Instrument Rating Ratting-->
+                                <div class="col-md-12">
+                                    <fieldset>
+                                        @Html.Partial("../TrxRegisterForm/_LicInstrumentRattingForm", Model.TrxLicInstrumentRatingViewModel)
+                                    </fieldset>
+                                </div>
+                            </fieldset>
+                        }
+                    }
+
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <fieldset>
+                                <legend>
+                                    Medical Certificate
+                                    <a class="pull-right btn btn-primary btn-xs" id="add-medical-certificate"><i class="fa fa-plus"></i></a>
+                                    <a class="pull-right btn btn-danger btn-xs remove-medical-certificate"><i class="fa fa-trash-o"></i></a>
+                                </legend>
+                                <div id="list-medical-certificate">
+
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                        @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                    </fieldset>
+                    <div id="error">
+                        <input type="checkbox" id="checkbox-disclaimer" />
+                        I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit"> Submit </button>
+                        <a href="#" class="btn btn-danger"> Cancel </a>
+                    </div>
+                </div>
+            <!--End Form-->
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        /** PPL on Change **/
+        $('#ppl_license_no').change(function () {
+            var id_trx_license = $(this).val();
+            var id_applicant = $('#id_applicant').val();
+            GetTrxLicenseByMstLicense(id_trx_license);
+            GetAircraftClassRattingByMstLicenseAndIdApplicant(id_trx_license, id_applicant);
+            GetPPCRattingByMstLicenseAndIdApplicant(id_trx_license, id_applicant);
+            GetMedicalCheckByIdApplicant(id_applicant);
+        });
+
+        /** Get Trx License */
+        function GetTrxLicenseByMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetTrxLicenseByMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="row">' +
+                                '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#list-aircraft-class-ratting').html(img);
+                },
+                success: function (data) {
+                    $('#radio-aircraft-ratting-' + data.aircraft_category_rating).attr('checked', true);
+                    $('#aircraft_category_rating').val(data.aircraft_category_rating);
+                    $('#total_flying_hours').val(data.total_flying_hours);
+                }
+            });
+        }
+
+        function GetAircraftClassRattingByMstLicenseAndIdApplicant(id_mst_license, id_applicant) {
+            $.ajax({
+                url: '@Url.Action("GetAircraftClassRattingByMstLicenseAndIdApplicant", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license,
+                    id_applicant: id_applicant
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-aircraft-class-ratting').html(data);
+                }
+            });
+        }
+
+        function GetPPCRattingByMstLicenseAndIdApplicant(id_mst_license, id_applicant) {
+            $.ajax({
+                url: '@Url.Action("GetPPCRattingByMstLicenseAndIdApplicant", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license,
+                    id_applicant: id_applicant
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-ppc-ratting').html(data);
+                    var button = '<a class="pull-right btn btn-primary btn-xs add-ppc-certificate" ><i class="fa fa-plus"></i></a>' +
+                                    '<a class="pull-right btn btn-danger btn-xs remove-ppc-certificate"><i class="fa fa-trash-o"></i></a>';
+                    $('#control-ppc-ratting').html(button);
+                }
+            });
+        }
+
+        function GetMedicalCheckByIdApplicant(id_applicant) {
+            $.ajax({
+                url: '@Url.Action("GetMedicalCheckByIdApplicant", "AJAX")',
+                data: {
+                    id_applicant: id_applicant,
+                    is_history: '@ViewBag.HasLicenseMedicalCertificateHistory',
+                    id_sop_type: $("#id_sop_type").val()
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-medical-certificate').html(data);
+                }
+            });
+        }
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: '12/12/2015'
+            //...
+        });
+
+
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.required-value-dropdown'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi numeric
+            if (!MustNumber($('#total_flying_hours'))) {
+                hasError = hasError + 1;
+            }
+            if (!LessThan35($('#total_flying_hours'))) {
+                hasError = hasError + 1;
+            }
+
+            //validasi date form - until
+            $.each($form.find('.from-date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var $thisTr = $(this).parent().parent();
+                var objec_until = $thisTr.find(':input.until-date:first');
+                if (!FromUntilValidate($(this), objec_until)) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.until-date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var $thisTr = $(this).parent().parent();
+                var objec_from = $thisTr.find(':input.from-date:first');
+                if (!FromUntilValidate(objec_from, $(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+            //return false;
+        });
+
+        //validasi is required
+        $('.required-value').keyup(function () {
+            IsRequired($(this));
+        });
+
+        $('.required-value-dropdown').change(function () {
+            IsRequired($(this));
+        });
+
+        $('.required-value.date-picker').change(function () {
+            IsRequired($(this));
+        });
+
+        $('div').on("change", ":input.from-date", function () {
+            var suffix = parseInt($(this).attr('id').match(/\d+/));
+            var $thisTr = $(this).parent().parent();
+            var objec_until = $thisTr.find('.until-date:first');
+            IsRequired($(this));
+            FromUntilValidate($(this), objec_until);
+        });
+
+        $('div').on("change", ":input.until-date", function () {
+            var suffix = parseInt($(this).attr('id').match(/\d+/));
+            var $thisTr = $(this).parent().parent();
+            var objec_from = $thisTr.find(':input.from-date:first');
+            IsRequired($(this));
+            FromUntilValidate(objec_from, $(this));
+        });
+
+
+        // validasi numerik and less than 400
+        $('#total_flying_hours').keyup(function () {
+            if (MustNumber($(this))) {
+                LessThan35($(this));
+            }
+
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: '+allowedExtensions.join(", ")+'</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (!numericReg.test(value)) {
+                $(object).after('<span class="help-block">Numeric characters only.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                var value = parseInt(value);
+                $(object).val(value);
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function LessThan35(object) {
+            var IsValid = true;
+            var value = $(object).val();
+            if (value.length > 0) {
+
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if (parseInt(value) < 35) {
+                    $(object).after('<span class="help-block">The score not valid</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+
+            return IsValid;
+        }
+
+        function FromUntilValidate(object_from, object_until) {
+            var IsValid = true;
+            var from_date = "";
+            var until_date = "";
+            $(object_from).parent().find('span').remove();
+            $(object_from).parent().removeClass('has-error');
+            $(object_from).parent().removeClass('has-success');
+
+            $(object_until).parent().find('span').remove();
+            $(object_until).parent().removeClass('has-error');
+            $(object_until).parent().removeClass('has-success');
+
+            until_date = $(object_until).val();
+            from_date = $(object_from).val();
+            if (from_date != null && until_date != null) {
+                if (from_date.length > 0 && until_date.length > 0) {
+                    var from = from_date.split('/');
+                    var fromDate = new Date(from[1] + '/' + from[0] + '/' + from[2]);
+
+                    var until = until_date.split('/');
+                    var untilDate = new Date(until[1] + '/' + until[0] + '/' + until[2]);
+
+                    if (fromDate >= untilDate) {
+                        $(object_from).after('<span class="help-block">The date range not valid</span>');
+                        $(object_from).parent().addClass('has-error');
+
+                        $(object_until).after('<span class="help-block">The date range not valid</span>');
+                        $(object_until).parent().addClass('has-error');
+                        IsValid = false;
+                    }
+                    else {
+                        $(object_from).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object_from).parent().addClass('has-success');
+
+                        $(object_until).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object_until).parent().addClass('has-success');
+                        IsValid = true;
+                    }
+                }
+            }
+            return IsValid;
+        }
+
+    });
+</script>
+

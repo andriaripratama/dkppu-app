@@ -1,0 +1,13 @@
+﻿<div id="shortcut">
+    @if (User.Identity.Name != null)
+    {
+        <ul>
+            @foreach (DKUPPU.ViewModels.MstMenuViewModel item in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name,"MN02").OrderBy(x => x.menu_order))
+            {
+                <li>
+                    <a href="@Url.Action(item.menu_action, item.menu_controller)" class="jarvismetro-tile big-cubes bg-color-blue"> <span class="iconbox"> <i class="fa fa-@item.menu_icon fa-4x"></i> <span>@item.menu_title</span> </span> </a>
+                </li>
+            }
+        </ul>
+    }
+</div>

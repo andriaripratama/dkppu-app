@@ -1,0 +1,305 @@
+﻿@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div class="row">
+    <div class="col-xs-6">
+        <div id="wid-id-0" class="jarviswidget" data-widget-sortable="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" role="widget">
+            <header role="heading">
+                <div class="jarviswidget-ctrls" role="menu">
+                    <a class="button-icon jarviswidget-toggle-btn dashboard-menu" data-url="@Url.Action("PerLicenseTypeForm", "Dashboard")" data-placement="bottom" rel="tooltip" data-original-title="Detail">
+                        <i class="fa fa-search-plus "></i>
+                    </a>
+                </div>
+                <h2>Grafik per license </h2>
+            </header>
+            <div role="content">
+                <div class="widget-body" id="grafik-license" style="text-align:center;min-height:300px;">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-6">
+        <div id="wid-id-1" class="jarviswidget" data-widget-sortable="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" role="widget">
+            <header role="heading">
+                <div class="jarviswidget-ctrls" role="menu">
+                    <a class="button-icon jarviswidget-toggle-btn dashboard-menu" data-url="@Url.Action("LicensePerIdWfStatusFrom", "Dashboard")" data-placement="bottom" rel="tooltip" data-original-title="Detail">
+                        <i class="fa fa-search-plus "></i>
+                    </a>
+                </div>
+                <h2>Grafik per status </h2>
+            </header>
+            <div role="content">
+                <div class="widget-body" id="grafik-status" style="text-align:center;min-height:300px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+
+        <div id="wid-id-2" class="jarviswidget" data-widget-sortable="false" data-widget-editbutton="false" data-widget-fullscreenbutton="false" data-widget-colorbutton="false" role="widget">
+            <header role="heading">
+                <div class="jarviswidget-ctrls" role="menu">
+                    <a class="button-icon jarviswidget-toggle-btn dashboard-menu" data-url="@Url.Action("LicenseByYearForm", "Dashboard")" data-placement="bottom" rel="tooltip" data-original-title="Detail">
+                        <i class="fa fa-search-plus "></i>
+                    </a>
+                </div>
+                <h2>Grafik in Year </h2>
+            </header>
+            <div>
+                <div class="widget-body">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div id="grafik-year" style="text-align:center;min-height:400px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/Content/HighChart/highcharts.js"></script>
+    <script src="~/Content/HighChart/highcharts-3d.js"></script>
+    <script src="~/Content/HighChart/modules/exporting.js"></script>
+}
+
+<script>
+    $(function () {
+
+        $('#grafik-year').ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetLicenseByYear", "Dashboard")',
+                data: {
+                    year: '@DateTime.Now.Year'
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-year').append(img);
+                },
+                success: function (data) {
+                    var label = [];
+                    var total = [];
+                    $.each(data.data, function (i, data) {
+                        label[i] = data.name;
+                        total[i] = data.y;
+                    });
+                    $('#grafik-year').highcharts({
+                        chart: {
+                            zoomType: 'xy',
+                            margin: 75,
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: label,
+                            title: {
+                                text: null
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total',
+                                align: 'center'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        plotOptions: {
+                            column: {
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                depth: 25
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        legend: {
+                            itemStyle: { "display": "none" }
+                        },
+                        series: [{
+                            name: 'License',
+                            type: 'column',
+                            data: total
+                        }, {
+                            name: 'License',
+                            type: 'line',
+                            data: total
+                        }]
+                    });
+                    $('.loader').remove();
+                }
+            });
+        });
+
+        $('#grafik-license').ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetLicensePerLicenseTypeFiveTop", "Dashboard")',
+                data: {
+                    startDate: '@String.Format("{0:dd/MM/yyyy}", DateTime.Now.AddMonths(-1))',
+                    endDate: '@String.Format("{0:dd/MM/yyyy}", DateTime.Now)'
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-license').append(img);
+                },
+                success: function (data) {
+                    var label = [];
+                    var total = [];
+                    $.each(data.data, function (i, data) {
+                        label[i] = data.name;
+                        total[i] = data.y;
+                    });
+                    $('#grafik-license').highcharts({
+                        chart: {
+                            type: 'bar',
+                            margin: 65,
+                            options3d: {
+                                enabled: true,
+                                alpha: 0,
+                                beta: 0,
+                                depth: 0,
+                                viewDistance: 25
+                            },
+                            height: 300,
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: label,
+                            title: {
+                                text: null
+                            }
+                        },
+                        yAxis: {
+                            min: 0,
+                            title: {
+                                text: 'Total',
+                                align: 'center'
+                            },
+                            labels: {
+                                overflow: 'justify'
+                            }
+                        },
+                        plotOptions: {
+                            bar: {
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                depth: 0
+                            }
+                        },
+                        credits: {
+                            enabled: false
+                        },
+                        series: [{
+                            name: 'License',
+                            data: total
+                        }]
+                    });
+
+                    $('.loader').remove();
+                }
+            });
+        });
+
+        $('#grafik-status').ready(function () {
+            $.ajax({
+                url: '@Url.Action("GetLicensePerIdWfStatus", "Dashboard")',
+                data: {
+                    id_sop_type: ""
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#grafik-status').append(img);
+                },
+                success: function (data) {
+                    $('#grafik-status').highcharts({
+                        chart: {
+                            plotBackgroundColor: null,
+                            plotBorderWidth: null,
+                            plotShadow: false,
+                            type: 'pie',
+                            options3d: {
+                                enabled: true,
+                                alpha: 45,
+                                beta: 0
+                            },
+                            height: 300
+                        },
+                        title: {
+                            text: ''
+                        },
+                        tooltip: {
+                            pointFormat: '{series.name}: <b>{point.percentage:.1f}% ({point.y})</b>'
+                        },
+                        plotOptions: {
+                            pie: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                depth: 35,
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                showInLegend: true
+                            }
+                        },
+                        legend: {
+                            align: 'central',
+                            itemStyle: { "fontSize": "11px", "fontWeight": "normal" }
+                        },
+                        series: [{
+                            name: "License",
+                            colorByPoint: true,
+                            data: data.data
+                        }]
+                    });
+                    $('.loader').remove();
+                }
+            });
+        });
+
+        $('.dashboard-menu').click(function () {
+            var url = $(this).attr("data-url");
+            var srcValue = "";
+            $.ajax({
+                url: url,
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div>' +
+                                '<div><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#render-body').html(img);
+                },
+                success: function (data) {
+                    $('#render-body').html(data);
+                }
+            });
+        });
+    });
+</script>

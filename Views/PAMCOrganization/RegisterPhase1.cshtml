@@ -1,0 +1,17 @@
+﻿<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAMCOrganization/Phase1/_InformationForm")
+            </div>
+        }
+    </div>
+</div>

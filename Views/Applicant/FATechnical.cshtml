@@ -1,0 +1,395 @@
+﻿@model DKUPPU.ViewModels.MstApplicantTechnicalFormViewModel
+@{
+    ViewBag.Title = "Technical";
+    string fileSize = ViewBag.DocUploadFileSize == null ? string.Empty : ViewBag.DocUploadFileSize;
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>@ViewBag.Title Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.License.id_trx_license)
+                    @Html.HiddenFor(model => model.License.id_sop_type)
+                    @Html.HiddenFor(model => model.License.id_license_category)
+                    @Html.HiddenFor(model => model.Applicant.id_applicant)
+                    @Html.HiddenFor(model => model.Applicant.job_id)
+                    @Html.HiddenFor(model => model.WTILicenseTypeId)
+                    @Html.HiddenFor(model => model.WTIDocCategoryId)
+
+                    <input type="hidden" id="DocUploadFormFileSize" value="@fileSize" />
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LicenseId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.LicenseId, (IEnumerable<SelectListItem>)ViewBag.Licenses, "Select Item", htmlAttributes: new { @class = "form-control required-value-dropdown" })
+                        </div>
+                    </div>
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LicenseNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.DropDownList("LicenseNo", (IEnumerable<SelectListItem>)ViewBag.LicenseNumbers, "Select Item", new { @class = "form-control required-value-dropdown", id = "LicenseNo" })
+                            </div>
+                            @Html.LabelFor(model => model.LicenseNoNew, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.LicenseNoNew, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                    </fieldset>                    
+                    @Html.Partial("_DocUploadForm", Model)
+                    <div class="form-group">
+                        <div class="col-md-2">Type of Aircraft</div>
+                        <div class="col-md-9" id="list-aircraft-type-rating">
+                            @Html.Partial("_LicAircraftTypeRatingForm", new List<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Recurrent Type of Aircraft</div>
+                        <div class="col-md-9" id="list-recurrent-type-of-aircraft">
+                            @Html.Partial("_LicRecurrentTypeOfAircraftForm", new List<DKUPPU.ViewModels.TrxLicRecurrentTypeOfAircraftViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Competency Checks</div>
+                        <div class="col-md-9" id="list-competency-check">
+                            @Html.Partial("_LicCompetencyCheckForm", new List<DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Medical Check</div>
+                        <div class="col-md-9" id="list-medical-certificate">
+                            @Html.Partial("_LicMedicalCertificateForm", new List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>())
+                        </div>
+                    </div>
+                    <div id="error">
+                        <input type="checkbox" id="checkbox-disclaimer" />
+                        I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="submit" class="btn btn-primary" type="submit"> Submit </button>
+                        <a href="@Url.Action("Index", "Applicant")" class="btn btn-default"> Cancel </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#WTISopTypeId').attr('disabled', 'disabled');
+        $('#WTISopTypeDocFile').addClass('disabled');
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#LicenseId').change(function () {
+            var licenseId = $(this).val();
+
+            $.ajax({
+                url: '@Url.Action("GetLicenseNoByLicenseType", "Applicant")',
+                data: {
+                    licenseType: licenseId
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#LicenseNo').empty();
+                    $('#LicenseNo').append('<option value="">Select Item</option>');
+                    $.each(data, function (i, data) {
+                        $('#LicenseNo').append('<option value="' + data.license_no + '">' + data.license_no + '</option>');
+                    });
+                    $('#LicenseNo').append('<option value="Create New">Create New</option>');
+
+                    var licenseNoNewObj = $('#LicenseNoNew');
+                    licenseNoNewObj.val('');
+                    licenseNoNewObj.attr('disabled', 'disabled');
+
+                    var IsWTIObj = $('input[name="IsWTI"]');
+                    var WTISopTypeIdObj = $('#WTISopTypeId');
+
+                    if (licenseId == '') {
+                        IsWTIObj.attr('disabled', 'disabled');
+                        WTISopTypeIdObj.attr('disabled', 'disabled');
+                        WTISopTypeIdObj.removeClass('required-value-dropdown');
+                        $('#WTISopTypeDocFile').addClass('disabled');
+                    }
+                    else
+                        IsWTIObj.removeAttr('disabled', 'disabled');
+
+                    IsWTIObj.prop('checked', false);
+                    IsWTIObj.removeAttr("checked");
+                    WTISopTypeIdObj.empty();
+                    WTISopTypeIdObj.append('<option value="">Select Item</option>');
+                    $("#WTISopTypeDocFile").val('');
+                }
+            });
+        });
+
+        $('#LicenseNo').change(function () {
+            var licenseNo = $(this).val();
+            var licenseType = $('#LicenseId').val();
+            var LicenseNoNewObj = $('#LicenseNoNew');
+
+            if (licenseNo == 'Create New') {
+                LicenseNoNewObj.removeAttr('disabled');
+                LicenseNoNewObj.focus();
+            }
+            else {
+                LicenseNoNewObj.attr('disabled', 'disabled');
+                LicenseNoNewObj.removeClass('required-value');
+
+                $.ajax({
+                    url: '@Url.Action("GetApplicantTechnicalData", "Applicant")',
+                    data: {
+                        applicantID: $('#Applicant_id_applicant').val(),
+                        licenseNo: licenseNo,
+                        licenseType: licenseType
+                    },
+                    dataType: 'JSON',
+                    success: function (data) {
+                        var idTrxLicense = data.License.id_trx_license;
+
+                        $('#License_id_trx_license').val(idTrxLicense);
+
+                        GetAircraftTypeRating(idTrxLicense, '@ViewBag.IsAircraftTypeRatingReadOnly');
+                        GetRecurrentTypeOfAircraft(idTrxLicense, '@ViewBag.IsRecurrentTypeOfAircraftReadOnly');
+                        GetCompetencyCheck(idTrxLicense, '@ViewBag.IsCompetencyCheckReadOnly');
+                        GetMedicalCertificate(idTrxLicense, '@ViewBag.IsMedicalCertificateReadOnly');
+                    }
+                });
+            }
+        });
+
+        $('input[name="IsWTI"]').change(function () {
+            var WTISopTypeIdObj = $('#WTISopTypeId');
+            var WTISopTypeDocFileObj = $('#WTISopTypeDocFile');
+
+            if ($(this).val() == 'Yes') {
+                WTISopTypeIdObj.removeAttr('disabled');
+                WTISopTypeIdObj.addClass('required-value-dropdown');
+                WTISopTypeDocFileObj.removeClass('disabled');
+
+                SetWTISopType($('#LicenseId').val());
+            }
+            else {
+                WTISopTypeIdObj.attr('disabled', 'disabled');
+                WTISopTypeIdObj.removeClass('required-value-dropdown');
+                WTISopTypeDocFileObj.addClass('disabled');
+            }
+        });
+
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        $('form').submit(function () {
+            var hasError = 0;
+
+            var technicalForm = $(this);
+            var licenseNo = $('#LicenseNo').val();
+            var newLicenseNoObj = $('#LicenseNoNew');
+
+            if (licenseNo == 'Create New' && newLicenseNoObj.val() == '')
+                newLicenseNoObj.addClass('required-value');
+            else
+                newLicenseNoObj.removeClass('required-value');
+
+            $.each(technicalForm.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            $.each(technicalForm.find('.required-value-dropdown'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            if (hasError > 0)
+                return false;
+        });
+    });
+
+    function FileValidation(object) {
+        var IsValid = true;
+        $(object).parent().find('span').remove();
+        $(object).parent().removeClass('has-error');
+        $(object).parent().removeClass('has-success');
+
+        var allowedExtensions = ["jpg", "pdf", "png"];
+
+        var value = $(object).val(),
+                    file = value.toLowerCase(),
+                    extension = file.substring(file.lastIndexOf('.') + 1);
+        if ($(object).val().length > 0) {
+            if ($.inArray(extension, allowedExtensions) == -1) {
+                $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            } else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+        }
+        return IsValid;
+    }
+
+    function FileSize(object) {
+        var IsValid = true;
+        if ($(object).val().length > 0) {
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var file = $(object)[0].files[0];
+            var maxFileSize = $('#DocUploadFormFileSize').val();
+
+            if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                $(object).after('<span class="help-block">The file size to big</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            } else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+        }
+        return IsValid;
+    }
+
+    function SetWTISopType(licenseTypeId) {
+        $.ajax({
+            url: '@Url.Action("GetWTISopTypeByLicenseType", "Applicant")',
+            data: {
+                licenseType: licenseTypeId
+            },
+            dataType: 'JSON',
+            success: function (data) {
+                $('#WTISopTypeId').empty();
+                $('#WTISopTypeId').append('<option value="">Select Item</option>');
+                $.each(data, function (i, data) {
+                    $('#WTISopTypeId').append('<option value="' + data.SOPTypeId + '">' + data.SOPTypeName + '</option>');
+                });
+            }
+        });
+    }
+
+    function GetAircraftTypeRating(idTrxLicense, isAircraftTypeRatingReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetAircraftTypeRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isAircraftTypeRatingReadOnly: isAircraftTypeRatingReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-aircraft-type-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-aircraft-type-rating').html(data);
+            }
+        });
+    }
+
+    function GetRecurrentTypeOfAircraft(idTrxLicense, isRecurrentTypeOfAircraftReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetRecurrentTypeOfAircraft", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isRecurrentTypeOfAircraftReadOnly: isRecurrentTypeOfAircraftReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-recurrent-type-of-aircraft').html(img);
+            },
+            success: function (data) {
+                $('#list-recurrent-type-of-aircraft').html(data);
+            }
+        });
+    }
+
+    function GetCompetencyCheck(idTrxLicense, isCompetencyCheckReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetCompetencyCheck", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isCompetencyCheckReadOnly: isCompetencyCheckReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-competency-check').html(img);
+            },
+            success: function (data) {
+                $('#list-competency-check').html(data);
+            }
+        });
+    }
+
+    function GetMedicalCertificate(idTrxLicense, isMedicalCertificateReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetMedicalCertificate", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isMedicalCertificateReadOnly: isMedicalCertificateReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-medical-certificate').html(img);
+            },
+            success: function (data) {
+                $('#list-medical-certificate').html(data);
+            }
+        });
+    }
+
+    function IsRequired(object) {
+        var IsValid = true;
+        $(object).parent().find('span').remove();
+        $(object).parent().removeClass('has-error');
+        $(object).parent().removeClass('has-success');
+        var value = $(object).val();
+        if (value.length <= 0) {
+            $(object).after('<span class="help-block">Is required.</span>');
+            $(object).parent().addClass('has-error');
+            IsValid = false;
+        }
+        else {
+            $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+            $(object).parent().addClass('has-success');
+            IsValid = true;
+        }
+        return IsValid;
+    }
+
+</script>

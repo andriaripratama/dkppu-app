@@ -1,0 +1,177 @@
+﻿@model DKUPPU.ViewModels.PPPURegisterFormViewModel
+@{
+    ViewBag.Title = "Underwriting Recording Aircraft";
+}
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <ul id="myTab1" class="nav nav-tabs bordered">
+                    <li class="active">
+                        <a href="#s1" data-toggle="tab"><i class="glyphicon glyphicon-th-large"></i> Application </a>
+                    </li>
+                    <li>
+                        <a href="#s2" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft Data </a>
+                    </li>
+                    <li>
+                        <a href="#s3" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Air Transport Activity Data and Use </a>
+                    </li>
+                    <li>
+                        <a href="#s4" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Human Resources </a>
+                    </li>
+                    <li>
+                        <a href="#s5" data-toggle="tab"><i class="glyphicon glyphicon-book"></i> Documents </a>
+                    </li>
+                </ul>
+
+                <div id="myTabContent1" class="tab-content padding-10">
+                    <div class="tab-pane fade in active" id="s1">
+                        <!--Data Applicant Begin-->
+                        <fieldset>
+                            <div class="form-group">
+                                @Html.Partial("../MstRegisterForm/_DataAircraftForm", Model.Aircraft)
+                            </div>
+                        </fieldset>
+                        <!--Data Applican End-->
+                        <div class="form-horizontal">
+                            <div class="col-md-push-12">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.registration_number)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.DropDownListFor(model => model.Application.registration_number, (IEnumerable<SelectListItem>)ViewBag.registration_number, "Select Registration No.", new { @class = "form-control" })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.aircraft_type)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.Application.aircraft_type, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.serial_number)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.EditorFor(model => model.Application.serial_number, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.registration_marks)
+                                    </label>
+                                    <div class="col-md-2">
+                                        @Html.EditorFor(model => model.Application.registration_marks, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.Operator)
+                                    </label>
+                                    <div class="col-md-2">
+                                        @Html.EditorFor(model => model.Application.Operator, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.operator_address)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.TextAreaFor(model => model.Application.operator_address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.owner)
+                                    </label>
+                                    <div class="col-md-2">
+                                        @Html.EditorFor(model => model.Application.owner, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.owner_address)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.TextAreaFor(model => model.Application.owner_address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.guarantor)
+                                    </label>
+                                    <div class="col-md-2">
+                                        @Html.EditorFor(model => model.Application.guarantor, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.guarantor_address)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.TextAreaFor(model => model.Application.guarantor_address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.insured)
+                                    </label>
+                                    <div class="col-md-2">
+                                        @Html.EditorFor(model => model.Application.insured, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label text-left">
+                                        @Html.LabelFor(model => model.Application.insured_address)
+                                    </label>
+                                    <div class="col-md-4">
+                                        @Html.TextAreaFor(model => model.Application.insured_address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-pane fade" id="s2">
+                    </div>
+
+                    <div class="tab-pane fade" id="s3">
+                    </div>
+
+                    <div class="tab-pane fade" id="s4">
+                    </div>
+
+                    <div class="tab-pane fade" id="s5">
+                    </div>
+                </div>
+            </div>
+            <div class="row col-md-12">
+                <fieldset>
+                    <legend>Upload Document</legend>
+                    @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                </fieldset>
+                <div id="error" class="col-md-12">
+                    <input type="checkbox" required="required" />
+                    I hereby certify that the above information given are true and correct
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" type="submit"> Submit </button>
+                <a href="#" class="btn btn-danger"> Back </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#tabs').tabs();
+    });
+</script>

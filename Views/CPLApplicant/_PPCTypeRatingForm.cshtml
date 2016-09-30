@@ -1,0 +1,74 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicPpcViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Type Ratting</th>
+                    <th>Aircraft Or SIM</th>
+                    <th>Check Date</th>
+                    <th>Expire Date</th>
+                    <th>Position/PIC</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int j = 0; string vdisable = "";}
+                @foreach (DKUPPU.ViewModels.TrxLicPpcViewModel item in Model)
+                {
+                    vdisable = ""; 
+                    <tr id="TrxLicPpcViewModel_@j">
+                        @if (j == 0)
+                        {
+                            vdisable = "disabled";
+                        }
+                        <td>
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].id_ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__id_ppc_type_rating" value="@Html.DisplayFor(m => m[j].id_ppc_type_rating)">
+                            <input type="text" class="form-control required-value" name="TrxLicPpcViewModel[@j].ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating" value="@Html.DisplayFor(m => m[j].ppc_type_rating)" readonly="readonly" />
+
+                        </td>
+                        <td>
+                            @if (j == 0)
+                            {
+                                <input type="text" class="form-control required-value" name="TrxLicPpcViewModel[@j].air_sim_type_value" id="TrxLicPpcViewModel_@j.ToString()__air_sim_type_value" value="@Html.DisplayFor(m => m[j].air_sim_type_value)" @vdisable />
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, new { @class = "form-control required-value", id = "TrxLicPpcViewModel_" + j.ToString() + "__id_air_sim_type", @disable = vdisable })
+                            }
+                           
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker required-value" name="TrxLicPpcViewModel[@j].checked_date" id="TrxLicPpcViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vdisable />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker required-value" name="TrxLicPpcViewModel[@j].expired_date" id="TrxLicPpcViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vdisable/>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control required-value" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic" value="@Html.DisplayFor(m => m[j].ppc_pic)" @vdisable />
+                        </td>
+                    </tr>
+                        j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    // datepicker
+    $('.date-picker').datepicker({
+        //options
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        //...
+    });
+    $(function () {
+        $('.id_class_rating').change(function () {
+            var item = $('.id_class_rating option:selected').text();
+            $('#TrxLicPpcViewModel_0__ppc_type_rating').val(item);
+        });
+    });
+</script>

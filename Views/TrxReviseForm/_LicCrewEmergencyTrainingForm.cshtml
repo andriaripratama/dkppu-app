@@ -1,0 +1,32 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicCrewEmergencyTrainingViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date Of Recurrent</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicCrewEmergencyTrainingViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicCrewEmergencyTrainingViewModel_@j">
+                    <td>
+                        <input type="hidden" name="TrxLicCrewEmergencyTrainingViewModel[@j].id_trx_emergency_training" id="TrxLicCrewEmergencyTrainingViewModel_@j.ToString()__id_trx_emergency_training" value="@Html.DisplayFor(a => item.id_trx_emergency_training)">
+                        <input type="text" class="form-control" name="TrxLicCrewEmergencyTrainingViewModel[@j].recurrent_date" id="TrxLicCrewEmergencyTrainingViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)">
+                    </td>
+                    <td><input type="text" class="form-control" name="TrxLicCrewEmergencyTrainingViewModel[@j].expired_date" id="TrxLicCrewEmergencyTrainingViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+

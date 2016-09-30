@@ -1,0 +1,25 @@
+﻿@model List<DKUPPU.ViewModels.MstMappingAircraftApprovalViewModel>
+@{
+    Layout = null;
+}
+<div class="smart-form">
+    <div class="inline-group">
+        @{int j = 0;}
+        @foreach (DKUPPU.ViewModels.MstMappingAircraftApprovalViewModel item in Model)
+        {
+            <label class="checkbox state-disabled">
+                @if (item.disposition == 1)
+                {
+                    <input type="checkbox" disabled="disabled" name="checkbox-inline">
+                }
+                else
+                {
+                    <input type="checkbox" disabled="disabled" checked="checked" name="checkbox-inline">
+                }
+                <i></i>
+                @Html.DisplayFor(a => item.group_name)
+            </label>
+            j++;
+        }
+    </div>
+</div>

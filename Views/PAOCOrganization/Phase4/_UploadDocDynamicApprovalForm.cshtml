@@ -1,0 +1,68 @@
+﻿@model List<DKUPPU.ViewModels.TrxOrganizationDocCertificationViewModel>
+@{
+    Layout = null;
+    string isWfActivity = ViewBag.isWfActivity;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @{
+                int i = 0;
+                string required = "required-value";
+                string bintang = "*";
+
+            }
+
+            @foreach (var item in Model)
+            {
+                bool isFileExist = item.doc_file_data == null ? false : true ;
+             
+                if (isFileExist)
+                {
+                    <div class="form-group">
+                        <a id="@i" style="cursor:pointer;" class="col-md-12 preview" data-target="#preview-document" data-toggle="modal">@Html.DisplayFor(a => item.label_name)</a>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group">
+                        <label class="col-md-4 control-label text-left" for="sertificate_no">@Html.DisplayFor(m => m[i].label_name) @bintang</label>
+                        <div class="col-md-4">
+                            <input type="file" class="form-control btn btn-default @required" data-validation="@required" name="ListOfTrxOrganizationDocCertification[@i].File" id="ListOfTrxOrganizationDocCertification_@i.ToString()__File" />
+                            <input type="hidden" name="ListOfTrxOrganizationDocCertification[@i].id_doc_category" id="ListOfTrxOrganizationDocCertification_@i.ToString()__id_doc_category" value="@Html.DisplayFor(m => item.id_doc_category)" />
+                            <input type="hidden" class="form-control" name="ListOfTrxOrganizationDocCertification[@i].id_trx_org_doc_certification" id="ListOfTrxOrganizationDocCertification_@i.ToString()__id_trx_org_doc_certification" value="@Html.DisplayFor(a => item.id_trx_org_doc_certification)">
+                        </div>
+                    </div>
+                }
+                i++;
+            }
+        </div>
+    </div>
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"></div>
+<script>
+    $(function () {
+        $('.preview').click(function () {
+            var id = $(this).attr('id');
+
+            var id_trx_org_doc_certification = $('#ListOfTrxOrganizationDocCertification_' + id + '__id_trx_org_doc_certification').val();
+
+            $.ajax({
+                url: "@Url.Action("GetTrxOrganizationDocCertificationUploadById", "AJAX")",
+                data: {
+                    id_trx_org_doc_certification: id_trx_org_doc_certification
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

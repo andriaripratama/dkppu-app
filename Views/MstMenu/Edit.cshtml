@@ -1,0 +1,34 @@
+﻿@model DKUPPU.ViewModels.MstMenuViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Edit Menu </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.id_menu)
+                <fieldset>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.Partial("_Form",Model)
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit"> Submit </button>
+                        <a class="btn btn-danger" href="@Url.Action("Index", "MstMenu")">Cancel</a>
+                    </div>
+                </fieldset>
+            }
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")
+

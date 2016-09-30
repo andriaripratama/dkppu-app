@@ -1,0 +1,127 @@
+﻿@model DKUPPU.ViewModels.PSNAAircraftViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div>
+                <br />
+                <div class="form-horizontal">
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_type_model)
+                        </label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="aircraft_type_model" name="aircraft_type_model">
+                                <option value="">Select</option>
+                                @foreach (var item in Model.ListOfAircraftTypeModel)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_registration)
+                        </label>
+                        <div class="col-md-8">
+                            <select class="form-control" id="aircraft_registration" name="aircraft_registration">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_serial_number)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.aircraft_serial_number, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.manufacture)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.manufacture, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.powerplant_manufacture)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.powerplant_manufacture, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.model_series)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.model_series, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.certification_note)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.certification_note, new { @class = "form-control", @rows = 4 })
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" type="submit">Submit</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#aircraft_type_model').change(function () {
+            $('#aircraft_registration').empty();
+
+            $.ajax({
+                url: '@Url.Action("GetAircraftRegistration", "PSNAAircraft")',
+                data: {
+                    id_aircraft_type_model: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#aircraft_registration').empty();
+                    $('#aircraft_registration').append('<option value="">Select</option>');
+                    $.each(data, function (i, data) {
+                        $('#aircraft_registration').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        $('#aircraft_registration').change(function () {
+            $('#aircraft_serial_number').val('');
+            $('#manufacture').val('');
+            $('#powerplant_manufacture').val('');
+            $('#model_series').val('');
+            
+            $.ajax({
+                url: '@Url.Action("GetAircraftProperties", "PSNAAircraft")',
+                data: {
+                    id_aircraft_registration: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#aircraft_serial_number').val(data.id_lookup);
+                    $('#manufacture').val(data.lookup_value);
+                    $('#powerplant_manufacture').val(data.id_lookup);
+                    $('#model_series').val(data.lookup_value);
+                }
+            });
+        });
+    });
+</script>

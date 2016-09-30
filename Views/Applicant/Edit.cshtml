@@ -1,0 +1,193 @@
+﻿@model DKUPPU.ViewModels.MstApplicantFormViewModel
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-plus"></i></span>
+        <h2>New Applicant </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.id_applicant)
+                @Html.Partial("_Form", Model)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.photo_file, new { @class = "col-md-2 control-label text-left" })
+                    <div class="col-md-8">
+                        <input type="file" name="_photo_file" class="btn btn-warning" id="letter_of_assignment" />
+                    </div>
+                </div>
+                <div id="error">
+                    <input type="checkbox" id="checkbox-disclaimer" />
+                    I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"> Submit </button>
+                    <a class="btn btn-danger" href="@Url.Action("Index","Applicant")">Cancel</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        var minDate = new Date('1/1/1900');
+        var todaysDate = new Date();
+        var maxDate = new Date((todaysDate.getFullYear() - 15),
+                               todaysDate.getMonth(),
+                               todaysDate.getDate());
+
+        $('.date-picker').datepicker({
+            minDate: minDate,
+            maxDate: maxDate,
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        $("#org_type").change(function () {
+            var org_type = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetOrganizationByType","AJAX")',
+                data: { org_type: org_type },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_org").empty();
+                    $("#id_org").append("<option value=''>Select Organization Name</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_org").append("<option value='" + item.id_lookup + "'>" + item.lookup_value + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_nationality").change(function () {
+            var id_country = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllStateByCountryId", "AJAX")',
+                data: { id_country: id_country },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_state").empty();
+                    $("#id_state").append("<option value=''>Select State</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_state").append("<option value='" + item.id_state + "'>" + item.state_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_state").change(function () {
+            var id_state = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllDistricByStateId", "AJAX")',
+                data: { id_state: id_state },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_district").empty();
+                    $("#id_district").append("<option value=''>Select District</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_district").append("<option value='" + item.id_district + "'>" + item.district_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_district").change(function () {
+            var id_district = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllSubDistricByDistricId", "AJAX")',
+                data: { id_district: id_district },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_subdist").empty();
+                    $("#id_subdist").append("<option value=''>Select Sub District</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_subdist").append("<option value='" + item.id_subdist + "'>" + item.subdist_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_subdist").change(function () {
+            var id_subdist = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllVillageBySubdiscId", "AJAX")',
+                data: { id_subdist: id_subdist },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_village").empty();
+                    $("#id_village").append("<option value=''>Select Village</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_village").append("<option value='" + item.id_village + "'>" + item.village_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().parent().removeClass('has-error');
+            $(object).parent().parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+    });
+</script>

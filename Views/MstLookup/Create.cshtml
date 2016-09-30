@@ -1,0 +1,40 @@
+﻿@model DKUPPU.ViewModels.MstLookupViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>New Role </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal" }))
+            {
+                @Html.AntiForgeryToken()
+                <fieldset>
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.id_lookup, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.id_lookup, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.id_lookup, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    @Html.Partial("_Form")
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit"> Submit </button>
+                        <a class="btn btn-danger" href="@Url.Action("Index", "MstLookup")">Cancel</a>
+                    </div>
+                </fieldset>
+            }
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")

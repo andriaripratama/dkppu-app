@@ -1,0 +1,390 @@
+﻿@model List<DKUPPU.ViewModels.SpWfSelectTrxLicenseViewModel>
+@{
+    if (ViewBag.NoLayout != true)
+    {
+        Layout = null;
+    }
+    ViewBag.Title = "Applicant List";
+    List<DKUPPU.ViewModels.MstMenuViewModel>
+        MenuIcon = new List<DKUPPU.ViewModels.MstMenuViewModel>
+            ();
+}
+<style>
+    table > thead > tr > th {
+        cursor: pointer;
+    }
+</style>
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.Name != null)
+        {
+            MenuIcon = DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name, "MN03");
+            foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>
+                )MenuIcon.OrderBy(a => a.menu_order))
+            {
+                if (menuIconItem.menu_title == "Checkout")
+                {
+                    <button class="btn bg-color-greenLight txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+                else
+                {
+                    <button class="btn bg-color-blue txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+            }
+        }
+    </div>
+</div>
+
+@using (Html.BeginForm("SendEmail", "Reports"))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="btn bg-color-blue txt-color-white" id="print-all" title="Print and send email" data-target="#modal-all-modul" data-toggle="modal">
+                <i class="fa fa-print fa-4x"></i>
+            </a>
+        </div>
+    </div>
+    <br />
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="LicenseType">Position</label>
+            <div class="col-md-5">
+                @Html.DropDownList("job_position", (IEnumerable<SelectListItem>)ViewBag.job_position, "Select Job Position", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="LicenseType">Exam</label>
+            <div class="col-md-5">
+                @Html.DropDownList("exam_type", (IEnumerable<SelectListItem>)ViewBag.exam_type, "Select Exam Type", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="LicenseType"></label>
+            <div class="col-xs-3">
+                <input class="form-control" id="search-value-index" value="@ViewBag.srcValue" name="search-value-index" placeholder="Search" />
+            </div>
+            <div class="col-xs-2">
+                <a id="src-lecense" class="btn btn-warning btn-sm ">Search</a>
+            </div>
+        </div>
+    </div>
+    <br />
+    <input type="hidden" name="id_wf_status_for_print" id="id_wf_status_for_print" value="@ViewBag.WfStatus" />
+    <div class="row">
+        <div class="col-xs-12" id="list-license" data-wf="@ViewBag.WfStatus">
+            <!-- Widget ID (each widget will need unique ID)-->
+            <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                    <h2>List All Application </h2>
+
+                </header>
+
+                <!-- widget div-->
+                <div id="table-list">
+                    <!-- widget content -->
+                    <div class="widget-body no-padding">
+                        <div class="table-responsive">
+                            <table id="table-applicant" class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th data-order="False">
+                                            <input type="checkbox" id="check-all-2" name="check-all" />
+                                        </th>
+                                        <th id="RegNo" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].RegNo)
+                                        </th>
+                                        <th id="NIK" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].NIK)
+                                        </th>
+                                        <th id="IdentityType" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].IdentityType)
+                                        </th>
+                                        <th id="FullName" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].FullName)
+                                        </th>
+                                        <th id="LicenseName" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].LicenseName)
+                                        </th>
+                                        <th id="Job" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].Job)
+                                        </th>
+                                        @if (ViewBag.IsInternal == true)
+                                        {
+                                            <th id="OrgName" data-desc="True">
+                                                @Html.DisplayNameFor(model => model[1].OrgName)
+                                            </th>
+                                        }
+                                        <th id="Nationality" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].Nationality)
+                                        </th>
+                                        <th id="PaymentStatus" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].PaymentStatus)
+                                        </th>
+                                        <th id="InvoiceNumber" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].InvoiceNumber)
+                                        </th>
+                                        <th id="ExpiredDate" data-desc="True">
+                                            @Html.DisplayNameFor(model => model[1].ExpiredDate)
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="applicant-list-data">
+                                    @{int j = 0;}
+                                    @foreach (DKUPPU.ViewModels.SpWfSelectTrxLicenseViewModel item in Model)
+                                    {
+                                        <tr id="">
+                                            <td>
+                                                @Html.CheckBoxFor(model => model[j].is_selected, htmlAttributes: new { @class = "check-print"})
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.RegNo)
+                                                @Html.HiddenFor(model => model[j].id_trx_license)
+                                                @Html.HiddenFor(model => model[j].sn)
+                                            </td>
+                                            <td>
+                                                @if (item.FormUrl != null)
+                                                {
+                                                    <a href="@Html.DisplayFor(modelItem=>item.FormUrl)">@Html.DisplayFor(modelItem => item.NIK)</a>
+                                                }
+                                                else
+                                                {
+                                                    @Html.DisplayFor(modelItem => item.NIK)
+                                                }
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.IdentityType)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.FullName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.LicenseName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Job)
+                                            </td>
+                                            @if (ViewBag.IsInternal == true)
+                                            {
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.OrgName)
+                                                </td>
+                                            }
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Nationality)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.PaymentStatus)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ExpiredDate)
+                                            </td>
+                                        </tr>
+                                            j++;
+                                    }
+                                </tbody>
+                            </table>
+                            <div class="dt-toolbar-footer">
+                                <div class="col-xs-2 col-sm-2" id="total-row">
+                                    <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                                </div>
+                                <div class="col-xs-10 col-sm-10">
+                                    <div class="dataTables_paginate paging_simple_numbers" id="pagination-applicant">
+                                        @Html.Raw(ViewBag.Pagination)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end widget content -->
+
+                </div>
+                <!-- end widget div -->
+
+            </div>
+            <!-- end widget -->
+        </div>
+    </div>
+    <div id="modal-all-modul" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+                    <h4>Group Information</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal" id="add-license-applicant">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left" for="Position">Group Name</label>
+                            <div class="col-md-8">
+                                <input type="text" name="group_name_for_print" id="group_name_for_print" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" id="btn-checkout-ok" class="btn btn-primary">Submit</button>
+                    <a role="button" id="btn-checkout-cancel" class="btn btn-danger" aria-hidden="true" data-dismiss="modal">Cancel</a>
+                </div>
+            </div>
+            <div id="submit-loader"></div>
+        </div>
+    </div>
+}
+
+
+@if (MenuIcon != null)
+{
+    foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in MenuIcon)
+    {
+        <script>
+            $(function () {
+                $('#' + '@menuIconItem.menu_name').click(function () {
+                    $.ajax({
+                        url: "@Url.Action(menuIconItem.menu_action, menuIconItem.menu_controller)",
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div class="modal-dialog modal-lg">' +
+                                        '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#modal-all-modul').html(img);
+                        },
+                        success: function (data) {
+                            $('#modal-all-modul').html(data);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+}
+<script type="text/javascript">
+    $(function () {
+        $('#job_position').change(function () {
+            $('#exam_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetLicenseTypeByJobId", "Home")',
+                data: {
+                    id_job: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#exam_type').empty();
+                    $('#exam_type').append('<option value="">Select Exam Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#exam_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        /* button search */
+        var propertyOrder = "CreateDate";
+        var isDescending = "True";
+        $('#src-lecense').click(function () {
+            var job_position = $('#job_position').val();
+            var exam_type = $('#exam_type').val();
+            var srcValue = $('#search-value-index').val();
+            var wfStatus = $('#list-license').attr("data-wf");
+            getListData(wfStatus, 1, 10, job_position, exam_type, srcValue, propertyOrder, isDescending);
+        });
+        $('#pagination-applicant').on("click", "li.page", function (e) {
+            var page = $(this).attr('link');
+            var wfStatus = "@ViewBag.WfStatus";
+            var pageSize = 10;
+            var job_position = $('#job_position').val();
+            var exam_type = $('#exam_type').val();
+            var srcValue = $('#search-value-index').val();
+            getListData(wfStatus, 1, 10, job_position, exam_type, srcValue, propertyOrder, isDescending);
+        });
+
+        $('#table-applicant>thead>tr>th').click(function (e) {
+            if ($(this).attr('data-order') != 'False') {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var job_position = $('#job_position').val();
+                var exam_type = $('#exam_type').val();
+                var srcValue = $('#search-value-index').val();
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-applicant>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getListData(wfStatus, 1, 10, job_position, exam_type, srcValue, propertyOrder, isDescending);
+            }
+        });
+
+        function getListData(wfStatus, page, pageSize, job_position, exam_type, srcValue, propertyOrder, isDescending) {
+            $.ajax({
+                url: '@Url.Action("GetPrintExamInternalOperationsReturnJson", "AJAX")',
+                data: {
+                    wfStatus: wfStatus,
+                    page: page,
+                    pageSize: pageSize,
+                    job_position: job_position,
+                    exam_type: exam_type,
+                    srcValue: srcValue,
+                    propertyOrder: propertyOrder,
+                    isDescending: isDescending
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#table-list').after(img);
+                },
+                success: function (data) {
+                    var j = 0;
+                    var table_row = '';
+                    $.each(data.dataTable, function (i, value) {
+                        table_row += '<tr>';
+                        table_row += '<td><input name="[' + j + '].is_selected" type="checkbox" value="true" data-val-required="The is_selected field is required." data-val="true"></input><input name="[' + j + '].is_selected" type="hidden" value="false"></input></td>';
+                        table_row += '<td>' + value.RegNo + '<input name="[' + j + '].id_trx_license" type="hidden" value="' + value.id_trx_license + '"><input name="[' + j + '].sn" type="hidden" value="' + value.sn + '"></td>';
+                        if (value.FormUrl != undefined) {
+                            table_row += '<td><a href=' + value.FormUrl + '>' + value.NIK + '</a></td>';
+                        } else {
+                            table_row += '<td>' + value.NIK + '</td>';
+                        }
+                        table_row += '<td>' + value.IdentityType + '</td>';
+                        table_row += '<td>' + value.FullName + '</td>';
+                        table_row += '<td>' + value.LicenseName + '</td>';
+                        table_row += '<td>' + value.Job + '</td>';
+                        table_row += '<td>' + value.OrgName + '</td>';
+                        table_row += '<td>' + value.Nationality + '</td>';
+                        table_row += '<td>' + value.PaymentStatus + '</td>';
+                        table_row += '<td>' + value.InvoiceNumber + '</td>';
+                        table_row += '<td>' + value.ExpiredDate + '</td>';
+                        table_row += '</tr>';
+                        j++;
+                    });
+                    $('#applicant-list-data').html(table_row);
+                    $('#pagination-applicant').html(data.pagination);
+                    $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                    $('.loader').remove();
+                }
+            });
+        }
+        $('#check-all-2').change(function () {
+            $("input:checkbox").prop('checked', $(this).prop("checked"));
+
+        });
+    });
+</script>

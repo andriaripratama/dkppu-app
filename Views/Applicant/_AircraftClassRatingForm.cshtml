@@ -1,0 +1,148 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel>
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsAircraftCategoryRatingItemReadOnly == null ? false : (ViewBag.IsAircraftCategoryRatingItemReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+<div class="table-responsive">
+    @if (!isReadOnly)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td style="padding-bottom: 5px; text-align: right;">
+                        <a class="pull-right btn btn-primary btn-xs disabled" id="add-class-rating"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+
+    <table class="table table-bordered table-striped" id="aircraft-class-rating-form-table">
+        <thead>
+            <tr>
+                <th>Class Rating</th>
+                <th>Date of Issue (D/M/Y)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("LicAircraftCategoryRatings[0].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.AircraftCategoryRatingItems, "Select Class Rating", new { @class = "form-control", id = "LicAircraftCategoryRatings_0__id_class_rating", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("LicAircraftCategoryRatings[0].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.AircraftCategoryRatingItems, "Select Class Rating", new { @class = "form-control", id = "LicAircraftCategoryRatings_0__id_class_rating" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicAircraftCategoryRatings[0].issued_date" id="LicAircraftCategoryRatings_0__issued_date" value="" @disabledHTML />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel item in Model)
+                    {
+                        <tr id="LicAircraftCategoryRatings_@i">
+                            <td>
+                                <input type="hidden" name="LicAircraftCategoryRatings[@i].id_trx_category_rating" id="LicAircraftCategoryRatings_@i.ToString()__id_trx_category_rating" value="@Html.DisplayFor(x => x[i].id_trx_category_rating)">
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("LicAircraftCategoryRatings[" + i.ToString() + "].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.AircraftCategoryRatingItems, "Select Class Rating", new { @class = "form-control", id = "LicAircraftCategoryRatings_" + i.ToString() + "__id_class_rating", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("LicAircraftCategoryRatings[" + i.ToString() + "].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.AircraftCategoryRatingItems, "Select Class Rating", new { @class = "form-control", id = "LicAircraftCategoryRatings_" + i.ToString() + "__id_class_rating" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.id_class_rating))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#LicAircraftCategoryRatings_@i.ToString()__id_class_rating option[value=@item.id_class_rating]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicAircraftCategoryRatings[@i].issued_date" id="LicAircraftCategoryRatings_@i.ToString()__issued_date" value="@Html.DisplayFor(x => x[i].issued_date)" @disabledHTML />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('#add-class-rating').click(function () {
+            var rowIndex = 0;
+
+            $('#aircraft-class-rating-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var aircraftCategoryRatingFirstRowObj = $('#aircraft-class-rating-form-table > tbody').find("tr:first");
+            var aircraftCategoryRatingNewRowObj = aircraftCategoryRatingFirstRowObj.clone();
+
+            $.each(aircraftCategoryRatingNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(aircraftCategoryRatingNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(aircraftCategoryRatingNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#aircraft-class-rating-form-table > tbody > tr').last().after(aircraftCategoryRatingNewRowObj);
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

@@ -1,0 +1,98 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicPpcViewModel>
+@{
+    Layout = null;
+    string sopType = ViewBag.sop_type == null ? string.Empty : ViewBag.sop_type;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Type Ratting</th>
+                    <th>Aircraft Or SIM</th>
+                    <th>Check Date</th>
+                    <th>Expire Date</th>
+                    <th>Position/PIC</th>
+                </tr>
+            </thead>
+            <tbody id="ppc-aircraft-rating">
+                @{
+                    int j = 0;
+                    string vreadonly = "";
+                    string vrequered = "";
+                    string datepicker = "";
+                    string from_date = "";
+                    string until_date = "";
+                }
+                @foreach (DKUPPU.ViewModels.TrxLicPpcViewModel item in Model)
+                {
+                    vreadonly = "readonly='readonly'";
+                    vrequered = "";
+                    datepicker = "";
+                    from_date = "";
+                    until_date = "";
+                    if ((item.is_history == false) && ViewBag.activity_id == "ACT01")
+                    {
+                        vreadonly = "";
+                        vrequered = (sopType == "WL20") ? string.Empty : "required-value";
+                        from_date = "from-date";
+                        until_date = "until-date";
+                        datepicker = "date-picker";
+                    }
+                    <tr id="TrxLicPpcViewModel_@j">
+                        <td>
+                            <input type="text" class="form-control" name="TrxLicPpcViewModel[@j].ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating" value="@Html.DisplayFor(m => m[j].ppc_type_rating)" readonly="readonly">
+                            <input type="hidden" class="form-control" name="TrxLicPpcViewModel[@j].id_trx_lic_ppc" id="TrxLicPpcViewModel_@j.ToString()__id_trx_lic_ppc" value="@Html.DisplayFor(m => m[j].id_trx_lic_ppc)">
+                        </td>
+                        <td>
+                            @if (ViewBag.activity_id == "ACT01" && vreadonly == "")
+                            {
+                                @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, new { @class = "form-control required-value", id = "TrxLicPpcViewModel_" + j.ToString() + "__id_air_sim_type" })
+                                <script>
+                                    $(function () {
+                                        var value = "@Html.DisplayFor(m => m[j].id_air_sim_type)";
+                                        $('#TrxLicPpcViewModel_' + @j.ToString() + '__id_air_sim_type option[value=' + value + ']').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" name="TrxLicPpcViewModel[@j].air_sim_type_value" id="TrxLicPpcViewModel_@j.ToString()__air_sim_type_value" value="@Html.DisplayFor(m => m[j].air_sim_type_value)" @vreadonly>
+                                <input type="hidden" name="TrxLicPpcViewModel[@j].id_air_sim_type" id="TrxLicPpcViewModel_@j.ToString()__id_air_sim_type" value="@Html.DisplayFor(m => m[j].id_air_sim_type)">
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @from_date @datepicker" name="TrxLicPpcViewModel[@j].checked_date" id="TrxLicPpcViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vreadonly>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @until_date @datepicker" name="TrxLicPpcViewModel[@j].expired_date" id="TrxLicPpcViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vreadonly>
+                        </td>
+                        <td>
+                            @if (ViewBag.activity_id == "ACT01" && vreadonly == "")
+                            {
+                                @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control required-value PositionOrPIC", id = "TrxLicPpcViewModel_" + j.ToString() + "__ppc_pic" })
+                                if (item.ppc_pic != null && item.ppc_pic != "")
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#TrxLicPpcViewModel_@j.ToString()__ppc_pic option[value=@item.ppc_pic]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+
+                            }
+                            else
+                            {
+                                <input type="text" class="form-control" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic" value="@Html.DisplayFor(m => m[j].ppc_pic)" @vreadonly>
+                                <input type="hidden" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic" value="@Html.DisplayFor(m => m[j].ppc_pic)">
+                            }
+                            
+
+                        </td>
+                    </tr>
+                            j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

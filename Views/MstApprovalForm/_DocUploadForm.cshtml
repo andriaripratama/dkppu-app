@@ -1,0 +1,104 @@
+﻿@model List<DKUPPU.ViewModels.MstDocUploadViewModel>
+@{
+    Layout = null;
+
+    bool isDocumentUploadStatusDisabled = ViewBag.IsDocumentUploadStatusDisabled == null ? false : (ViewBag.IsDocumentUploadStatusDisabled ? true : false);
+    string tagDocumentUploadStatusDisabled = isDocumentUploadStatusDisabled ? "disabled = 'disabled'" : string.Empty;
+}
+
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Attachment</th>
+                        @if (ViewBag.documentUploadStatus != false)
+                        {
+                            <th colspan="2">Status</th>
+                        }
+                        @if (ViewBag.documentUploadNote != false)
+                        {
+                            <th>Remark</th>
+                        }
+                        @if (ViewBag.RemarkLog == true)
+                        {
+                            <th>Remark Log</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody id="MstDocUploadViewModel">
+                    @{int j = 0;}
+                    @foreach (DKUPPU.ViewModels.MstDocUploadViewModel item in Model)
+                    {
+                        string satisfied = "";
+                        string unSatified = "";
+                        if (item.is_satisfied != null)
+                        {
+                            satisfied = item.is_satisfied == true ? "checked" : "";
+                            unSatified = item.is_satisfied == false ? "checked" : "";
+                        }
+                        <tr id="Document_@j">
+                            <td>
+                                <a id="@j" style="cursor:pointer;" class="preview" data-target="#preview-document" data-toggle="modal">@Html.DisplayFor(a => item.label_name)</a>
+                                <input type="hidden" class="form-control" name="MstDocUploadViewModel[@j].id_trx_uploaded_doc" id="MstDocUploadViewModel_@j.ToString()__id_trx_uploaded_doc" value="@Html.DisplayFor(a => item.id_trx_uploaded_doc)">
+                            </td>
+                            @if (ViewBag.documentUploadStatus != false)
+                            {
+                                <td>
+                                    <input type="radio" class="satisfied" name="MstDocUploadViewModel[@j].is_satisfied" id="MstDocUploadViewModel_@j.ToString()__is_satisfied" value="True" @satisfied @tagDocumentUploadStatusDisabled/> <label for="MstDocUploadViewModel_@j.ToString()__is_satisfied">Satisfied</label>
+                                </td>
+                                <td>
+                                    <input type="radio" class="un-satisfied" name="MstDocUploadViewModel[@j].is_satisfied" id="MstDocUploadViewModel_@j.ToString()__is_unsatisfied" value="False" @unSatified @tagDocumentUploadStatusDisabled/> <label for="MstDocUploadViewModel_@j.ToString()__is_unsatisfied">Unsatisfied</label>
+                                </td>
+                            }
+                            @if (ViewBag.documentUploadNote != false)
+                            {
+                                <td>
+                                    <input type="text" class="form-control" name="MstDocUploadViewModel[@j].doc_remark" id="MstDocUploadViewModel_@j.ToString()__doc_remark" value="@Html.DisplayFor(a => item.doc_remark)">
+                                </td>
+                            }
+                            @if (ViewBag.RemarkLog == true)
+                            {
+                                <td>
+                                    <input type="text" class="form-control" name="MstDocUploadViewModel[@j].doc_remark" id="MstDocUploadViewModel_@j.ToString()__doc_remark" value="@Html.DisplayFor(a => item.doc_remark_log)" readonly="readonly">
+                                </td>
+                            }
+
+                        </tr>
+                            j++;
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<script>
+    $(function () {
+        $('.preview').click(function () {
+            var id = $(this).attr('id');
+            var id_trx_uploaded_doc = $('#MstDocUploadViewModel_' + id + '__id_trx_uploaded_doc').val();
+            $.ajax({
+                url: "@Url.Action("GetTrxDocUploadById", "AJAX")",
+                data: {
+                    id_trx_uploaded_doc: id_trx_uploaded_doc
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

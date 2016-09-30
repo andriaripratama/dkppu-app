@@ -1,0 +1,93 @@
+﻿@model DKUPPU.ViewModels.TrxLicWrittenExamViewModel
+@{
+    Layout = null;
+    string skill01 = "SKILL01";
+    string datepicker = "date-picker";
+    string from_date = "TrxLicWrittenExamViewModel_medical_valid_from_date";
+    string until_date = "TrxLicWrittenExamViewModel_medical_valid_to_date"; ;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @*<div class="form-group" id="exaaam">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Exam Type *</label>
+                <div class="col-md-5">
+                    @Html.DropDownList("TrxLicWrittenExamViewModel.exam_type", (IEnumerable<SelectListItem>)ViewBag.ExamTypeDrop, "Select Exam.", new { @class = "form-control required-value", id = "TrxLicWrittenExamViewModel_exam_type", @disabled = "disabled" })
+                </div>
+            </div>*@
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Validity Medical Certificate Period</label>
+                <div class="col-md-5">
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicWrittenExamViewModel.medical_valid_from_date" id="TrxLicWrittenExamViewModel_medical_valid_from_date" class="form-control date-skill01 @skill01" placeholder="Input From Date" value="@Html.DisplayFor(m => m.medical_valid_from_date)" />
+                    </div>
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicWrittenExamViewModel.medical_valid_to_date" id="TrxLicWrittenExamViewModel_medical_valid_to_date" class="form-control date-filed @datepicker" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.medical_valid_to_date)" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Total Flight Hours</label>
+                <div class="col-md-5">
+                    <input name="TrxLicWrittenExamViewModel.total_flight_hour" id="TrxLicWrittenExamViewModel_total_flight_hour" class="form-control number-only" placeholder="Input Number" value="@Html.DisplayFor(m => m.total_flight_hour)" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Have license before</label>
+                <div class="col-md-5">
+                    <label class="checkbox checkbox-inline">
+                        <input type="checkbox" id="TrxLicWrittenExamViewModel_is_have_license" class="have-license">yes &nbsp;
+                    </label>
+                    <input type="hidden" name="TrxLicWrittenExamViewModel.is_have_license" id="is_have_license">
+                    @Html.DropDownList("TrxLicWrittenExamViewModel.license_name", (IEnumerable<SelectListItem>)ViewBag.license_name, "Select License Type.", new { @class = "form-control", id = "TrxLicWrittenExamViewModel_license_name", @disabled = "disabled" })
+                    @*<input name="TrxLicWrittenExamViewModel.license_name" id="TrxLicWrittenExamViewModel_license_name" class="form-control" placeholder="Input License Name" value="@Html.DisplayFor(m => m.license_name)" readonly="readonly" />*@
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Choose License</label>
+                <div class="col-md-5">
+                    @Html.DropDownList("TrxLicWrittenExamViewModel.license_number_choose", (IEnumerable<SelectListItem>)ViewBag.license_number, "Select License.", new { @class = "form-control", id = "TrxLicWrittenExamViewModel_license_number_choose" })
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">License Number</label>
+                <div class="col-md-5">
+                    <input name="TrxLicWrittenExamViewModel.license_number" id="TrxLicWrittenExamViewModel_license_number" class="form-control" value="@Html.DisplayFor(m => m.license_number)" readonly="readonly" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+
+        var VSKILL01 = $('#val-SKILL01').attr('data-date');
+
+        $('.SKILL01').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL01,
+            //...
+        });
+
+        $(function () {
+            $('.number-only').keypress(function (e) {
+                if (e.charCode != 8 && e.charCode != 0 && e.charCode != 46 && (e.charCode < 48 || e.charCode > 57)) {
+                    return false;
+                    e.preventDefault();
+                }
+            })
+        });
+    });
+</script>

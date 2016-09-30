@@ -1,0 +1,42 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel>
+@{
+    Layout = null;
+}
+<div class="row" style="margin-left:10px;">
+    <div class="col-xs-12">
+        @{
+            int j = 0;
+            string disabled = "";
+            string is_selected = "";
+        }
+        @foreach (DKUPPU.ViewModels.TrxLicExamBasicCertificateViewModel item in Model)
+        {
+            if (ViewBag.IsDisabled == true)
+            {
+                disabled = "disabled='disabled'";
+            }
+            <label class="checkbox">
+                @if (Model[j].is_selected == true)
+                {
+                    is_selected = "True";
+                    <input type="checkbox" name="TrxLicExamBasicCertificateViewModel[@j].is_selected" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__is_selected" class="basic-option" value="True" checked="checked" @disabled />
+                }
+                else
+                {
+                    is_selected = "False";
+                    <input type="checkbox" name="TrxLicExamBasicCertificateViewModel[@j].is_selected" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__is_selected" class="basic-option" value="True" @disabled />
+                }
+                <i></i>
+                @Html.DisplayFor(m => m[j].id_basic_certificate_value)
+            </label>
+            if (ViewBag.IsDisabled == true)
+            {
+                <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].is_selected" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__is_selected" value="@is_selected"/>
+            }
+            <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].id_basic_certificate" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__id_basic_certificate" value="@Html.DisplayFor(m => m[j].id_basic_certificate)" />
+            <input type="hidden" name="TrxLicExamBasicCertificateViewModel[@j].id_trx_lic_basic_certificate" id="TrxLicExamBasicCertificateViewModel_@j.ToString()__id_trx_lic_basic_certificate" value="@Html.DisplayFor(m => m[j].id_trx_lic_basic_certificate)" />
+                j++;
+        }
+    </div>
+</div>
+

@@ -1,0 +1,41 @@
+﻿@model DKUPPU.ViewModels.SOPPositionViewModel
+
+<fieldset>   
+    <div class="form-group">
+        @Html.LabelFor(model => model.id_license_category, htmlAttributes: new { @class = "control-label col-md-2 text-left text-left" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.id_license_category, (IEnumerable<SelectListItem>)ViewBag.org_type, "Select Organization Type", new { @class = "form-control col-md-5" })
+        </div>
+        @Html.ValidationMessageFor(model => model.id_license_category, "", new { @class = "text-danger col-md-5" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.id_job, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.id_job, (IEnumerable<SelectListItem>)ViewBag.id_position, "Select Organization Type", new { @class = "form-control col-md-5" })
+        </div>
+        @Html.ValidationMessageFor(model => model.id_job, "", new { @class = "text-danger col-md-5" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.id_license_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.id_license_type, new SelectList(string.Empty,"id_lookup","lookup_value"), "Select Organization Type", new { @class = "form-control col-md-5" })
+           
+        </div>
+        @Html.ValidationMessageFor(model => model.id_license_type, "", new { @class = "text-danger col-md-5" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.id_sop_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+        <div class="col-md-5">
+            @Html.DropDownListFor(model => model.id_sop_type, new SelectList(string.Empty, "id_lookup", "lookup_value"), "Select Organization Type", new { @class = "form-control col-md-5" })
+            
+        </div>
+        @Html.ValidationMessageFor(model => model.id_sop_type, "", new { @class = "text-danger col-md-5" })
+    </div>
+    <div class="form-actions">
+        <button class="btn btn-primary" type="submit"> Submit </button>
+        <a href="@Url.Action("Index","SOPPosition")" class="btn btn-danger" type="reset">Cancel</a>
+    </div>
+</fieldset>

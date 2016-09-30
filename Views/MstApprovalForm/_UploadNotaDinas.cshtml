@@ -1,0 +1,19 @@
+﻿@model DKUPPU.ViewModels.MstDocUploadViewModel
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-3">
+            <input type="file" class="btn btn-default" name="NotaDinas.File" id="MstDocUploadViewModel_File" required />
+            <input type="hidden" name="MstDocUploadViewModel.id_trx_license" id="LicenseScan_id_trx_license" value="@Html.DisplayFor(m => m.id_trx_license)" required />
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#upload-scan').click(function () {
+            $('#LicenseScan_id_doc_category').click();
+        });
+    });
+</script>

@@ -1,0 +1,56 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.SOPPositionViewModel>
+@{
+    Layout = null;
+}
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.org_type)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.position_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.module_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.license_category_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.license_type_value)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.sop_type_value)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.org_type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.position_value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.module_value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.license_category_value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.license_type_value)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sop_type_value)
+            </td>
+            <td>
+                <a href="@Url.Action("Detail", "SOPPosition", new { id=item.id_sop})" class="btn btn-primary btn-circle"><i class="fa fa-search"></i></a>
+                <a href="@Url.Action("Edit", "SOPPosition", new { id = item.id_sop })" class="btn btn-primary btn-circle"><i class="fa fa-edit"></i></a>
+            </td>
+        </tr>
+    }
+
+</table>

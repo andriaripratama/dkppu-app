@@ -1,0 +1,151 @@
+﻿@model List<DKUPPU.ViewModels.CheckoutViewModel>
+@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content" id="checkout-modal-content">
+        <div class="modal-header">
+            <a class="close" aria-hidden="true" data-dismiss="modal" role="button"> <i class="fa fa-remove"></i> </a>
+            <h4>Checkout</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-12"> </div>
+            </div>
+            <div class="row" id="list-applicant">
+
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th class="col-md-2">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            decimal amount = 0;
+                            string amount_string = "IDR 0,00";
+                            int i = 0;
+                        }
+                        @foreach (DKUPPU.ViewModels.CheckoutViewModel item in Model)
+                        {
+                            @Html.HiddenFor(model => model[i].id_trx_license)
+                            @Html.HiddenFor(model => model[i].amount)
+                            @Html.HiddenFor(model => model[i].wf_name)
+                            <tr>
+                                <td>
+                                    @item.description
+                                </td>
+                                <td class="text-right">
+                                    @item.amount_string
+                                </td>
+                            </tr>
+                            amount = amount + (decimal)item.amount;
+
+                            i++;
+                        }
+                        @{
+                            amount_string = (amount).ToString("C2", System.Globalization.CultureInfo.CurrentCulture).Replace("Rp", "IDR ");
+                        }
+                        <tr>
+                            <td><label class="pull-right">Sub Total</label></td>
+                            <td id="total-amount" class="text-right">@amount_string</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="row" hidden="hidden">
+                <h3>Note :</h3>
+                <div class="col-md-12">&nbsp;</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <a role="button" id="btn-checkout-ok" class="btn btn-primary">OK</a>
+            <a role="button" id="btn-checkout-cancel" class="btn btn-danger" aria-hidden="true" data-dismiss="modal">Cancel</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#btn-checkout-ok").click(function () {
+            var value = "12345";
+            var total_amount = parseInt($("#total-amount").text());
+            if (true) {
+                $.ajax({
+                    url: '@Url.Action("StartWorkflow", "Home")',
+                    data: {
+                        srcValue: value
+                    },
+                    method: 'POST',
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#checkout-modal-content').append(img);
+                    },
+                    success: function (data) {
+                        if (data.status_save == 'success') {
+                            if (data.isUseSimphoni == true) {
+                                GetPayment(data.id);
+                            }
+                            else {
+                                GetBillingDetailById(data.id);
+                            }
+                        }
+                    }
+                });
+            }
+            else {
+                alert("You does not have transaction");
+            }
+
+        });
+
+        function GetPayment(id) {
+            $.ajax({
+                url: '@ViewBag.paymentRequest',
+                data: {
+                    id: id
+                },
+                method: 'POST',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.result == true) {
+                        GetBillingDetail(data.billing_code);
+                    }
+                }
+            });
+        }
+
+        // function get Billing detail
+        function GetBillingDetail(billing_code) {
+            $.ajax({
+                url: '@Url.Action("BillingDetail", "Home")',
+                data: {
+                    billing_code: billing_code
+                },
+                method: 'POST',
+                dataType: 'HTML',
+                success: function (data) {
+                    $('#checkout-modal-content').html(data);
+                }
+            });
+        }
+        function GetBillingDetailById(id_trx_lic_invoice) {
+            $.ajax({
+                url: '@Url.Action("BillingDetailById", "Home")',
+                data: {
+                    id_trx_lic_invoice: id_trx_lic_invoice
+                },
+                method: 'POST',
+                dataType: 'HTML',
+                success: function (data) {
+                    $('#checkout-modal-content').html(data);
+                }
+            });
+        }
+    });
+</script>

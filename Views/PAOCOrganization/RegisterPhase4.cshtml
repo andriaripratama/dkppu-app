@@ -1,0 +1,294 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_org_certificate)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_org_type)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+
+            string isAircraftTypeModelDisable = (ViewBag.IsAircraftTypeModelDisable) == null ? string.Empty : (ViewBag.IsAircraftTypeModelDisable) ? "disabled = 'disabled'" : string.Empty;
+            <div>
+                <br />
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                <div class="form-horizontal">
+                    <div class="row form-group">
+                        <div class="col-md-12">
+                            @Html.Partial("../PAOCOrganization/Phase1/_InformationForm", Model.TrxOrganizationInitialCerViewModel)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <fieldset>
+                <legend>Document Upload (Phase IV)</legend>
+                @Html.Partial("../PAOCOrganization/Phase1/_DocUploadRegisterForm", Model.ListOfMstOrganizationDocument)
+            </fieldset>
+            <div id="error" class="row form-group">
+                <div class="col-md-8">
+                    <input type="checkbox" required="required" />
+                    I hereby certify that the above information given are true and correct
+                </div>
+            </div>
+            <div class="form-actions">
+                <button class="btn btn-primary" id="id_submit" type="submit">Submit</button>
+                <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+            </div>
+
+        }
+    </div>
+</div>
+
+
+<script>
+    $(function () {
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#aircraft_type_model').change(function () {
+            var id_aircraft_type_model = $(this).val();
+
+            if (id_aircraft_type_model == "0")
+                $('#TrxOrganizationViewModel_aircraft_type_model_other').removeAttr('disabled');
+            else
+                $('#TrxOrganizationViewModel_aircraft_type_model_other').attr('disabled', 'disabled');
+
+            $('#TrxOrganizationViewModel_aircraft_type_model_other').val('');
+        });
+
+        $('#TrxOrganizationViewModel_airline_type').change(function () {
+            var i = 0;
+
+            if ($(this).val() != '')
+                $('#addAirlineTypeDetail').removeClass('disabled');
+            else
+                $('#addAirlineTypeDetail').addClass('disabled', 'disabled');
+
+            $('#TrxOrganizationAirlineTypeViewModel > tr').each(function (index, el) {
+                if (i != 0)
+                    $(this).remove();
+                else
+                    $('#TrxOrganizationAirlineTypeViewModel_0').show();
+
+                i++;
+            });
+
+            GetOrganizationAirlineType('TrxOrganizationAirlineTypeViewModel', 0);
+        });
+
+        $('#addAirlineTypeDetail').click(function (e) {
+            addRow(e, 'TrxOrganizationAirlineTypeViewModel');
+        });
+
+        $('div').on("click", "a.airline-type-detail-remove-row", function (e) {
+            e.preventDefault();
+
+            var trRemove = $(this).parent().parent().attr('id');
+            var trIndexId = trRemove.match(/\d+/);
+
+            RemoveRow(e, 'TrxOrganizationAirlineTypeViewModel', trIndexId);
+
+            return false;
+        });
+
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.required-value-dropdown'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+            //return false;
+        });
+
+        function addRow(e, tableName) {
+            e.preventDefault();
+
+            var trLast = $('#' + tableName).find("tr:last");
+            var trNew = $('#' + tableName + '_0').clone();
+            var suffix = $('#' + tableName + ' > tr').length;
+            var isSelected = true;
+
+            if (suffix > 1) {
+                $.each($('#' + tableName).find("tr > td > select"), function (i, val) {
+                    if (i > 0 && $(this).val() == '') isSelected = false;
+                });
+            }
+
+            if (isSelected) {
+                var oldNTr = trNew.attr('id');
+                var newNTr = oldNTr.replace('_0', '_' + suffix);
+
+                $('#' + tableName + '_0').hide();
+
+                trNew.attr('id', newNTr);
+                trNew.removeAttr('style');
+
+                $.each(trNew.find('td'), function (i, val) {
+                    var compObject = $(this).children('[id*=' + tableName + '_]');
+                    var compName = compObject.attr('name');
+                    var compID = compObject.attr('id');
+
+                    if (typeof compName != 'undefined') {
+                        compName = compName.replace('[0]', '[' + parseInt(suffix) + ']');
+                        compObject.attr('name', compName);
+                        compObject.addClass('required-value-dropdown');
+                    }
+
+                    if (typeof compID != 'undefined') {
+                        compID = compID.replace('_0_', '_' + parseInt(suffix) + '_');
+
+                        compObject.attr('id', compID);
+                        compObject.removeClass('invisible');
+                    }
+                });
+
+                trLast.after(trNew);
+
+                GetOrganizationAirlineType(tableName, suffix);
+            }
+        }
+
+        function RemoveRow(e, tableName, indexId) {
+            e.preventDefault();
+
+            $("#" + tableName + '_' + indexId).remove();
+
+            var trName = $('#' + tableName + ' > tr').length;
+
+            if (trName == 1) $('#' + tableName + '_0').show();
+
+            return false;
+        }
+
+        function GetOrganizationAirlineType(tableName, indexId) {
+            $.ajax({
+                url: '@Url.Action("GetAirlinesTypeDetail", "PAOCOrganization")',
+                data: {
+                    id_airlines_type: $('#TrxOrganizationViewModel_airline_type').val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#' + tableName + '_' + indexId + '__id_airline_type').empty();
+                    $('#' + tableName + '_' + indexId + '__id_airline_type').append('<option value="">Select</option>');
+
+                    var isDataExist = false;
+
+                    $.each(data, function (i, data) {
+                        $.each($('#' + tableName).find("tr > td > select"), function (i, val) {
+                            if (data.id_lookup == $(this).val()) isDataExist = true;
+                        });
+
+                        if (!isDataExist)
+                            $('#' + tableName + '_' + indexId + '__id_airline_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+
+                        isDataExist = false;
+                    });
+                }
+            });
+        }
+
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+    });
+</script>

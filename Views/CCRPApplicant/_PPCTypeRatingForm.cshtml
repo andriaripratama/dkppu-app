@@ -1,0 +1,150 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicPpcViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model[0].id_ppc_type_rating)</th>
+                    <th>@Html.DisplayNameFor(model => model[0].id_air_sim_type)</th>
+                    <th>@Html.DisplayNameFor(model => model[0].checked_date)</th>
+                    <th>@Html.DisplayNameFor(model => model[0].expired_date)</th>
+                    <th>@Html.DisplayNameFor(model => model[0].ppc_pic)</th>
+                </tr>
+            </thead>
+            <tbody id="table-ppc">
+                @{int j = 0;}
+                @foreach (DKUPPU.ViewModels.TrxLicPpcViewModel item in Model)
+                {
+                    <tr id="TrxLicPpcViewModel_@j" class="old-tr">
+                        <td>
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].id_ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__id_ppc_type_rating" value="@Html.DisplayFor(m => m[j].id_ppc_type_rating)">
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].id_trx_lic_ppc" id="TrxLicPpcViewModel_@j.ToString()__id_trx_lic_ppc" value="@Html.DisplayFor(m => m[j].id_trx_lic_ppc)">
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating" value="@Html.DisplayFor(m => m[j].ppc_type_rating)">
+                            <input type="text" class="form-control ratingvalue required-value" name="TrxLicPpcViewModel[@j].ppc_type_rating_value" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating_value" value="@Html.DisplayFor(m => m[j].ppc_type_rating_value)" readonly="readonly" />
+                        </td>
+                        <td>
+                            @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, new { @class = "form-control required-value", id = "TrxLicPpcViewModel_" + j.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                            @if (!(item.id_air_sim_type == null || item.id_air_sim_type == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicPpcViewModel_@j.ToString()__id_air_sim_type option[value=@item.id_air_sim_type]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].id_air_sim_type" id="TrxLicPpcViewModel_@j.ToString()__id_air_sim_type" value="@Html.DisplayFor(m => m[j].id_air_sim_type)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker required-value" name="TrxLicPpcViewModel[@j].checked_date" id="TrxLicPpcViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" readonly="readonly" />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker required-value" name="TrxLicPpcViewModel[@j].expired_date" id="TrxLicPpcViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" readonly="readonly" />
+                        </td>
+                        <td>
+                            @if (item.is_history == true)
+                            {
+                                @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control PositionOrPIC", id = "TrxLicPpcViewModel_" + j.ToString() + "__ppc_pic", @disabled = "disabled" })
+                                if (!(item.ppc_pic == null || item.ppc_pic == ""))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#TrxLicPpcViewModel_@j.ToString()__ppc_pic option[value=@item.ppc_pic]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                                <input type="hidden" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic_2" value="@Html.DisplayFor(m => m[j].ppc_pic)" />
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control required-value PositionOrPIC", id = "TrxLicPpcViewModel_" + j.ToString() + "__ppc_pic" })
+                            }
+                            @*<input type="text" class="form-control @vrequered" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic" value="@Html.DisplayFor(m => m[j].ppc_pic)" @vreadonly />*@
+                        </td>
+                    </tr>
+                            j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+
+    $(function () {
+
+        $('.id_class_rating').change(function () {
+            var itemText = $('.id_class_rating option:selected').text();
+            var itemValue = $('.id_class_rating').val();
+            $.each($tabelData.find('tr.new-tr'), function (i, val) {
+                $('input[ID*=ppc_type_rating]').val(itemText);
+                $('input[ID*=id_ppc_type_rating]').val(itemValue);
+                $('input[ID*=ppc_type_rating_value]').val(itemText);
+            });
+        });
+
+
+        $('#add-aircraft').click(function (e) {
+            var $tabelData = $('#table-ppc');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-aircraft", function (e) {
+            var $tabelData = $('#table-ppc');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                    $(this).removeAttr('style');
+                });
+                $.each($trNew.find('.date-picker'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        //...
+                    });
+                });
+
+                $trLast.after($trNew);
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>

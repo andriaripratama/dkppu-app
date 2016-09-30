@@ -1,0 +1,215 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicenseInvoiceViewModel>
+@{
+    ViewBag.Title = "Billing System";
+    List<DKUPPU.ViewModels.MstMenuViewModel> MenuIcon = new List<DKUPPU.ViewModels.MstMenuViewModel>();
+}
+<style>
+    table > thead > tr > th {
+        cursor: pointer;
+    }
+</style>
+@*<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.Name != null)
+        {
+            MenuIcon = DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name, "MN03");
+            foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)MenuIcon.OrderBy(a => a.menu_order))
+            {
+                if (menuIconItem.menu_title == "Checkout")
+                {
+                    <button class="btn bg-color-greenLight txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+                else
+                {
+                    <button class="btn bg-color-blue txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+            }
+        }
+    </div>
+</div>*@
+
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <input class="form-control" id="search-value-index" name="search-value-index" placeholder="Search" />
+    </div>
+    <div class="col-xs-2">
+        <button id="src-lecense" class="btn btn-warning btn-sm ">Search</button>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-xs-12" id="list-billing">
+        @Html.Partial("_Billing", Model)
+    </div>
+</div>
+@if (MenuIcon != null)
+{
+    foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in MenuIcon)
+    {
+        <script>
+            $(function () {
+                $('#' + '@menuIconItem.menu_name').click(function () {
+                    $.ajax({
+                        url: "@Url.Action(menuIconItem.menu_action, menuIconItem.menu_controller)",
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div class="modal-dialog modal-lg">' +
+                                        '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#modal-all-modul').html(img);
+                        },
+                        success: function (data) {
+                            $('#modal-all-modul').html(data);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+}
+<script>
+    $(function () {
+        var propertyOrder = "created_date";
+        var isDescending = "True";
+
+        $('#src-lecense').click(function () {
+            var srcValue = $('#search-value-index').val();
+            getListData(1, 10, srcValue, propertyOrder, isDescending);
+        });
+
+        $('#pagination-applicant').on("click", "li.page", function (e) {
+            var page = $(this).attr('link');
+            var pageSize = 10;
+            var srcValue = $('#search-value-index').val();
+            getListData(page, pageSize, srcValue, propertyOrder, isDescending);
+        });
+
+        $('#table-applicant>thead>tr>th').click(function (e) {
+            var page = 1;
+            var pageSize = 10;
+            var srcValue = $('#search-value-index').val();
+            propertyOrder = $(this).attr('id');
+            isDescending = $(this).attr('data-desc');
+            $('#table-applicant>thead>tr>th>span').remove();
+            if (isDescending == "True") {
+                $(this).attr('data-desc', 'False');
+                $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+            }
+            else {
+                $(this).attr('data-desc', 'True');
+                $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+            }
+            getListData(page, pageSize, srcValue, propertyOrder, isDescending);
+        });
+
+        AddRowClickEvent();
+
+        function getListData(page, pageSize, srcValue, propertyOrder, isDescending) {
+            $.ajax({
+                url: '@Url.Action("BillingJson", "Home")',
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    srcValue: srcValue,
+                    propertyOrder: propertyOrder,
+                    isDescending: isDescending
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#table-list').after(img);
+                },
+                success: function (data) {
+                    var table_row = '';
+                    $.each(data.dataTable, function (i, value) {
+                        table_row += '<tr>';
+                        table_row += '<td>' + value.invoice_no + '</td>';
+                        table_row += '<td>' + value.pic_name + '</td>';
+                        table_row += '<td>' + value.billing_code + '</td>';
+                        table_row += '<td>' + value.expired_date_string + '</td>';
+                        table_row += '<td>' + value.total_price_string + '</td>';
+
+                        if (value.is_getcode == true) {
+                            table_row += '<td><a id="' + value.id_trx_lic_invoice + '" role="button" class="get-billing-code btn btn-primary btn-danger btn-xs">Get Code</a></td>';
+                        }
+                        else {
+                            if (value.is_paid == true) {
+                                table_row += '<td><span class="label label-primary arrowed">Paid</span></td>';
+                            } else {
+                                table_row += '<td><span class="label label-warning arrowed">Unpaid</span></td>';
+                            }
+                        }
+                        if (value.is_paid == true) {
+                            table_row += '<td><a href="' + value.Url + '" class="btn btn-sm btn-primary">Print Receipt</a></td>';
+                        }
+                        else {
+                            table_row += '<td><a href="' + value.Url + '" class="btn btn-sm btn-primary disabled">Print Receipt</a></td>';
+                        }
+                        table_row += '</tr>';
+                    });
+                    $('#applicant-list-data').html(table_row);
+                    $('#pagination-applicant').html(data.pagination);
+                    $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                    $('.loader').remove();
+
+                    AddRowClickEvent();
+                }
+            });
+        }
+
+        function AddRowClickEvent() {
+            $('#applicant-list-data > tr > td').on("click", "a.get-billing-code", function (e) {
+                e.preventDefault();
+
+                var id = $(this).attr('id');
+
+                $.ajax({
+                    url: '@ViewBag.paymentRequest',
+                    data: {
+                        id: id
+                    },
+                    method: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.result)
+                        {
+                            UpdateBillingCodeTotalRequest(id);
+
+                            var page = $('#pagination-applicant > ul > li.active').attr('link');
+                            var pageSize = 10;
+                            var srcValue = $('#search-value-index').val();
+
+                            getListData(page, pageSize, srcValue, propertyOrder, isDescending);
+                        }
+                    }
+                });
+
+                return false;
+            });
+        }
+
+        function UpdateBillingCodeTotalRequest(license_invoice_id)
+        {
+            $.ajax({
+                url: '@Url.Action("UpdateBillingCodeTotalRequest", "Home")',
+                data: {
+                    license_invoice_id: license_invoice_id
+                },
+                method: 'POST',
+                dataType: 'HTML',
+                success: function (data) {
+                }
+            });
+        }
+    });
+</script>

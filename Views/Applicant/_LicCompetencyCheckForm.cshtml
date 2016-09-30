@@ -1,0 +1,168 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel>
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsCompetencyCheckReadOnly == null ? true : (ViewBag.IsCompetencyCheckReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+<div class="table-responsive">
+    @if (!isReadOnly)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td style="padding-bottom: 5px; text-align: right;">
+                        <a class="pull-right btn btn-primary btn-xs" id="add-lic-competency-check-form"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+
+    <table class="table table-bordered table-striped" id="lic-competency-check-form-table">
+        <thead>
+            <tr>
+                <th>Rating</th>
+                <th>Date of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="LicCompetencyChecks">
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="LicCompetencyChecks[0].rating" id="LicCompetencyChecks_0__rating" value="">
+
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("LicCompetencyChecks[0].id_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Item", new { @class = "form-control", id = "LicCompetencyChecks_0__id_rating", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("LicCompetencyChecks[0].id_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Item", new { @class = "form-control", id = "LicCompetencyChecks_0__id_rating" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicCompetencyChecks[0].checked_date" id="LicCompetencyChecks_0__checked_date" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="LicCompetencyChecks[0].expired_date" id="LicCompetencyChecks_0__expired_date" value="" @disabledHTML />
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel item in Model)
+                    {
+                        <tr id="LicCompetencyChecks_@i">
+                            <td>
+                                <input type="hidden" name="LicCompetencyChecks[@i].id_trx_lic_competency_check" id="LicCompetencyChecks_@i.ToString()__id_trx_lic_competency_check" value="@Html.DisplayFor(x => x[i].id_trx_lic_competency_check)">
+                                <input type="hidden" name="LicCompetencyChecks[@i].rating" id="LicCompetencyChecks_@i.ToString()__rating" value="@Html.DisplayFor(x => x[i].rating)">
+
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("LicCompetencyChecks[" + i.ToString() + "].id_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Item", new { @class = "form-control", id = "LicCompetencyChecks_" + i.ToString() + "__id_rating", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("LicCompetencyChecks[" + i.ToString() + "].id_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Item", new { @class = "form-control", id = "LicCompetencyChecks_" + i.ToString() + "__id_rating" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.id_rating))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#LicCompetencyChecks_@i.ToString()__id_rating option[value=@item.id_rating]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicCompetencyChecks[@i].checked_date" id="LicCompetencyChecks_@i.ToString()__checked_date" value="@Html.DisplayFor(x => x[i].checked_date)" @disabledHTML />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="LicCompetencyChecks[@i].expired_date" id="LicCompetencyChecks_@i.ToString()__expired_date" value="@Html.DisplayFor(x => x[i].expired_date)" @disabledHTML />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('#add-lic-competency-check-form').click(function () {
+            var rowIndex = 0;
+
+            $('#lic-competency-check-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var licCompetencyCheckFirstRowObj = $('#lic-competency-check-form-table > tbody').find("tr:first");
+            var licCompetencyCheckNewRowObj = licCompetencyCheckFirstRowObj.clone();
+
+            $.each(licCompetencyCheckNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(licCompetencyCheckNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(licCompetencyCheckNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#lic-competency-check-form-table > tbody > tr').last().after(licCompetencyCheckNewRowObj);
+        });
+
+        $('div').on('change', 'select.id_rating', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#LicCompetencyChecks_' + index + '__rating').val(itemText);
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

@@ -1,0 +1,386 @@
+﻿@model DKUPPU.ViewModels.CFIRenewalApprovalViewModel
+@{
+    ViewBag.Title = "Certification Flight Instructor Renewal Approval";
+    ViewBag.activity_id = Model.wf_activity_name;
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Approval Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_applicant)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_category)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_sop_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.delivery_code)
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.id_license_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.LicenseType, (IEnumerable<SelectListItem>)ViewBag.LicenseTypeDrop, "Select Lic. Type", htmlAttributes: new { @class = "form-control license-type-ctrp", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.license_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.TrxLicenseViewModel.license_no, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicFlightInstructorViewModel.category_code, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.TrxLicFlightInstructorViewModel.category_code, (IEnumerable<SelectListItem>)ViewBag.CategoryClass, "Select Category/Class", htmlAttributes: new { @class = "form-control license-type-ctrp", @disabled = "disabled" })
+                            @Html.HiddenFor(model => model.TrxLicFlightInstructorViewModel.category_code)
+                        </div>
+                    </div>
+                    <div>
+                        @Html.Partial("../MstApprovalForm/_LicFlightInstructor", Model.TrxLicFlightInstructorViewModel)
+                    </div>
+                    <fieldset>
+                        <legend>Medical Check</legend>
+                        @Html.Partial("../MstApprovalForm/_LicMedicalCertificate", Model.TrxLicMedicalCertificateViewModel)
+                    </fieldset>
+                    @if (ViewBag.UploadDocumentForm == true)
+                    {
+                        <fieldset>
+                            <legend>Upload Document</legend>
+                            @Html.Partial("../MstApprovalForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                        </fieldset>
+                    }
+                    <fieldset>
+                        <legend>Notes</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                                @Html.HiddenFor(model => model.TrxWfViewModel.sn)
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>Logs</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_LogNotesForm", Model.TrxLicenseNotesViewModel)
+                            </div>
+                        </div>
+                        @if (ViewBag.GenerateLicense == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_GenerateLicenseNumber", Model.TrxLicenseViewModel)
+                                </div>
+                            </div>
+                        }
+                        @if (ViewBag.UploadLicenseScan == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_UploadLicenseScan", Model.TrxLicenseUploadViewModel)
+                                </div>
+                            </div>
+                            <script>
+                                $('#TrxLicenseUploadViewModel_license_no').hide();
+                            </script>
+                        }
+                        @if (ViewBag.CheckingRegNo == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="form-horizontal">
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label text-left" for="RegistrationNumber">Registration number *</label>
+                                            <div class="col-md-5">
+                                                <input name="RegistrationNumber" id="RegistrationNumber" class="form-control" required="required" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label text-left" for="IdCard">ID Card</label>
+                                            <div class="col-md-5">
+                                                <input name="TrxLicenseViewModel.id_card_accepted_by" id="TrxLicenseViewModel_id_card_accepted_by" class="form-control" required="required" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-md-2 control-label text-left" for="Name">Name</label>
+                                            <div class="col-md-5">
+                                                <input name="TrxLicenseViewModel.accepted_by" id="TrxLicenseViewModel_accepted_by" class="form-control" required="required" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </fieldset>
+                    <div class="form-actions">
+                        @if (ViewBag.WFActions != null)
+                        {
+                            string disabled = "";
+                            if (Model.wf_activity_name == "ACT04" || Model.wf_activity_name == "ACT01" || Model.wf_activity_name == "ACT02" || Model.wf_activity_name == "ACT06")
+                            {
+                                disabled = "disabled";
+                            }
+                            foreach (DKUPPU.Helpers.WorkflowAction action in ViewBag.WFActions as List<DKUPPU.Helpers.WorkflowAction>)
+                            {
+                                if (action.kode == null)
+                                {
+                                    <a class="btn btn-primary" name="action_@action.kode" id="action_@action.kode">@action.name</a>
+                                }
+                                else
+                                {
+                                    <input class="btn btn-primary @disabled" data-submit="false" type="submit" name="action_@action.kode" id="action_@action.kode" value="@action.name" onclick="javascript: return RejectConfirmation(this);" />
+                                }
+                            }
+                        }
+                        <a href="@Url.Action("Index","Home")" class="btn btn-default"> Back </a>
+                    </div>
+
+                    <!--End Form-->
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@if (Model.wf_activity_name == "ACT04")
+{
+    <script>
+        $(function () {
+            $('#action_').click(function () {
+                $('#action_Y').attr('data-submit', 'true');
+                $('#action_Y').removeClass('disabled');
+            });
+
+            $('form').submit(function () {
+                var isValid = $('#action_Y').attr('data-submit');
+                if (isValid == 'false') {
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+@if (Model.wf_activity_name == "ACT01" || Model.wf_activity_name == "ACT02")
+{
+    <script>
+        $(function () {
+            CheckingDoc();
+
+            $('.satisfied').click(function () {
+                CheckingDoc();
+            });
+            $('.un-satisfied').click(function () {
+                CheckingDoc();
+            });
+            function CheckingDoc() {
+                var IsValid = false;
+                var lengthSatisfied = $('.satisfied').length;
+                var lengthSatisfiedChecked = $('.satisfied:checked').length;
+                //var lengthUnSatisfied = $('.un-satisfied').length;
+                var lengthUnSatisfiedChecked = $('.un-satisfied:checked').length;
+                if (lengthSatisfiedChecked == lengthSatisfied) {
+                    enebelButtonProcesed();
+                }
+                else if (((lengthUnSatisfiedChecked + lengthSatisfiedChecked) == lengthSatisfied) && lengthUnSatisfiedChecked > 0) {
+                    enebelButtonRevise();
+                }
+                else {
+                    DesableAll();
+                }
+            }
+
+            function enebelButtonProcesed() {
+                $('#action_Y').removeClass('disabled');
+                $('#action_R').addClass('disabled');
+                $('#action_N').addClass('disabled');
+            }
+            function DesableAll() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').addClass('disabled');
+                $('#action_N').addClass('disabled');
+            }
+            function enebelButtonRevise() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').removeClass('disabled');
+                $('#action_N').removeClass('disabled');
+            }
+        })
+    </script>
+}
+@if (ViewBag.CheckingRegNo == true)
+{
+    <script>
+        $(function () {
+
+            $('#RegistrationNumber').keyup(function () {
+                var reg_no = $('#TrxLicenseViewModel_reg_no').val();
+                var reg_no_input = $('#RegistrationNumber').val();
+                $(this).parent().find('span').remove();
+                $(this).parent().parent().removeClass('has-error');
+                $(this).parent().parent().removeClass('has-success');
+                if (reg_no == reg_no_input) {
+                    $('#action_Y').removeClass('disabled');
+                    $(this).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(this).parent().parent().addClass('has-success');
+                } else {
+                    $(this).after('<span class="help-block">Registration number not correct</span>');
+                    $(this).parent().parent().addClass('has-error');
+                }
+            });
+        });
+    </script>
+}
+@if (Model.wf_activity_name == "ACT01")
+{
+    <script>
+        $(function () {
+            $('#TrxLicMedicalCertificateViewModel').ready(function () {
+                var $trLast = $('#TrxLicMedicalCertificateViewModel').find('tr:last');
+                $.each($trLast.find('.date-picker'), function (i, val) {
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        //...
+                    });
+                });
+            });
+
+            //** Validasi form
+            $('form').submit(function () {
+                //return false;
+                var hasError = 0;
+                $form = $('form:first');
+
+                //validasi is required
+                $.each($form.find('.required-value'), function (i, val) {
+                    if (!IsRequired($(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                //validasi date form - until
+                $.each($form.find('.from-date'), function (i, val) {
+                    var suffix = parseInt($(this).attr('id').match(/\d+/));
+                    var objec_until = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__until_date');
+                    if (!FromUntilValidate($(this), objec_until)) {
+                        hasError = hasError + 1;
+                    }
+                });
+                $.each($form.find('.until-date'), function (i, val) {
+                    var suffix = parseInt($(this).attr('id').match(/\d+/));
+                    var objec_from = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__from_date');
+                    if (!FromUntilValidate(objec_from, $(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                //if hasError has value more than 0 that return false
+                if (hasError > 0) {
+                    return false;
+                }
+                //return false;
+            });
+
+            //validasi is required
+            $('.required-value').keyup(function () {
+                IsRequired($(this));
+            });
+
+            $('.required-value.date-picker').change(function () {
+                IsRequired($(this));
+                FromUntilValidate();
+            });
+
+
+            function IsRequired(object) {
+                var IsValid = true;
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var value = $(object).val();
+                if (value.length <= 0) {
+                    $(object).after('<span class="help-block">Is required.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+                return IsValid;
+            }
+
+            function FromUntilValidate(object_from, object_until) {
+                var IsValid = true;
+                var from_date = "";
+                var until_date = "";
+                var expired_date = "";
+                var checked_date = "";
+                $(object_from).parent().find('span').remove();
+                $(object_from).parent().removeClass('has-error');
+                $(object_from).parent().removeClass('has-success');
+
+                $(object_until).parent().find('span').remove();
+                $(object_until).parent().removeClass('has-error');
+                $(object_until).parent().removeClass('has-success');
+
+                until_date = $(object_until).val();
+                from_date = $(object_from).val();
+                expired_date = $(object_until).val();
+                checked_date = $(object_from).val();
+
+                if (from_date != null && until_date != null) {
+                    if (from_date.length > 0 && until_date.length > 0) {
+                        var from = from_date.split('/');
+                        var fromDate = new Date(from[1] + '/' + from[0] + '/' + from[2]);
+
+                        var until = until_date.split('/');
+                        var untilDate = new Date(until[1] + '/' + until[0] + '/' + until[2]);
+
+                        if (fromDate > untilDate) {
+                            $(object_from).after('<span class="help-block">The date range not valid</span>');
+                            $(object_from).parent().addClass('has-error');
+
+                            $(object_until).after('<span class="help-block">The date range not valid</span>');
+                            $(object_until).parent().addClass('has-error');
+                            IsValid = false;
+                        }
+                        else {
+                            $(object_from).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                            $(object_from).parent().addClass('has-success');
+
+                            $(object_until).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                            $(object_until).parent().addClass('has-success');
+                            IsValid = true;
+                        }
+                    }
+                }
+                return IsValid;
+            }
+
+        });
+    </script>
+}
+
+

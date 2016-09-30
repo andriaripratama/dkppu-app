@@ -1,0 +1,204 @@
+﻿@model DKUPPU.Models.t_mst_organization
+@using DKUPPU.Helpers;
+
+@{
+    ViewBag.Title = "Delete";
+
+    string created_date_text = DateHelper.Display(Model.created_date);
+    string updated_date_text = DateHelper.Display(Model.updated_date);
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>t_mst_organization</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.org_code)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_code)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.address)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.address)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.address_rt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.address_rt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.address_rw)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.address_rw)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_npwp_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_npwp_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_tdp_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_tdp_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_phone_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_phone_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_fax_no)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_fax_no)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.org_website)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.org_website)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.owner_fullname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.owner_fullname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.is_active)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.is_active)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.created_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.created_date)
+        </dt>
+
+        <dd>
+            @created_date_text
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.updated_by)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.updated_by)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.updated_date)
+        </dt>
+
+        <dd>
+            @updated_date_text
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_mst_loc_country.country_name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_mst_loc_country.country_name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_mst_loc_village.id_subdist)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_mst_loc_village.id_subdist)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_mst_lookup.lookup_group)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_mst_lookup.lookup_group)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_mst_organization_certificate.id_org_type)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_mst_organization_certificate.id_org_type)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_mst_organization2.id_trx_org)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_mst_organization2.id_trx_org)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.t_trx_organization.id_org_parent)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.t_trx_organization.id_org_parent)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

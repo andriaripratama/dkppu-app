@@ -1,0 +1,201 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Add Personal License</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal" id="add-license-applicant">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="Position">Position</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("Position", (IEnumerable<SelectListItem>)ViewBag.Position, "Select Position", new { @class = "form-control required-value" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">License Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("license_type", (IEnumerable<SelectListItem>)ViewBag.LicenseType, "Select License Type", new { @class = "form-control required-value" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">License Name</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("sop_type", (IEnumerable<SelectListItem>)ViewBag.SOPType, "Select License Name", new { @class = "form-control required-value" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2"></label>
+                    <div class="col-md-5">
+                        <input class="form-control" id="search-value" name="search-value" placeholder="Search" />
+                    </div>
+                    <div class="col-md-5">
+                        <button id="src-applicant" class="btn btn-primary btn-sm">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="list-applicant-add">
+
+            </div>
+        </div>
+    </div>
+    <div id="submit-loader"></div>
+</div>
+<script>
+    $(function () {
+        $('#src-applicant').click(function () {
+            var value = $('#search-value').val();
+            var idjob = $('#Position').val();
+            var sop_type = $('#sop_type').val();
+            var hasError = 0;
+            $.each($('#add-license-applicant').find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            if (hasError == 0) {
+                getList(sop_type, idjob, value);
+            }
+        });
+        $('.required-value').change(function () {
+            IsRequired($(this));
+        });
+        $('#Position').change(function () {
+            $('#license_type').empty();
+            $('#sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetLicenseTypeByJobId", "Home")',
+                data: {
+                    id_job: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#license_type').empty();
+                    $('#license_type').append('<option value="">Select License Type</option>');
+                    $('#sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#license_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        //license_type
+        $('#license_type').change(function () {
+            $('#sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetSOPTypeByLicenseType", "Home")',
+                data: {
+                    id_license_type: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#sop_type').empty();
+                    $('#sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#sop_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        function getList(sop_type, id_job, value) {
+            var page = 1;
+            var pageSize = 10;
+            $.ajax({
+                url: '@Url.Action("GetNewApplicantList", "Home")',
+                data: {
+                    sop_type: sop_type,
+                    id_job: id_job,
+                    page: page,
+                    pageSize: pageSize,
+                    srcValue: value,
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #fff;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#list-applicant-add').append(img);
+                },
+                success: function (data) {
+                    $('#list-applicant-add').html(data);
+                    $('.loader').remove();
+                }
+            });
+        }
+
+        $('#list-applicant-add').on("click", "li.page", function (e) {
+            var page = $(this).attr('link');
+            var wfStatus = "@ViewBag.WfStatus";
+            var pageSize = 10;
+            var srcValue = $('#search-value').val();
+            var id_job = $('#Position').val();
+            var sop_type = $('#sop_type').val();
+            $.ajax({
+                url: '@Url.Action("GetNewApplicantListReturnJson", "Home")',
+                data: {
+                    sop_type: sop_type,
+                    id_job: id_job,
+                    page: page,
+                    pageSize: pageSize,
+                    srcValue: srcValue
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #FFF;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#tabel-applicant').after(img);
+                },
+                success: function (data) {
+                    var table_row = '';
+                    $.each(data.dataTable, function (i, value) {
+                        table_row += '<tr id="' + value.id_applicant + '" class="submit-applicant" style="cursor:pointer">';
+                        table_row += '<td>' + (i+1) + '</td>';
+                        table_row += '<td>' + value.registration_no + '</td>';
+                        table_row += '<td>' + value.nik + '</td>';
+                        table_row += '<td>' + value.identity_type + '</td>';
+                        table_row += '<td>' + value.full_name + '</td>';
+                        table_row += '<td>' + value.license_name + '</td>';
+                        table_row += '<td>' + value.job_name + '</td>';
+                        table_row += '<td>' + value.nationality_name + '</td>';
+                        table_row += '<td>' + value.payment_status + '</td>';
+                        table_row += '<td>' + value.invoice_no + '</td>';
+                        table_row += '<td>' + value.expire_date + '</td>';
+                        table_row += '</tr>';
+                    });
+                    $('#applicant-add-license').html(table_row);
+                    $('#pagination-add-license').html(data.pagination);
+                    $('.loader').remove();
+                }
+            });
+        });
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+    });
+</script>

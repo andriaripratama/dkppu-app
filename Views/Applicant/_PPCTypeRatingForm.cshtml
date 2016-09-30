@@ -1,0 +1,227 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicPpcViewModel>
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsPPCTypeRatingReadOnly == null ? true : (ViewBag.IsPPCTypeRatingReadOnly.ToString() == "True" ? true : false);
+
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+<div class="table-responsive">
+    @if (!isReadOnly)
+    {
+        <table>
+            <tbody>
+                <tr>
+                    <td style="padding-bottom: 5px; text-align: right;">
+                        <a class="pull-right btn btn-primary btn-xs" id="add-ppc-type-rating-form"><i class="fa fa-plus"></i></a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+    
+    <table class="table table-bordered table-striped" id="ppc-type-rating-form-table">
+        <thead>
+            <tr>
+                <th>Type Rating</th>
+                <th>Aircraft or SIM</th>
+                <th>Checked Date</th>
+                <th>Expired Date</th>
+                <th>Position/PIC</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicPpcViewModel">
+            @{
+                if (Model == null || Model.Count == 0)
+                {
+                    <tr>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].id_ppc_type_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Rating", new { @class = "form-control id_ppc_type_rating", id = "PPCTypeRatings_0__id_ppc_type_rating", @disabled = "disabled" })
+                            }
+                            else 
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].id_ppc_type_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Rating", new { @class = "form-control id_ppc_type_rating", id = "PPCTypeRatings_0__id_ppc_type_rating" })
+                            }
+
+                            <input type="hidden" name="PPCTypeRatings[0].ppc_type_rating" id="PPCTypeRatings_0__ppc_type_rating" value="" @disabledHTML>
+                        </td>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_0__id_air_sim_type", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_0__id_air_sim_type" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="PPCTypeRatings[0].checked_date" id="PPCTypeRatings_0__checked_date" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="PPCTypeRatings[0].expired_date" id="PPCTypeRatings_0__expired_date" value="" @disabledHTML />
+                        </td>
+                        <td>
+                            @if (isReadOnly)
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_0__ppc_pic", @disabled = "disabled" })
+                            }
+                            else
+                            {
+                                @Html.DropDownList("PPCTypeRatings[0].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_0__ppc_pic" })
+                            }
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    int i = 0;
+
+                    foreach (DKUPPU.ViewModels.TrxLicPpcViewModel item in Model)
+                    {
+                        <tr id="PPCTypeRatings_@i">
+                            <td>
+                                <input type="hidden" name="PPCTypeRatings[@i].id_trx_lic_ppc" id="PPCTypeRatings_@i.ToString()__id_trx_lic_ppc" value="@Html.DisplayFor(x => x[i].id_trx_lic_ppc)" @disabledHTML />
+                                <input type="hidden" name="PPCTypeRatings[@i].ppc_type_rating" id="PPCTypeRatings_@i.ToString()__ppc_type_rating" value="@Html.DisplayFor(x => x[i].ppc_type_rating)" @disabledHTML />
+
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].id_ppc_type_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Rating", new { @class = "form-control id_ppc_type_rating", id = "PPCTypeRatings_" + i.ToString() + "__id_ppc_type_rating", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].id_ppc_type_rating", (IEnumerable<SelectListItem>)ViewBag.TypeRatings, "Select Rating", new { @class = "form-control id_ppc_type_rating", id = "PPCTypeRatings_" + i.ToString() + "__id_ppc_type_rating" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.id_ppc_type_rating))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#PPCTypeRatings_@i.ToString()__id_ppc_type_rating option[value=@item.id_ppc_type_rating]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_" + i.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_" + i.ToString() + "__id_air_sim_type" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.ppc_type_rating))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#PPCTypeRatings_@i.ToString()__id_air_sim_type option[value=@item.id_air_sim_type]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="PPCTypeRatings[@i].checked_date" id="PPCTypeRatings_@i.ToString()__checked_date" value="@Html.DisplayFor(x => x[i].checked_date)" @disabledHTML />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker" name="PPCTypeRatings[@i].expired_date" id="PPCTypeRatings_@i.ToString()__expired_date" value="@Html.DisplayFor(x => x[i].expired_date)" @disabledHTML />
+                            </td>
+                            <td>
+                                @if (isReadOnly)
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_" + i.ToString() + "__ppc_pic", @disabled = "disabled" })
+                                }
+                                else
+                                {
+                                    @Html.DropDownList("PPCTypeRatings[" + i.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, "Select Item", new { @class = "form-control", id = "PPCTypeRatings_" + i.ToString() + "__ppc_pic" })
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.ppc_pic))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#PPCTypeRatings_@i.ToString()__ppc_pic option[value=@item.ppc_pic]').attr('selected', 'selected');
+                                        })
+                                    </script>
+                                }
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                }
+}
+        </tbody>
+    </table>
+</div>
+
+<script>
+    $(function () {
+        $('#add-ppc-type-rating-form').click(function () {
+            var rowIndex = 0;
+
+            $('#ppc-type-rating-form-table > tbody').find('tr').each(function () {
+                rowIndex++;
+            });
+
+            var ppcTypeRatingFormFirstRowObj = $('#ppc-type-rating-form-table > tbody').find("tr:first");
+            var ppcTypeRatingFormNewRowObj = ppcTypeRatingFormFirstRowObj.clone();
+
+            $.each(ppcTypeRatingFormNewRowObj.find('select'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+                $(this).val('');
+            });
+
+            $.each(ppcTypeRatingFormNewRowObj.find(':input'), function (i, val) {
+                var oldName = $(this).attr('name');
+                var newName = oldName.replace('[0]', '[' + rowIndex + ']');
+                $(this).attr('name', newName);
+
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_0_', '_' + rowIndex + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+            });
+
+            $.each(ppcTypeRatingFormNewRowObj.find('.date-picker'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).removeClass('date-picker');
+                $(this).datepicker({
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true
+                });
+            });
+
+            $('#ppc-type-rating-form-table > tbody > tr').last().after(ppcTypeRatingFormNewRowObj);
+        });
+
+        $('div').on('change', 'select.id_ppc_type_rating', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#PPCTypeRatings_' + index + '__ppc_type_rating').val(itemText);
+        });
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+    });
+</script>

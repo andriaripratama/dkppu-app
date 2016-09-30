@@ -1,0 +1,86 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.SOPPositionViewModel>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("License Category", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("id_license_category", (IEnumerable<SelectListItem>)ViewBag.id_license_category, "Select License Category", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("License Type", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("id_license_type", (IEnumerable<SelectListItem>)ViewBag.id_license_type, "Select License Type", new { @class = "form-control" })
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary pull-left" id="btn_search">Search</button>
+                    <a href="@Url.Action("AddSOP","SOPPosition")" class="btn btn-labeled btn-primary pull-right"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Widget ID (each widget will need unique ID)-->
+<div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-0" data-widget-editbutton="false">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>List SOP Position</h2>
+
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+
+        </div>
+        <!-- end widget edit box -->
+        <!-- widget content -->
+        <div class="widget-body no-padding" id="list-sop-license">
+           @Html.Partial("_ListSOP",Model)
+        </div>
+        <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+</div>
+<!-- end widget -->
+
+<script type="text/javascript">
+    $(function () {
+        $("#btn_search").click(function () {
+            var id_license_category = $("#id_license_category").val();
+            var id_license_type = $("#id_license_type").val();
+            $.ajax({
+                url: '@Url.Action("GetListSOP", "SOPPosition")',
+                data: { id_license_category: id_license_category, id_license_type: id_license_type },
+                beforeSend: function () {
+
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $("#list-sop-license").html(data);
+                },
+            });
+        });
+    });
+</script>

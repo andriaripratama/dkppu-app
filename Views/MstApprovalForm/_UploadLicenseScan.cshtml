@@ -1,0 +1,22 @@
+﻿@model DKUPPU.ViewModels.TrxLicenseUploadViewModel
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-3">
+            <input type="file" class="btn btn-default" name="TrxLicenseUploadViewModel.File" id="TrxLicenseUploadViewModel_File" required/>
+            <input type="hidden" name="TrxLicenseUploadViewModel.id_trx_license" id="LicenseScan_id_trx_license" value="@Html.DisplayFor(m => m.id_trx_license)" required />
+        </div>
+        <div class="col-md-5">
+            <input name="TrxLicenseUploadViewModel.license_no" id="TrxLicenseUploadViewModel_license_no" class="form-control" value="@ViewBag.License_no" readonly="readonly" />
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#upload-scan').click(function () {
+            $('#LicenseScan_id_doc_category').click();
+        });
+    });
+</script>

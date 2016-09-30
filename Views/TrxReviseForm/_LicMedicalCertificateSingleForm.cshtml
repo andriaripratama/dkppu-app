@@ -1,0 +1,25 @@
+﻿@model DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.med_certi_no)</th>
+                    <th>@Html.DisplayNameFor(model => model.from_date)</th>
+                    <th>@Html.DisplayNameFor(model => model.until_date)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><input name="TrxLicMedicalCertificateViewModel.med_certi_no" id="TrxLicMedicalCertificateViewModel_med_certi_no" class="form-control required-value" value="@Model.med_certi_no" /></td>
+                    <td><input name="TrxLicMedicalCertificateViewModel.from_date" id="TrxLicMedicalCertificateViewModel_from_date" class="form-control date-picker required-value" value="@Model.from_date" /></td>
+                    <td><input name="TrxLicMedicalCertificateViewModel.until_date" id="TrxLicMedicalCertificateViewModel_until_date" class="form-control date-picker required-value" value="@Model.until_date" /></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>

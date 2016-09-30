@@ -1,0 +1,143 @@
+﻿@model DKUPPU.ViewModels.PSNAAircraftViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div>
+                <br />
+                <div class="form-horizontal">
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_type_model)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.aircraft_type_model, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_registration)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.aircraft_registration, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.aircraft_serial_number)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.aircraft_serial_number, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.manufacture)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.manufacture, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.powerplant_manufacture)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.powerplant_manufacture, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.model_series)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.model_series, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.certification_note)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.certification_note, new { @class = "form-control", @rows = 4, @disabled = "disabled" })
+                        </div>
+                    </div>
+                </div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Document Upload</legend>
+                    </fieldset>
+                </div>
+                @if (Model.wf_activity_name == "ACT01")
+                {
+                    @Html.Partial("_InspectorChooseForm", Model.ListOfAircraftInspectorTypeViewModel)
+                }
+                else if (Model.wf_activity_name == "ACT02")
+                {
+                    @Html.Partial("_InspectionReportForm", Model.ListOfAircraftInspectionReportViewModel)
+
+                    <div class="form-horizontal">
+                        <div class="row form-group">
+                            <label class="col-md-4 control-label text-left">
+                                @Html.LabelFor(model => model.noise_certificate)
+                            </label>
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.noise_certificate, Model.ListOfNoiseCertificate, "Select", new { @class = "form-control input" })
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.certificate_no)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.certificate_no, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                }
+                else if (Model.wf_activity_name == "ACT03")
+                {
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.noise_certificate)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.noise_certificate, new { htmlAttributes = new { @class = "form-control", @type = "file" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.delivery_code)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.delivery_code, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.id_card)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.id_card, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-md-4 control-label text-left">
+                            @Html.LabelFor(model => model.name)
+                        </label>
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.name, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                }
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" type="submit">Submit</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

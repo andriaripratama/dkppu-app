@@ -1,0 +1,124 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model[0].id_class_rating)</th>
+                    <th>@Html.DisplayNameFor(model => model[0].issued_date)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="table-aircraft">
+                @{int j = 0;}
+                @foreach (DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel item in Model)
+                {
+                    <tr id="TrxLicAircraftCategoryRatingViewModel_@j" class="old-tr">
+                        @if (item.is_history == true)
+                        {
+                            <td>
+                                @Html.DropDownList("TrxLicAircraftCategoryRatingViewModel[" + j.ToString() + "].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.id_class_rating, new { @class = "form-control required-value id_class_rating", id = "TrxLicAircraftCategoryRatingViewModel_" + j.ToString() + "__id_class_rating", @disabled = "disabled" })
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicAircraftCategoryRatingViewModel_@j.ToString()__id_class_rating option[value=@item.id_class_rating]').attr('selected', 'selected');
+                                    })
+                                </script>
+
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker required-value" name="TrxLicAircraftCategoryRatingViewModel[@j].issued_date" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(m => m[j].issued_date)" readonly="readonly" />
+                                <input type="hidden" name="TrxLicAircraftCategoryRatingViewModel[@j].id_class_rating" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__id_class_rating" value="@Html.DisplayFor(m => m[j].id_class_rating)" />
+                                <input type="hidden" name="TrxLicAircraftCategoryRatingViewModel[@j].class_ratting" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__class_ratting" value="@Html.DisplayFor(m => m[j].class_ratting)" />
+                                <input type="hidden" name="TrxLicAircraftCategoryRatingViewModel[@j].id_trx_category_rating" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__id_trx_category_rating" value="@Html.DisplayFor(m => m[j].id_trx_category_rating)" />
+                            </td>
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.DropDownList("TrxLicAircraftCategoryRatingViewModel[" + j.ToString() + "].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.id_class_rating, new { @class = "form-control required-value id_class_rating", id = "TrxLicAircraftCategoryRatingViewModel_" + j.ToString() + "__id_class_rating" })
+                            </td>
+                            <td>
+                                <input type="text" class="form-control date-picker required-value" name="TrxLicAircraftCategoryRatingViewModel[@j].issued_date" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(m => m[j].issued_date)" />
+                            </td>
+                            <td></td>
+                        }
+                    </tr>
+                        j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#add-aircraft').click(function (e) {
+            var $tabelData = $('#table-aircraft');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-aircraft", function (e) {
+            var $tabelData = $('#table-aircraft');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                    $(this).removeAttr('style');
+                });
+                $.each($trNew.find('.date-picker'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        //...
+                    });
+                });
+                $.each($trNew.find('.ratingvalue'), function (i, val) {
+                    $(this).hide();
+                });
+
+                $trLast.after($trNew);
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>
+

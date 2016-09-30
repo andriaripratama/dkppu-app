@@ -1,0 +1,46 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicDangerousGoodsViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date Of Recurrent</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicDangerousGoodsViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicDangerousGoodsViewModel_@j">
+                    <td>
+                        <input type="hidden" name="TrxLicDangerousGoodsViewModel[@j].id_trx_dangerous_goods" id="TrxLicRecurrentTypeOfAircraftViewModel_@j.ToString()__id_trx_dangerous_goods" value="@Html.DisplayFor(a => item.id_trx_dangerous_goods)">
+                        <input type="text" class="form-control date-picker" name="TrxLicDangerousGoodsViewModel[@j].recurrent_date" id="TrxLicDangerousGoodsViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)">
+                    </td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicDangerousGoodsViewModel[@j].expired_date" id="TrxLicDangerousGoodsViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)"></td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+    });
+
+</script>
+
+
+
+

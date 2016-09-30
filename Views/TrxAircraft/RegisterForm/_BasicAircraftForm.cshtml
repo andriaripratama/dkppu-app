@@ -1,0 +1,21 @@
+﻿@model DKUPPU.ViewModels.BasicAircraft
+
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody id="BasicAircraft">
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.letter_intent, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => model.letter_intent, ViewBag.LetterIntent as IEnumerable<SelectListItem>, new { @class = "form-control required-value aircraft_type" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.maintenance_facility_file" id="model.maintenance_facility_file" />
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>

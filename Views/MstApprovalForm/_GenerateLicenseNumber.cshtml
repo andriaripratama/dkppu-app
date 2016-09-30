@@ -1,0 +1,126 @@
+﻿@model DKUPPU.ViewModels.TrxLicenseViewModel
+@{
+    Layout = null;
+    string disabled = "";
+    if (Model.license_no != null && Model.license_no != "")
+    {
+        disabled = "disabled";
+    }
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        <div class="col-md-2">
+            <a class="btn btn-primary @disabled" name="generate-license" id="generate-license_@disabled">Generate License No</a>
+        </div>
+        <div class="col-md-5">
+            <input name="TrxLicenseViewModel.license_no" id="TrxLicenseViewModel_license_no" class="form-control" value="@Html.DisplayFor(a => a.license_no)" readonly="readonly" />
+        </div>
+    </div>
+</div>
+@if (ViewBag.IsLOA == true)
+{
+    <script>
+        $(function () {
+            $('#generate-license_').click(function () {
+                var id_trx_license = "@Html.DisplayFor(a => a.id_trx_license)";
+                var id_mst_license_his = $('#TrxLicenseHisViewModel_id_trx_license_old').val();
+                var License_no = "@Html.DisplayFor(a => a.license_no)";
+                License_no = License_no.length > 0 ? License_no : $('#TrxLicenseViewModel_license_no').val();
+                if (License_no.length <= 0) {
+                    $.ajax({
+                        url: "@Url.Action("GenerateLOALicenseNumber", "AJAX")",
+                        data: {
+                            id_trx_license: id_trx_license,
+                            id_mst_license_his : id_mst_license_his
+                        },
+                        dataType: 'JSON',
+                        beforeSend: function () {
+                            $('#generate-license_').append('&nbsp;&nbsp;<i class="fa fa-refresh fa-spin"></i>');
+                        },
+                        success: function (data) {
+                            $('#generate-license_').html('Generate License No');
+                            $('#TrxLicenseViewModel_license_no').val(data);
+                            $('#generate-license_').addClass('disabled');
+                            $('#generate-license_').attr('id', 'generate-license_disabled');
+                            $('#action_').removeClass('disabled');
+                            location.reload(true);
+                        }
+                    });
+                }
+                else {
+                    $('#generate-license_').addClass('disabled');
+                }
+            });
+        });
+</script>
+}
+else if (ViewBag.IsTAC == true)
+{
+    <script>
+        $(function () {
+            $('#generate-license_').click(function () {
+                var id_trx_license = "@Html.DisplayFor(a => a.id_trx_license)";
+                var License_no = "@Html.DisplayFor(a => a.license_no)";
+                License_no = License_no.length > 0 ? License_no : $('#TrxLicenseViewModel_license_no').val();
+                if (License_no.length <= 0) {
+                    $.ajax({
+                        url: "@Url.Action("GenerateTACLicenseNumber", "AJAX")",
+                        data: {
+                            id_trx_license: id_trx_license,
+                        },
+                        dataType: 'JSON',
+                        beforeSend: function () {
+                            $('#generate-license_').append('&nbsp;&nbsp;<i class="fa fa-refresh fa-spin"></i>');
+                        },
+                        success: function (data) {
+                            $('#generate-license_').html('Generate License No');
+                            $('#TrxLicenseViewModel_license_no').val(data);
+                            $('#generate-license_').addClass('disabled');
+                            $('#generate-license_').attr('id', 'generate-license_disabled');
+                            location.reload(true);
+                        }
+                    });
+                }
+                else {
+                    $('#generate-license_').addClass('disabled');
+                }
+            });
+        });
+    </script>
+}
+else
+{
+    <script>
+    $(function () {
+        $('#generate-license_').click(function () {
+            var id_trx_license = "@Html.DisplayFor(a => a.id_trx_license)";
+                var License_no = "@Html.DisplayFor(a => a.license_no)";
+                License_no = License_no.length > 0 ? License_no : $('#TrxLicenseViewModel_license_no').val();
+                if (License_no.length <= 0) {
+                    $.ajax({
+                        url: "@Url.Action("GenerateLicenseNumber", "AJAX")",
+                    data: {
+                        id_trx_license: id_trx_license
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        $('#generate-license_').append('&nbsp;&nbsp;<i class="fa fa-refresh fa-spin"></i>');
+                    },
+                    success: function (data) {
+                        $('#generate-license_').html('Generate License No');
+                        $('#TrxLicenseViewModel_license_no').val(data);
+                        $('#generate-license_').addClass('disabled');
+                        $('#generate-license_').attr('id', 'generate-license_disabled');
+                        $('#action_').removeClass('disabled');
+                        location.reload(true);
+                    }
+                });
+            }
+            else {
+                $('#generate-license_').addClass('disabled');
+            }
+        });
+    });
+    </script>
+}
+

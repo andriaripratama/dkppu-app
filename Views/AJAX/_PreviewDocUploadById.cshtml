@@ -1,0 +1,26 @@
+﻿@model DKUPPU.ViewModels.TrxUploadedDocumentViewModel
+@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Document Preview</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                @if (Model.doc_file_extension.ToLower().Contains("pdf"))
+                {
+                    <object class="col-xs-12" data="@Url.Action("PreviewUploadedDocument", "AJAX", new { id_trx_uploaded_doc = Model.id_trx_uploaded_doc })" type="application/pdf" height="600px">
+                        <a href="@Url.Action("PreviewUploadedDocument", "AJAX", new { id_trx_uploaded_doc = Model.id_trx_uploaded_doc })">test.pdf</a>
+                    </object>
+                }
+                else
+                {
+                <img class="col-xs-12" src="@Url.Action("PreviewUploadedDocument", "AJAX", new { id_trx_uploaded_doc = Model.id_trx_uploaded_doc })" />
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>AirCraft or SIM</th>
+
+                    <th>Check Date</th>
+
+                    <th>Valid Until</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int j = 0;
+                    string vreadonly = "";
+                    string vrequered = "";
+                }
+                @foreach (DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel item in Model)
+                {
+                    vreadonly = "readonly='readonly'";
+                    vrequered = "";
+                    if (item.is_history == false || item.is_history == null)
+                    {
+                        vreadonly = "";
+                        vrequered = "required-value";
+                    }
+                    <tr>
+                        <td>
+                            @if (item.is_history == true)
+                            {
+                                @Html.DropDownList("TrxLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, "Select Air or SIM", new { @class = "form-control", id = "TrxLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                                if (!(Model[j].id_air_sim_type == null || Model[j].id_air_sim_type == ""))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#TrxLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type option[value=@Model[j].id_air_sim_type]').attr('selected', true);
+                                        })
+                                    </script>
+                                }
+                                <input type="hidden" name="TrxLicInstrumentRatingViewModel[@j].id_air_sim_type" id="TrxLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type" value="@Html.DisplayFor(m => m[j].id_air_sim_type)" @vreadonly>
+
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TrxLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, "Select Air or SIM", new { @class = "form-control", id = "TrxLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type" })
+                                if (!(Model[j].id_air_sim_type == null || Model[j].id_air_sim_type == ""))
+                                {
+                                    <script>
+                                        $(function () {
+                                            $('#TrxLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type option[value=@Model[j].id_air_sim_type]').attr('selected', true);
+                                        })
+                                    </script>
+                                }
+                            }
+                            <input type="hidden" name="TrxLicInstrumentRatingViewModel[@j].id_trx_lic_instrument_rating" id="TrxLicInstrumentRatingViewModel_@j.ToString()__id_trx_lic_instrument_rating" value="@Html.DisplayFor(m => m[j].id_trx_lic_instrument_rating)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="TrxLicInstrumentRatingViewModel[@j].checked_date" id="TrxLicInstrumentRatingViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vreadonly>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker" name="TrxLicInstrumentRatingViewModel[@j].expired_date" id="TrxLicInstrumentRatingViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vreadonly>
+                        </td>
+                    </tr>
+                            j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

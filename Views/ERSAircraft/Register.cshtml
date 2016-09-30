@@ -1,0 +1,41 @@
+﻿@model DKUPPU.ViewModels.ERSAircraftViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div>
+                <br />
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Aircraft Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("_AircraftInformationForm", Model)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Applicant Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("_ApplicantInformationForm", Model.TrxAircraftViewModel)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Cancellation Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("_CancellationInformationForm", Model)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                    </fieldset>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" type="submit">Submit</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>

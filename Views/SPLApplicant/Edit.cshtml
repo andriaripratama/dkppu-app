@@ -1,0 +1,354 @@
+﻿@model DKUPPU.ViewModels.SPLApprovalViewModel
+@{
+    ViewBag.Title = Model.TrxLicenseViewModel.id_sop_type_value;
+    ViewBag.License_no = Model.TrxLicenseViewModel.license_no;
+    ViewBag.wf_activity_name = Model.wf_activity_name;
+}
+@if (Model.wf_activity_name == "ACTV")
+{
+    <style>
+        input {
+            background-color: transparent !important;
+            border: none !important;
+        }
+    </style>
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>
+            @if (Model.wf_activity_name == "ACTE")
+            {
+                <text>Edit Form</text>
+            }
+            else
+            {
+                <text>Approval Form</text>
+            }
+        </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_applicant)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_category)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_sop_type)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+                @Html.HiddenFor(model => model.TrxWfViewModel.sn)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.created_by)
+                @Html.HiddenFor(model => model.Applicant.job_name)
+                @Html.HiddenFor(model => model.Applicant.full_name)
+                @Html.HiddenFor(model => model.Applicant.id_applicant)
+                <fieldset>
+                    <legend>TOEIC Certificate</legend>
+                    @Html.Partial("../TrxReviseForm/_ToeflCheckForm", Model.TrxLicToeflCertificateViewModel)
+                </fieldset>
+                <fieldset>
+                    <legend>Medical Certificate</legend>
+                    @Html.Partial("../TrxReviseForm/_MedicalCheckForm", Model.TrxLicMedicalCertificateViewModel)
+                </fieldset>
+                if (ViewBag.UploadDocumentForm == true)
+                {
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                        @Html.Partial("../MstApprovalForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                    </fieldset>
+                }
+                if (ViewBag.CreateNote != false)
+                {
+                    <fieldset>
+                        <legend>Notes</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+                <fieldset>
+                    @if (ViewBag.GenerateLicense == true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_GenerateLicenseNumber", Model.TrxLicenseViewModel)
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.UploadLicenseScan == true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_UploadLicenseScan", Model.TrxLicenseUploadViewModel)
+                            </div>
+                        </div>
+                    }
+                    @if (ViewBag.CheckingRegNo == true)
+                    {
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_CheckingRegistrationNumber", Model.TrxLicenseUploadViewModel)
+                            </div>
+                        </div>
+                    }
+
+                </fieldset>
+                <div class="form-actions">
+                    <button id="submit" class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Back </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+        $('#TrxLicMedicalCertificateViewModel_med_certi_no').attr('readonly', 'readonly');
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi numeric
+            if (!MustNumber($('#TrxLicToeflCertificateViewModel_toefl_test_score'))) {
+                hasError = hasError + 1;
+            }
+            if (!LessThan999MoreThan400($('#TrxLicToeflCertificateViewModel_toefl_test_score'))) {
+                hasError = hasError + 1;
+            }
+
+            //validasi date form - until
+            if (!FromUntilValidate()) {
+                hasError = hasError + 1;
+            }
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+            //return false;
+        });
+
+        //validasi is required
+        $('.required-value').keyup(function () {
+            IsRequired($(this));
+        });
+
+        $('.required-value.date-picker').change(function () {
+            IsRequired($(this));
+            FromUntilValidate();
+        });
+
+        // validasi numerik and less than 400
+        $('#TrxLicToeflCertificateViewModel_toefl_test_score').keyup(function () {
+            if (MustNumber($(this))) {
+                LessThan999MoreThan400($(this));
+            }
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+
+            var allowedExtensions = ["jpg", "pdf", "png", "jpeg"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = false;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+
+                if (!numericReg.test(value)) {
+                    $(object).after('<span class="help-block">Numeric characters only.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    var value = parseInt(value);
+                    $(object).val(value);
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function LessThan999MoreThan400(object) {
+            var IsValid = true;
+            var value = $(object).val();
+            if (value.length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                if (!(parseInt(value) > 399 && parseInt(value) < 1000)) {
+                    $(object).after('<span class="help-block">The score not valid</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function FromUntilValidate() {
+            var IsValid = false;
+
+            $('#TrxLicMedicalCertificateViewModel_until_date').parent().find('span').remove();
+            $('#TrxLicMedicalCertificateViewModel_until_date').parent().removeClass('has-error');
+            $('#TrxLicMedicalCertificateViewModel_until_date').parent().removeClass('has-success');
+
+            $('#TrxLicMedicalCertificateViewModel_from_date').parent().find('span').remove();
+            $('#TrxLicMedicalCertificateViewModel_from_date').parent().removeClass('has-error');
+            $('#TrxLicMedicalCertificateViewModel_from_date').parent().removeClass('has-success');
+
+            var from_date = $('#TrxLicMedicalCertificateViewModel_from_date').val();
+            var until_date = $('#TrxLicMedicalCertificateViewModel_until_date').val();
+            if (from_date.length > 0 && until_date.length > 0) {
+                var from = from_date.split('/');
+                var fromDate = new Date(from[1] + '/' + from[0] + '/' + from[2]);
+
+                var until = until_date.split('/');
+                var untilDate = new Date(until[1] + '/' + until[0] + '/' + until[2]);
+
+                if (fromDate >= untilDate) {
+                    $('#TrxLicMedicalCertificateViewModel_from_date').after('<span class="help-block">The date range not valid</span>');
+                    $('#TrxLicMedicalCertificateViewModel_from_date').parent().addClass('has-error');
+
+                    $('#TrxLicMedicalCertificateViewModel_until_date').after('<span class="help-block">The date range not valid</span>');
+                    $('#TrxLicMedicalCertificateViewModel_until_date').parent().addClass('has-error');
+                    IsValid = false;
+                }
+
+                else {
+                    $('#TrxLicMedicalCertificateViewModel_until_date').after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $('#TrxLicMedicalCertificateViewModel_until_date').parent().addClass('has-success');
+
+                    $('#TrxLicMedicalCertificateViewModel_from_date').after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $('#TrxLicMedicalCertificateViewModel_from_date').parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+    });
+</script>

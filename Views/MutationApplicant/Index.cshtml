@@ -1,0 +1,286 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MutationApplicant>
+@{
+    ViewBag.Title = "Update Org";
+}
+<style>
+    table > thead > tr > th {
+        cursor: pointer;
+    }
+</style>
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <input class="form-control" id="search-value-index" value="@ViewBag.srcValue" name="search-value-index" placeholder="Search" />
+    </div>
+    <div class="col-xs-2">
+        <button id="src-mutation" class="btn btn-primary btn-sm">Search</button>
+    </div>
+    @if (ViewBag.IsInternal != true)
+    {
+        <div class="col-xs-7">
+            <a href="@Url.Action("Register", "MutationApplicant")" class="btn btn-labeled btn-primary btn-sm pull-right"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add</a>
+        </div>
+    }
+
+</div>
+<br />
+
+<div class="row">
+    <div class="col-xs-12" id="list-mutation">
+
+        <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>List All Update Organization </h2>
+            </header>
+
+            <!-- widget div-->
+            <div id="table-list">
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="table-responsive">
+                        <table id="table-applicant" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="applicant_name" data-desc="True">@Html.DisplayNameFor(model => model.applicant_name)</th>
+                                    <th id="old_id_org_name" data-desc="True">Previous Organization</th>
+                                    @if (ViewBag.IsInternal == true)
+                                    {
+                                        <th id="new_id_org_name" data-desc="True">New Organization</th>
+                                    }
+                                    <th id="last_license_number" data-desc="True">@Html.DisplayNameFor(model => model.last_license_number)</th>
+                                    <th id="created_date" data-desc="True">@Html.DisplayNameFor(model => model.created_date)</th>
+                                    <th id="id_wf_status_value" data-desc="True">@Html.DisplayNameFor(model => model.id_wf_status_value)</th>
+                                    <th data-order="False">#</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mutation-list">
+                                @foreach (DKUPPU.ViewModels.MutationApplicant item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.applicant_name)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.old_id_org_name)</td>
+                                        @if (ViewBag.IsInternal == true)
+                                        {
+                                            <td>@Html.DisplayFor(modelItem => item.new_id_org_name)</td>
+                                        }
+                                        <td>@Html.DisplayFor(modelItem => item.last_license_number)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.created_date)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.id_wf_status_value)</td>
+                                        <td>
+                                            @if (ViewBag.IsInternal != true)
+                                            {
+                                                if (item.id_wf_status == DKUPPU.Helpers.WorkflowStatus.REVISED)
+                                                {
+                                                    <a href="@Url.Action("Resubmit", "MutationApplicant", new { id_trx_mutation = item.id_trx_mutation })" class="btn btn-primary btn-circle" title="Resubmit"><i class="fa fa-edit"></i></a>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (item.id_wf_status == DKUPPU.Helpers.WorkflowStatus.INPROGRESS)
+                                                {
+                                                    <a href="@Url.Action("Approval", "MutationApplicant", new { id_trx_mutation = item.id_trx_mutation })" class="btn btn-primary btn-circle" title="Approval"><i class="fa fa-legal"></i></a>
+                                                }
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="dt-toolbar-footer">
+                            <div class="col-xs-2 col-sm-2" id="total-row">
+                                <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                            </div>
+                            <div class="col-xs-10 col-sm-10">
+                                <div class="dataTables_paginate paging_simple_numbers" id="pagination-mutation">
+                                    @Html.Raw(ViewBag.Pagination)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end widget content -->
+            </div>
+            <!-- end widget div -->
+        </div>
+        <!-- end widget -->
+
+    </div>
+</div>
+@if (ViewBag.IsInternal != true)
+{
+    <script type="text/javascript">
+        $(function () {
+            var propertyOrder = "created_date";
+            var isDescending = "True";
+            /* button search */
+            $('#src-mutation').click(function () {
+                var page = 1;
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                getData(page, pageSize, srcValue, propertyOrder, isDescending)
+            });
+
+            $('#pagination-mutation').on("click", "li.page", function (e) {
+                var page = $(this).attr('link');
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                getData(page, pageSize, srcValue, propertyOrder, isDescending)
+
+            });
+
+            $('#table-applicant>thead>tr>th').click(function (e) {
+                if ($(this).attr('data-order') != 'False') {
+                    var page = 1;
+                    var wfStatus = "@ViewBag.WfStatus";
+                    var pageSize = 10;
+                    var srcValue = $('#search-value-index').val();
+                    propertyOrder = $(this).attr('id');
+                    isDescending = $(this).attr('data-desc');
+                    $('#table-applicant>thead>tr>th>span').remove();
+                    if (isDescending == "True") {
+                        $(this).attr('data-desc', 'False');
+                        $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                    }
+                    else {
+                        $(this).attr('data-desc', 'True');
+                        $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                    }
+                    getData(page, pageSize, srcValue, propertyOrder, isDescending);
+                }
+            });
+
+            function getData(page, pageSize, srcValue, propertyOrder, isDescending) {
+                $.ajax({
+                    url: '@Url.Action("GetListExternalJson", "MutationApplicant")',
+                    data: {
+                        page: page,
+                        pageSize: pageSize,
+                        srcValue: srcValue,
+                        propertyOrder: propertyOrder,
+                        isDescending: isDescending
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#table-list').after(img);
+                    },
+                    success: function (data) {
+                        var table_row = '';
+                        $.each(data.dataTable, function (i, value) {
+                            table_row += '<tr>';
+                            table_row += '<td>' + value.applicant_name + '</td>';
+                            table_row += '<td>' + value.old_id_org_name + '</td>';
+                            table_row += '<td>' + value.last_license_number + '</td>';
+                            table_row += '<td>' + value.created_date_string + '</td>';
+                            table_row += '<td>' + value.id_wf_status_value + '</td>';
+                            table_row += '<td>'
+                            if (value.id_wf_status == "@DKUPPU.Helpers.WorkflowStatus.REVISED") {
+                                table_row += '<a href="@Url.Action("Resubmit", "MutationApplicant")?id_trx_mutation=' + value.id_trx_mutation + '" class="btn btn-primary btn-circle" title="Resubmit"><i class="fa fa-edit"></i></a>';
+                            }
+                            table_row += '</td>';
+                            table_row += '</tr>';
+                        });
+                        $('#mutation-list').html(table_row);
+                        $('#pagination-mutation').html(data.pagination);
+                        $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                });
+            }
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+    $(function () {
+        var propertyOrder = "created_date";
+        var isDescending = "True";
+        /* button search */
+        $('#src-mutation').click(function () {
+            var page = 1;
+            var pageSize = 10;
+            var srcValue = $('#search-value-index').val();
+            getData(page, pageSize, srcValue, propertyOrder, isDescending)
+        });
+
+        $('#pagination-mutation').on("click", "li.page", function (e) {
+            var page = $(this).attr('link');
+            var pageSize = 10;
+            var srcValue = $('#search-value-index').val();
+            getData(page, pageSize, srcValue, propertyOrder, isDescending)
+
+        });
+
+        $('#table-applicant>thead>tr>th').click(function (e) {
+            if ($(this).attr('data-order') != 'False') {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-applicant>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getData(page, pageSize, srcValue, propertyOrder, isDescending);
+            }
+        });
+
+        function getData(page, pageSize, srcValue, propertyOrder, isDescending) {
+            $.ajax({
+                url: '@Url.Action("GetListInternalJson", "MutationApplicant")',
+                data: {
+                    page: page,
+                    pageSize: pageSize,
+                    srcValue: srcValue,
+                    propertyOrder: propertyOrder,
+                    isDescending: isDescending
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#table-list').after(img);
+                },
+                success: function (data) {
+                    var table_row = '';
+                    $.each(data.dataTable, function (i, value) {
+                        table_row += '<tr>';
+                        table_row += '<td>' + value.applicant_name + '</td>';
+                        table_row += '<td>' + value.old_id_org_name + '</td>';
+                        table_row += '<td>' + value.new_id_org_name + '</td>';
+                        table_row += '<td>' + value.last_license_number + '</td>';
+                        table_row += '<td>' + value.created_date_string + '</td>';
+                        table_row += '<td>' + value.id_wf_status_value + '</td>';
+                        table_row += '<td>'
+                        if (value.id_wf_status == "@DKUPPU.Helpers.WorkflowStatus.INPROGRESS") {
+                            table_row += '<a href="@Url.Action("Approval", "MutationApplicant")?id_trx_mutation=' + value.id_trx_mutation + '" class="btn btn-primary btn-circle" title="Approval"><i class="fa fa-legal"></i></a>';
+                        }
+                        table_row += '</td>';
+                        table_row += '</tr>';
+                    });
+                    $('#mutation-list').html(table_row);
+                    $('#pagination-mutation').html(data.pagination);
+                    $('.loader').remove();
+                }
+            });
+        }
+    });
+    </script>
+}
+

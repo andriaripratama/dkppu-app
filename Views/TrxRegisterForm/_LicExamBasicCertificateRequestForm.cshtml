@@ -1,0 +1,28 @@
+﻿@model DKUPPU.ViewModels.BCEFormViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Type Of Certificate</th>
+                        <th>Exam Number</th>
+                        <th>Attandance Number</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="text" class="form-control" value="@Html.DisplayFor(a => a.TrxLicenseViewModel.id_sop_type_value)" readonly="readonly" /></td>
+                        <td><input type="text" class="form-control" value="@Html.DisplayFor(a => a.exam_number)" readonly="readonly" /></td>
+                        <td><input type="text" class="form-control" value="@Html.DisplayFor(a => a.exam_attandance_number)" readonly="readonly" /></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+

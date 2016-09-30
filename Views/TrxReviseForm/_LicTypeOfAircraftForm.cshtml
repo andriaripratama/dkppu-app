@@ -1,0 +1,75 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicTypeOfAircraftViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Issue</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicTypeOfAircraftViewModel">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicTypeOfAircraftViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value date-picker";
+                }
+                <tr id="TrxLicTypeOfAircraftViewModel_@j">
+                    <td>
+                        @if (item.is_history == true)
+                        {
+                            @Html.DropDownList("TrxLicTypeOfAircraftViewModel[" + j.ToString() + "].rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, "Select Type Rating", new { @class = "form-control id_type_rating", id = "TrxLicTypeOfAircraftViewModel_" + j.ToString() + "__rating", disabled = "disabled" })
+                            if (!(Model[j].rating == null || Model[j].rating == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicTypeOfAircraftViewModel_@j.ToString()__rating option[value=@Model[j].rating]').attr('selected', 'selecteds');
+                                    })
+                                </script>
+                            }
+
+                            <input type="hidden" class="form-control" name="TrxLicTypeOfAircraftViewModel[@j].rating" id="TrxLicTypeOfAircraftViewModel_@j.ToString()__rating" value="@Html.DisplayFor(a => item.rating)">
+                        }
+                        else
+                        {
+                        @Html.DropDownList("TrxLicTypeOfAircraftViewModel[" + j.ToString() + "].rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, "Select Type Rating", new { @class = "form-control id_type_rating", id = "TrxLicTypeOfAircraftViewModel_" + j.ToString() + "__rating" })
+                        }
+
+                    </td>
+
+                    <td colspan="2">
+                        <input type="text" class="form-control @vrequered" name="TrxLicTypeOfAircraftViewModel[@j].issued_date" id="TrxLicTypeOfAircraftViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(a => item.issued_date)"@vreadonly>
+                        <input type="hidden" class="form-control" name="TrxLicTypeOfAircraftViewModel[@j].id_trx_type_of_aircraft" id="TrxLicTypeOfAircraftViewModel_@j.ToString()__id_trx_type_of_aircraft" value="@Html.DisplayFor(a => item.id_trx_type_of_aircraft)">
+                    </td>
+                </tr>
+                        j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+

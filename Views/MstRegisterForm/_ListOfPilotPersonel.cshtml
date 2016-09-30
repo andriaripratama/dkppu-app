@@ -1,0 +1,170 @@
+﻿@model List<DKUPPU.ViewModels.ListOfPilotPersonnel>
+@{
+    Layout = null;
+
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+
+                <th>Certificat of appoinment</th>
+                <th>Pilot License</th>
+                <th>Function PIC</th>
+                <th>Aircraft Rating</th>
+                <th>Flight Instructor</th>
+                <th>Attatchment</th>
+                <th>Validity</th>
+            </tr>
+        </thead>
+        <tbody id="table-list-pilot">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+    //string datepicker = "";
+    //string from_date = "";
+    //string until_date = "";
+            }
+            @foreach (DKUPPU.ViewModels.ListOfPilotPersonnel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                //datepicker = "";
+                //from_date = "";
+                //until_date = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    //from_date = "from-date";
+                    //until_date = "until-date";
+                    //datepicker = "date-picker";
+                }
+                <tr id="tr-@j" class="old-tr">
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].name" id="ListOfPilotPersonnel_@j.ToString()__name" class="form-control required-value" value="@Html.DisplayFor(m => m[j].name)" @vreadonly>
+                        <input type="hidden" name="ListOfPilotPersonnel[@j].id_listofpilotpersonel" id="ListOfPilotPersonnel_@j.ToString()__id_listofpilotpersonel" value="@Html.DisplayFor(m => m[j].id_listofpilotpersonel)">
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].certificate_appointment" id="ListOfPilotPersonnel_@j.ToString()__certificate_appointment" class="form-control required-value" value="@Html.DisplayFor(m => m[j].certificate_appointment)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].pilot_license" id="ListOfPilotPersonnel_@j.ToString()__pilot_license" class="form-control required-value" value="@Html.DisplayFor(m => m[j].pilot_license)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].function_pic" id="ListOfPilotPersonnel_@j.ToString()__function_pic" class="form-control required-value" value="@Html.DisplayFor(m => m[j].function_pic)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].aircraft_rating" id="ListOfPilotPersonnel_@j.ToString()__aircraft_rating" class="form-control required-value" value="@Html.DisplayFor(m => m[j].aircraft_rating)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].flight_instructor" id="ListOfPilotPersonnel_@j.ToString()__flight_instructor" class="form-control required-value" value="@Html.DisplayFor(m => m[j].flight_instructor)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="file" name="ListOfPilotPersonnel[@j].attachment" id="ListOfPilotPersonnel_@j.ToString()__attachment" class="form-control required-value" value="@Html.DisplayFor(m => m[j].attachment)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" name="ListOfPilotPersonnel[@j].validity" id="ListOfPilotPersonnel_@j.ToString()__validity" class="form-control required-value" value="@Html.DisplayFor(m => m[j].validity)" @vreadonly>
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        $('#add-list-pilot').click(function (e) {
+            var $tabelData = $('#table-list-pilot');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-list-pilot", function (e) {
+            var $tabelData = $('#table-list-pilot');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+                //$.each($trNew.find('.date-filed'), function (i, val) {
+                //    $(this).removeClass('hasDatepicker');
+                //    $(this).datepicker({
+                //        //options
+                //        dateFormat: 'dd/mm/yy',
+                //        changeMonth: true,
+                //        changeYear: true,
+                //        //...
+                //    });
+                //});
+
+
+                @*var med_no = '';
+                var x = '@ViewBag.sop_type';
+                if (x == 'WL01' || x == 'WL02' || x == 'WL03' || x == 'WL04' || x == 'WL28' || x == 'WL29') {
+                    med_no = 'SECOND';
+                }
+                else if (x== 'WL05' || x== 'WL06' || x== 'WL07' || x== 'WL08' || x== 'WL09') {
+                    med_no = 'FIRST';
+                }
+                else if (x== 'WL11' || x== 'WL12' || x== 'WL13' || x== 'WL14' || x== 'WL15' || x== 'WL16' || x== 'WL17' || x== 'WL18' || x== 'WL19') {
+                    med_no = 'THIRD';
+                }*@
+                $.each($trNew.find('#ListOfPilotPersonnel_' + (parseInt(suffix) + 1) + '__med_certi_no'), function (i, val) {
+                    $(this).val(med_no);
+                    $(this).attr('readonly', 'readonly');
+                });
+
+                $.each($trNew.find('#ListOfPilotPersonnel_' + (parseInt(suffix) + 1) + '__from_date'), function (i, val) {
+                    $(this).addClass('from-date');
+                });
+
+                $.each($trNew.find('#ListOfPilotPersonnel_' + (parseInt(suffix) + 1) + '__until_date'), function (i, val) {
+                    $(this).addClass('until-date');
+                });
+
+                $trLast.after($trNew);
+
+
+
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>
+
+

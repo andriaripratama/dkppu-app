@@ -1,0 +1,33 @@
+﻿@model List<DKUPPU.ViewModels.TrxAircraftDocViewModel>
+@{
+    Layout = null;
+    string required = "";
+    string bintang = "";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.TrxAircraftDocViewModel item in Model)
+            {
+                required = "";
+                bintang = "";
+                if (Model[j].is_mandatory == true)
+                {
+                    required = "required-value";
+                    bintang = "*";
+                }
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-left" for="@j.ToString()__File">@Html.DisplayFor(m => m[j].label_name) @bintang</label>
+                    <div class="col-md-5">
+                        <input type="file" class="btn btn-default @required" data-validation="@required" name="[@j].File" id="@j.ToString()__File" />
+                        <input type="hidden" name="TrxAircraftDocViewModel[@j].id_doc_category" id="TrxAircraftDocViewModel_@j.ToString()__id_doc_category" value="@Html.DisplayFor(m => m[j].id_doc_category)" />
+                        <input type="hidden" name="TrxAircraftDocViewModel[@j].id_trx_aircraft_doc" id="TrxAircraftDocViewModel_@j.ToString()__id_trx_aircraft_doc" value="@Html.DisplayFor(m => m[j].id_trx_aircraft_doc)" />
+                    </div>
+                </div>
+                j++;
+            }
+        </div>
+    </div>
+
+</div>

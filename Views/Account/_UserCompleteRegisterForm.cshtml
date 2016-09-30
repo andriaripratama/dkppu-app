@@ -1,0 +1,548 @@
+﻿@model DKUPPU.ViewModels.UserViewModel
+@{
+    Layout = null;
+}
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Organization Type *</label>
+    <div class="col-md-8">
+
+        @if (ViewBag.IsProfile == "True")
+        {
+            @Html.HiddenFor(m => m.org_type)
+            @Html.TextBoxFor(model => model.org_type_value, new { @class = "form-control", @readonly = "readonly" })
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.org_type, (IEnumerable<SelectListItem>)ViewBag.OrgType, "Select Organization Type", htmlAttributes: new { @class = "is-required form-control" })
+        }
+        @Html.ValidationMessageFor(m => m.org_type, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Organization Name *</label>
+    <div class="col-md-8">
+        @if (ViewBag.IsProfile == "True")
+        {
+            @Html.HiddenFor(m => m.id_org)
+            @Html.TextBoxFor(model => model.id_org_value, new { @class = "form-control", @readonly = "readonly" })
+        }
+        else
+        {
+            @Html.DropDownListFor(model => model.id_org, (IEnumerable<SelectListItem>)ViewBag.IdOrg, "Select Organization Name", htmlAttributes: new { @class = "is-required form-control" })
+        }
+        @Html.ValidationMessageFor(m => m.id_org, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Username *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.username, new { @class = "form-control", @readonly = "readonly" })
+        @Html.ValidationMessageFor(m => m.username, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Full Name *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.full_name, new { @class = "form-control", @readonly = "readonly" })
+        @Html.ValidationMessageFor(m => m.full_name, null, new { @class = "text-danger" })
+    </div>
+    <div class="col-md-7">
+        <label for="fullname" class="control-label col-md-10">The name must correspond with the ID card</label>
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Email *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.email, new { @class = "form-control", @readonly = "readonly" })
+        @Html.ValidationMessageFor(m => m.email, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.fax_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.fax_number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.fax_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Phone Number *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.phone_number, new { @class = "form-control is-required" })
+        @Html.ValidationMessageFor(m => m.phone_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(model => model.extension_number, new { @class = "col-md-2 control-label text-left" })
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.extension_number, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.extension_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Mobile Number *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.mobile_number, new { @class = "form-control is-required" })
+        @Html.ValidationMessageFor(m => m.mobile_number, null, new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Place Of Birth *</label>
+    <div class="col-md-4">
+        @Html.TextBoxFor(model => model.place_of_birth, new { @class = "form-control is-required" })
+        @Html.ValidationMessageFor(model => model.place_of_birth, "", new { @class = "text-danger" })
+    </div>
+    <label class="col-md-1 control-label text-right">D.O.B *</label>
+    <div class="col-md-3">
+        <div class="input-group">
+            @Html.EditorFor(model => model.date_of_birth, new { htmlAttributes = new { @class = "form-control date-picker is-required" } })
+            <span class="input-group-addon">
+                <i class="fa fa-calendar"></i>
+            </span>
+        </div>
+        @Html.ValidationMessageFor(model => model.date_of_birth, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Gender *</label>
+    <div class="col-md-8">
+        @{ string isChecked = "";}
+        @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.IdGender)
+        {
+            if (Model != null && Model.id_gender != null)
+            {
+                if (Model.id_gender == item.id_lookup)
+                {
+                    isChecked = "checked='checked'";
+                }
+                else
+                {
+                    isChecked = "";
+                }
+            }
+
+            <label class="radio radio-inline">
+                <input type="radio" name="id_gender" required value="@item.id_lookup" @isChecked />
+                <i></i>
+                @item.lookup_value
+            </label>
+        }
+        @Html.ValidationMessageFor(model => model.id_gender, "", new { @class = "text-danger " })
+    </div>
+
+</div>
+
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Nationality *</label>
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.id_nationality, (IEnumerable<SelectListItem>)ViewBag.IdNationality, "Select Nationality", htmlAttributes: new { @class = "is-required form-control" })
+        @Html.ValidationMessageFor(model => model.id_nationality, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group" id="id-loc-1">
+    @Html.LabelFor(model => model.id_state, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-4">
+        @Html.DropDownListFor(model => model.id_state, (IEnumerable<SelectListItem>)ViewBag.IdState, "Select State", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.id_state, "", new { @class = "text-danger" })
+    </div>
+    @Html.LabelFor(model => model.id_district, htmlAttributes: new { @class = "control-label col-md-1 text-right" })
+    <div class="col-md-3">
+        @Html.DropDownListFor(model => model.id_district, (IEnumerable<SelectListItem>)ViewBag.IdDistrict, "Select District", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.id_district, "", new { @class = "text-danger" })
+    </div>
+</div>
+
+<div class="form-group" id="id-loc-2">
+    @Html.LabelFor(model => model.id_subdist, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-4">
+        @Html.DropDownListFor(model => model.id_subdist, (IEnumerable<SelectListItem>)ViewBag.IdSubdisctrict, "Select Sub District", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.id_subdist, "", new { @class = "text-danger" })
+    </div>
+    @Html.LabelFor(model => model.id_village, htmlAttributes: new { @class = "control-label col-md-1 text-right" })
+    <div class="col-md-3">
+        @Html.DropDownListFor(model => model.id_village, (IEnumerable<SelectListItem>)ViewBag.IdVillage, "Select Village", htmlAttributes: new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.id_village, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Address *</label>
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control is-required" } })
+        @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group" id="id-loc-3">
+    @Html.LabelFor(model => model.address_rt, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+    <div class="col-md-1">
+        @Html.EditorFor(model => model.address_rt, new { htmlAttributes = new { @class = "form-control number-only" } })
+        @Html.ValidationMessageFor(model => model.address_rt, "", new { @class = "text-danger" })
+    </div>
+    @Html.LabelFor(model => model.address_rw, htmlAttributes: new { @class = "control-label col-md-2 text-right" })
+    <div class="col-md-1">
+        @Html.EditorFor(model => model.address_rw, new { htmlAttributes = new { @class = "form-control number-only" } })
+        @Html.ValidationMessageFor(model => model.address_rw, "", new { @class = "text-danger" })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Pos Code *</label>
+    <div class="col-md-8">
+        @Html.TextBoxFor(model => model.pos_code, new { @class = "form-control number-only is-required" })
+        @Html.ValidationMessageFor(model => model.pos_code, "", new { @class = "text-danger" })
+    </div>
+</div>
+@{
+    string isImageUserExist = "is-required";
+    string isIdCardfileExist = "is-required";
+    string isLetterFileExist = "is-required";
+
+    string isFileUploadDisabled = string.Empty;
+
+    if (Model.is_approved && Model.EmailConfirmed)
+    {
+        isFileUploadDisabled = "disabled='disabled'";
+        isIdCardfileExist = string.Empty;
+        isLetterFileExist = string.Empty;
+    }
+    
+    if (Model.is_image_user_exsist == "EXIST")
+    {
+        isImageUserExist = string.Empty;
+    }
+       
+    if (Model.is_id_card_file_exsist == "EXIST")
+    {
+        isIdCardfileExist = string.Empty;
+    } 
+
+    if (Model.is_letter_file_exsist == "EXIST")
+    {
+        isLetterFileExist = string.Empty;
+    }
+}
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Images User *</label>
+    <div class="col-md-4">
+        <input type="file" name="_image_user_file" class="btn btn-warning @isImageUserExist" id="_image_user_file" />
+        <div class="col-md-12">
+            <label for="id_card_number" class="control-label col-md-12">Please upload a photo with red background, face 80 % , and a collared shirt</label>
+        </div>
+    </div>
+    @if (Model.is_image_user_exsist == "EXIST")
+    {
+        <div class="col-md-2">
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="img-user" data-toggle="modal">View Image</a>
+        </div>
+    }
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">ID Card Number *</label>
+    <div class="col-md-4">
+        <input type="file" name="_id_card_number_file" class="btn btn-warning @isIdCardfileExist" id="_id_card_number_file" />
+    </div>
+    @if (Model.is_id_card_file_exsist == "EXIST")
+    {
+        <div class="col-md-2">
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="idcard" data-toggle="modal">View Image</a>
+        </div>
+    }
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">Letter Of Assignment *</label>
+    <div class="col-md-4">
+        <input type="file" name="_letter_of_assignment" class="btn btn-warning @isLetterFileExist" id="_letter_of_assignment" />
+    </div>
+    @if (Model.is_letter_file_exsist == "EXIST")
+    {
+        <div class="col-md-2">
+            <a role="button" class="btn btn-primary btn-xs view-document" data-target="#documet-view" data-type="letter" data-toggle="modal">View Image</a>
+        </div>
+    }
+</div>
+
+
+<script type="text/javascript">
+
+    $(function () {
+        var minDate = new Date('1/1/1900');
+        var todaysDate = new Date();
+        var maxDate = new Date((todaysDate.getFullYear() - 15),
+                               todaysDate.getMonth(),
+                               todaysDate.getDate());
+
+        $('.date-picker').datepicker({
+            minDate: minDate,
+            maxDate: maxDate,
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+        });
+
+        // View Document Upload
+        $('.view-document').click(function () {
+            var typeDoc = $(this).attr('data-type');
+            var img = '';
+            switch (typeDoc) {
+                case 'img-user':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "images" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+                case 'idcard':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "idcard" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+                case 'letter':
+                    img = '<img class="col-xs-12" src="@Url.Action("RetriveFile", "Account", new { userId = Model.Id, fileName = "letter" })" alt="ID Card" />';
+                    $('#preview-doc').html(img);
+                    break;
+
+            }
+        });
+
+        $("#org_type").change(function () {
+            var org_type = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetOrganizationByType","AJAX")',
+                data: { org_type: org_type },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_org").empty();
+                    $("#id_org").append("<option value=''>Select Organization Name</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_org").append("<option value='" + item.id_lookup + "'>" + item.lookup_value + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_nationality").change(function () {
+            var id_country = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllStateByCountryId", "AJAX")',
+                data: { id_country: id_country },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_state").empty();
+                    $("#id_state").append("<option value=''>Select State</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_state").append("<option value='" + item.id_state + "'>" + item.state_name + "</option>");
+                    });
+
+                    // 1372CDDB-5FDB-4237-9980-25C01BB7D0BD
+                    if (id_country == '1372CDDB-5FDB-4237-9980-25C01BB7D0BD') {
+                        $("#id-loc-1").show();
+                        $("#id-loc-2").show();
+                        $("#id-loc-3").show();
+                    }
+                    else {
+                        $("#id-loc-1").hide();
+                        $("#id-loc-2").hide();
+                        $("#id-loc-3").hide();
+                    }
+                },
+            });
+        });
+
+        $("#id_state").change(function () {
+            var id_state = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllDistricByStateId", "AJAX")',
+                data: { id_state: id_state },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_district").empty();
+                    $("#id_district").append("<option value=''>Select District</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_district").append("<option value='" + item.id_district + "'>" + item.district_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_district").change(function () {
+            var id_district = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllSubDistricByDistricId", "AJAX")',
+                data: { id_district: id_district },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_subdist").empty();
+                    $("#id_subdist").append("<option value=''>Select Sub District</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_subdist").append("<option value='" + item.id_subdist + "'>" + item.subdist_name + "</option>");
+                    });
+                },
+            });
+        });
+
+        $("#id_subdist").change(function () {
+            var id_subdist = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetAllVillageBySubdiscId", "AJAX")',
+                data: { id_subdist: id_subdist },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_village").empty();
+                    $("#id_village").append("<option value=''>Select Village</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_village").append("<option value='" + item.id_village + "'>" + item.village_name + "</option>");
+                    });
+                },
+            });
+        });
+       
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (hasError == 0) {
+                    if (!FileValidation($(this))) {
+                        hasError = hasError + 1;
+                    }
+                }
+
+                if (hasError == 0) {
+                    if (!FileSize($(this))) {
+                        hasError = hasError + 1;
+                    }
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.is-required'), function (i, val) {
+                if (hasError == 0) {
+                    if (!IsRequired($(this))) {
+                        hasError = hasError + 1;
+                    }
+                }
+            });
+            // check for numeric
+            $.each($form.find('.is-numeric'), function (i, val) {
+                if (hasError == 0) {
+                    if (!MustNumber($(this))) {
+                        hasError = hasError + 1;
+                    }
+                }
+            });
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+        });
+
+        //validasi is required
+        $('.is-required').keyup(function () {
+            IsRequired($(this));
+        });
+
+        $('.is-numeric').keyup(function () {
+            MustNumber($(this));
+        });
+
+        //validasi file type
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+        $(function () {
+            $('.number-only').keypress(function (e) {
+                if (e.charCode != 8 && e.charCode != 0 && e.charCode != 46 && (e.charCode < 48 || e.charCode > 57)) {
+                    return false;
+                    e.preventDefault();
+                }
+            })
+        });
+        function FileValidation(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().parent().removeClass('has-error');
+            $(object).parent().parent().removeClass('has-success');
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                    $(object).parent().parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function MustNumber(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            var value = $(object).val();
+            if (!numericReg.test(value)) {
+                $(object).after('<span class="help-block">Numeric characters only.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = false;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+    });
+</script>

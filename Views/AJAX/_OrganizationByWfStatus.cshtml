@@ -1,0 +1,351 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.SpWfSelectTrxOrganizationViewModel>
+@{
+    if (ViewBag.NoLayout != true)
+    {
+        Layout = null;
+    }
+    ViewBag.Title = "Organization List";
+    List<DKUPPU.ViewModels.MstMenuViewModel> MenuIcon = new List<DKUPPU.ViewModels.MstMenuViewModel>();
+}
+<div class="row">
+    <div class="col-xs-12">
+        @if (User.Identity.Name != null)
+        {
+            MenuIcon = DKUPPU.DAL.MstMenuDAL.GetAllMenu(User.Identity.Name, "MN03");
+            foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in (IEnumerable<DKUPPU.ViewModels.MstMenuViewModel>)MenuIcon.OrderBy(a => a.menu_order))
+            {
+                if (menuIconItem.menu_title == "Checkout")
+                {
+                    <button class="btn bg-color-greenLight txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                        <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                    </button>
+                }
+                else
+                {
+                <button class="btn bg-color-blue txt-color-white @Html.DisplayFor(a => menuIconItem.menu_params)" id="@menuIconItem.menu_name" data-target="#modal-all-modul" data-toggle="modal" title="@menuIconItem.menu_title">
+                    <i class="fa fa-@menuIconItem.menu_icon fa-4x"></i>
+                </button>
+               }
+            }
+        }
+    </div>
+</div>
+
+<br />
+<div class="row">
+    <div class="col-xs-3">
+        <input class="form-control" id="search-value-index" value="@ViewBag.srcValue" name="search-value-index" placeholder="Search" />
+    </div>
+    <div class="col-xs-2">
+        <button id="src-lecense" class="btn btn-primary btn-sm bg-color-orange">Search</button>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-xs-12" id="list-license" data-wf="@ViewBag.WfStatus">
+        <!-- Widget ID (each widget will need unique ID)-->
+        <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+            <header>
+                <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                <h2>List All Organization </h2>
+
+            </header>
+
+            <!-- widget div-->
+            <div id="table-list">
+                <!-- widget content -->
+                <div class="widget-body no-padding">
+                    <div class="table-responsive">
+                        <table id="table-organization" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th id="reg_no" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.reg_no)
+                                    </th>
+                                    <th id="start_date" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.start_date)
+                                    </th>
+                                    <th id="type_of_operation" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.type_of_operation)
+                                    </th>
+                                    <th id="aircraft_type_model" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.aircraft_type_model)
+                                    </th>
+                                    <th id="main_base" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.main_base)
+                                    </th>
+                                    <th id="payment_status" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.payment_status)
+                                    </th>
+                                    <th id="invoice_number" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.invoice_number)
+                                    </th>
+                                    <th id="expire_date" data-desc="True">
+                                        @Html.DisplayNameFor(model => model.expire_date)
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="organization-list-data">
+                                @foreach (DKUPPU.ViewModels.SpWfSelectTrxOrganizationViewModel item in Model)
+                                {
+                                    <tr id="">
+                                        <td>
+                                            @if (item.url_form != null)
+                                            {
+                                                <a href="@Html.DisplayFor(modelItem => item.url_form)">@Html.DisplayFor(modelItem => item.url_form)</a>
+                                            }
+                                            else
+                                            {
+                                                @Html.DisplayFor(modelItem => item.reg_no)
+                                            }
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.start_date)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.type_of_operation)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.aircraft_type_model)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.main_base)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.payment_status)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.invoice_number)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.expire_date)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="dt-toolbar-footer">
+                            <div class="col-xs-2 col-sm-2" id="total-row">
+                                <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                            </div>
+                            <div class="col-xs-10 col-sm-10">
+                                s
+                                <div class="dataTables_paginate paging_simple_numbers" id="pagination-list">
+                                    @Html.Raw(ViewBag.Pagination)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end widget content -->
+
+            </div>
+            <!-- end widget div -->
+
+        </div>
+        <!-- end widget -->
+    </div>
+</div>
+
+
+<div id="modal-all-modul" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+@if (MenuIcon != null)
+{
+    foreach (DKUPPU.ViewModels.MstMenuViewModel menuIconItem in MenuIcon)
+    {
+        <script>
+            $(function () {
+                $('.' + '@menuIconItem.menu_name').click(function () {
+                    $.ajax({
+                        url: "@Url.Action(menuIconItem.menu_action, menuIconItem.menu_controller)",
+                        dataType: 'html',
+                        beforeSend: function () {
+                            var img = '<div class="modal-dialog modal-lg">' +
+                                        '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                        '</div></div>';
+                            $('#modal-all-modul').html(img);
+                        },
+                        success: function (data) {
+                            $('#modal-all-modul').html(data);
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+}
+@if (ViewBag.IsInternal == true)
+{
+    <script type="text/javascript">
+        $(function () {
+            var propertyOrder = "address";
+            var isDescending = "True";
+            /* button search */
+            $('#src-lecense').click(function () {
+                var srcValue = $('#search-value-index').val();
+                var wfStatus = $('#list-license').attr("data-wf");
+                getListData(wfStatus, 1, 10, srcValue, propertyOrder, isDescending);
+            });
+            $('#pagination-list').on("click", "li.page", function (e) {
+                var page = $(this).attr('link');
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#table-organization>thead>tr>th').click(function (e) {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-organization>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            function getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending) {
+                $.ajax({
+                    url: '@Url.Action("GetAircraftByWfStatusExternalReturnJson", "AJAX")',
+                    data: {
+                        wfStatus: wfStatus,
+                        page: page,
+                        pageSize: pageSize,
+                        srcValue: srcValue
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#table-list').after(img);
+                    },
+                    success: function (data) {
+                        var table_row = '';
+                        $.each(data.dataTable, function (i, value) {
+                            table_row += '<tr>';
+                            if (value.url_form != undefined) {
+                                table_row += '<td><a href=' + value.url_form + '>' + value.reg_no + '</a></td>';
+                            } else {
+                                table_row += '<td>' + value.reg_no + '</td>';
+                            }
+                            table_row += '<td>' + value.start_date + '</td>';
+                            table_row += '<td>' + value.type_of_operation + '</td>';
+                            table_row += '<td>' + value.aircraft_type_model + '</td>';
+                            table_row += '<td>' + value.main_base + '</td>';
+                            table_row += '<td>' + value.payment_status + '</td>';
+                            table_row += '<td>' + value.invoice_number + '</td>';
+                            table_row += '<td>' + value.expire_date + '</td>';
+                            table_row += '</tr>';
+                        });
+                        $('#organization-list-data').html(table_row);
+                        $('#pagination-list').html(data.pagination);
+                        $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                });
+            }
+        });
+    </script>
+}
+else
+{
+    <script type="text/javascript">
+        $(function () {
+            var propertyOrder = "address";
+            var isDescending = "True";
+            /* button search */
+            $('#src-lecense').click(function () {
+                var srcValue = $('#search-value-index').val();
+                var wfStatus = $('#list-license').attr("data-wf");
+                getListData(wfStatus, 1, 10, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#pagination-list').on("click", "li.page", function (e) {
+                var page = $(this).attr('link');
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            $('#table-organization>thead>tr>th').click(function (e) {
+                var page = 1;
+                var wfStatus = "@ViewBag.WfStatus";
+                var pageSize = 10;
+                var srcValue = $('#search-value-index').val();
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#table-organization>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending);
+            });
+
+            function getListData(wfStatus, page, pageSize, srcValue, propertyOrder, isDescending) {
+                $.ajax({
+                    url: '@Url.Action("GetOrganizationByWfStatusExternalReturnJson", "AJAX")',
+                    data: {
+                        wfStatus: wfStatus,
+                        page: page,
+                        pageSize: pageSize,
+                        srcValue: srcValue
+                    },
+                    dataType: 'JSON',
+                    beforeSend: function () {
+                        var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                        '</div>' +
+                                    '</div>';
+                        $('#table-list').after(img);
+                    },
+                    success: function (data) {
+                        var table_row = '';
+                        $.each(data.dataTable, function (i, value) {
+                            table_row += '<tr>';
+                            if (value.url_form != undefined) {
+                                table_row += '<td><a href=' + value.url_form + '>' + value.reg_no + '</a></td>';
+                            } else {
+                                table_row += '<td>' + value.reg_no + '</td>';
+                            }
+                            table_row += '<td>' + value.start_date + '</td>';
+                            table_row += '<td>' + value.type_of_operation + '</td>';
+                            table_row += '<td>' + value.aircraft_type_model + '</td>';
+                            table_row += '<td>' + value.main_base + '</td>';
+                            table_row += '<td>' + value.payment_status + '</td>';
+                            table_row += '<td>' + value.invoice_number + '</td>';
+                            table_row += '<td>' + value.expire_date + '</td>';
+                            table_row += '</tr>';
+                        });
+                        $('#organization-list-data').html(table_row);
+                        $('#pagination-list').html(data.pagination);
+                        $('#total-row').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                });
+            }
+        });
+    </script>
+}

@@ -1,0 +1,172 @@
+﻿@model List<DKUPPU.ViewModels.TrxLogViewModel>
+@{
+    ViewBag.Title = "Logging";
+}
+
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Date", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    <input type="text" name="date-log-search" id="date_log_search" class="form-control date-picker" />
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("User Name", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    <input type="text" name="username-log-search" id="username_log_search" class="form-control" />
+                </div>
+                <div class="col-md-1">
+                    <a id="btn_search" href="javascript:void(0);" class="btn btn-labeled btn-primary">
+                        <span class="btn-label"><i class="glyphicon glyphicon-search"></i></span>
+                        Search
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="jarviswidget jarviswidget-color-greenDark" data-widget-editbutton="false">
+    <header>
+        <span class="widget-icon"><i class="fa fa-table"></i></span>
+        <h2>Logging</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+
+    <div>
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="table-responsive">
+                <table id="table-logging" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>User Name</th>
+                            <th>Organization</th>
+                            <th>Role</th>
+                            <th>License</th>
+                            <th>Activity</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-logging">
+                        @{
+                            if (Model.Count == 0)
+                            {
+                                <tr>
+                                    <td class="text-center" colspan="7">No Data Found.</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="dt-toolbar-footer">
+                <div class="col-xs-2 col-sm-2" id="totalrow-logging">
+                    <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                </div>
+                <div class="col-xs-10 col-sm-10">
+                    <div class="dataTables_paginate paging_simple_numbers" id="paging-logging">
+                        @Html.Raw(ViewBag.Pagination)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end widget content -->
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var propertyOrder = "date";
+        var isDescending = "True";
+        var pageSize = 10;
+
+        $('.date-picker').datepicker({
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+        });
+
+        $('#btn_search').click(function () {
+            var logdate = $('#date_log_search').val().trim();
+            var username = $('#username_log_search').val().trim();
+
+            getLoggingList(logdate, username, 1, pageSize, propertyOrder, isDescending);
+        });
+
+        $('#paging-logging').on("click", "li.page", function (e) {
+            var page = $(this).attr('link');
+            var logdate = $('#date_log_search').val().trim();
+            var username = $('#username_log_search').val().trim();
+
+            getLoggingList(logdate, username, page, pageSize, propertyOrder, isDescending);
+        });
+
+        $('#table-logging>thead>tr>th').click(function (e) {
+            var logdate = $('#date_log_search').val().trim();
+            var username = $('#username_log_search').val().trim();
+
+            propertyOrder = $(this).attr('id');
+            isDescending = $(this).attr('data-desc');
+
+            $('#table-logging>thead>tr>th>span').remove();
+
+            if (isDescending == "True") {
+                $(this).attr('data-desc', 'False');
+                $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+            }
+            else {
+                $(this).attr('data-desc', 'True');
+                $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+            }
+
+            getLoggingList(logdate, username, 1, pageSize, propertyOrder, isDescending);
+        });
+
+        function getLoggingList(logdate, username, page, pageSize, propertyOrder, isDescending) {
+            $.ajax({
+                url: '@Url.Action("GetLoggingList", "AJAX")',
+                data: {
+                    log_date: logdate,
+                    user_name: username,
+                    page_index: page,
+                    page_size: pageSize,
+                    property_order: propertyOrder, 
+                    is_descending: isDescending
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                        '<div style="text-align:center;height:300px;padding-top:60px">' +
+                            '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                        '</div>' +
+                    '</div>';
+
+                    $('#table-logging').after(img);
+                },
+                success: function (data) {
+                    $('#tbody-logging').empty();
+
+                    if(data.length == 0){
+                        $('#tbody-logging').append('<tr><td class="text-center" colspan="7">No Data Found.</td></tr>');
+                    }
+                    else {
+                        $.each(data.dataTable, function (i, data) {
+                            $('#tbody-logging').append('<tr><td>' + (i + 1) + '</td><td>' + data.user_name + '</td><td>' + data.organization + '</td><td>' + data.role + '</td><td>' + data.license + '</td><td>' + data.workflow + '</td><td>' + data.date + '</td></tr>');
+                        });
+
+                        $('#paging-logging').html(data.pagination);
+                        $('#totalrow-logging').html('<b><i>Total Data :</i>' + data.totalRow + '</b>');
+                        $('.loader').remove();
+                    }
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxOrganizationAirlineTypeViewModel>
+@{
+    Layout = null;
+
+    bool isAirlineTypeDetailDisable = ViewBag.IsAirlineTypeDetailDisable == null ? false : (ViewBag.IsAirlineTypeDetailDisable ? true : false);
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            @if (isAirlineTypeDetailDisable)
+            {
+                <tr>
+                    <th>Airline Type Detail</th>
+                </tr>
+            }
+            else
+            {
+                <tr>
+                    <th>Airline Type Detail</th>
+                    <th width="40px"></th>
+                </tr>
+            }
+        </thead>
+        <tbody id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType">
+            @if (isAirlineTypeDetailDisable)
+            {
+                int j = 0;
+
+                foreach (DKUPPU.ViewModels.TrxOrganizationAirlineTypeViewModel item in Model)
+                {
+                    <tr id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_@j">
+                        <td>
+                            <input type="text" class="form-control input-sm" name="TrxOrganizationInitialCerViewModel.ListOfTrxOrganizationAirlineType[@j].name_airline_type" id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_@j.ToString()__name_airline_type" value="@Html.DisplayFor(a => item.name_airline_type)" disabled="disabled" />
+                            <input type="hidden" class="form-control" name="TrxOrganizationInitialCerViewModel.ListOfTrxOrganizationAirlineType[@j].id_trx_org_airline_type" id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_@j.ToString()__id_trx_org_airline_type" value="@Html.DisplayFor(a => item.id_trx_org_airline_type)">
+                        </td>
+                    </tr>
+
+                    j++;
+                }
+            }
+            else
+            {
+                <tr id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_0">
+                    <td>
+                        <select name="TrxOrganizationInitialCerViewModel.ListOfTrxOrganizationAirlineType[0].id_airline_type" id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_0__id_airline_type" class="form-control input-sm invisible">
+                            <option value="">Select</option>
+                        </select>
+                    </td>
+                    <td>
+                        <a role="button" id="TrxOrganizationInitialCerViewModel_ListOfTrxOrganizationAirlineType_0__remove" class="airline-type-detail-remove-row btn btn-xs btn-danger invisible"><i class="fa fa-trash-o"></i></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>

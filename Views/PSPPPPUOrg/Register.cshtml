@@ -1,0 +1,130 @@
+﻿@model DKUPPU.ViewModels.PSPPPPUOrgRegisterViewModel
+           @{
+               ViewBag.Title = "Penerbitan Sertifikat Organisasi Pusat Pelatihan dan Perawatan Pesawat";
+           }
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false"role="widget">
+    <header>
+        
+    </header>
+    <div role="content">
+        <div class="jarviswidget-loader"></div>
+        <div class="widget-body">
+
+            @using (Html.BeginForm(null,null,FormMethod.Post, new {enctype = "multipart/form-data"} ))
+            {
+                @Html.AntiForgeryToken()
+    @*Phase I*@
+                <div class="form-horizontal">
+
+                    @*<fieldset>
+                        <legend>Percobaan</legend>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.application)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.EditorFor(model => model.application, new { htmlAttribute = new { @class = "form-control", @placeholder = "Initial" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.LoP)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.LoP, new { @class = "form-control" })
+                            </div>
+                        </div>
+
+                    </fieldset>
+                    <fieldset>
+                        <legend>Type of Training Requested</legend>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.MT)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.MT, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.BAM)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.BAM, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.ATT)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.ATT, new { @class = "form-control" })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-4 text-left control-label">
+                                @Html.LabelFor(model => model.AETT)
+                            </label>
+                            <div class="col-md-5">
+                                @Html.TextAreaFor(model => model.AETT, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </fieldset>*@
+
+                </div>
+    @*Phase II*@
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            Application Requested
+                        </label>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.application, new { htmlAttribute = new { @class = "form-control", @placeholder = "Initial" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            @Html.LabelFor(model => model.LoP2)
+                        </label>
+                        <div class="col-md-5">
+                            @Html.TextAreaFor(model => model.LoP2, new { @class = "form-control col-md-5" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            @Html.LabelFor(model => model.NoAMTO)
+                        </label>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.NoAMTO,  new { @class = "form-control col-md-5"  })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            @Html.LabelFor(model => model.DBA)
+                        </label>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.DBA, new { htmlAttribute = new { @class = "form-control col-md-5", @placeholder = "Initial" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            @Html.LabelFor(model => model.MailList)
+                        </label>
+                        <div class="col-md-5">
+                            @Html.EditorFor(model => model.MailList,  new { @class = "form-control col-md-5", @placeholder = "Initial" } )
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-md-4 text-left control-label">
+                            @Html.LabelFor(model => model.FL)
+                        </label>
+                        <div class="col-md-5">
+                            @Html.TextAreaFor(model => model.FL, new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

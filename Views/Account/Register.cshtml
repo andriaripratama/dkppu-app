@@ -1,0 +1,86 @@
+﻿@using BotDetect.Web.UI.Mvc;
+@using DKUPPU.Helpers;
+@model DKUPPU.Web.RegisterViewModel
+@{
+    ViewBag.Title = "Register";
+    Layout = "~/Views/Shared/_LayoutRegister.cshtml";
+    MvcCaptcha registrationCaptcha = CaptchaHelper.GetRegistrationCaptcha();
+}
+<link href="@BotDetect.Web.CaptchaUrls.Absolute.LayoutStyleSheetUrl" rel="stylesheet" type="text/css" />
+@using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "smart-form client-form", role = "form" }))
+{
+    <header>Register Form</header>
+    @Html.AntiForgeryToken()
+    <fieldset>
+        @if (ViewBag.Errors != null)
+        {
+            <section>
+                @Html.ValidationSummary(true, "Please Fix Following Errors : ", new { @class = "text-danger" })
+                <label class="text-danger">@ViewBag.Errors</label>
+            </section>
+        }
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-user"></i>
+                @Html.TextBoxFor(m => m.Fullname, new { @placeholder = "Fullname" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-user txt-color-teal"></i> Needed to enter the website</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Fullname, null, new { @class="text-danger"})
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-user"></i>
+                @Html.TextBoxFor(m => m.Username, new { @placeholder = "Username" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-user txt-color-teal"></i> Username</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Username, null, new { @class = "text-danger" })
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-envelope"></i>
+                @Html.TextBoxFor(m => m.Email, new { @placeholder = "Email" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-envelope txt-color-teal"></i> Enter Email</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Email, null, new { @class = "text-danger" })
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-lock"></i>
+                @Html.PasswordFor(m => m.Password, new { @placeholder = "Password" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-lock txt-color-teal"></i> Password min. leng 8, must contains upper case, number, and charater</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+            <p class="note">Password min. leng 8, must contains upper case, number, and charater</p>
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-lock"></i>
+                @Html.PasswordFor(m => m.ConfirmPassword, new { @placeholder = "Confirm Password" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-lock txt-color-teal"></i> Confirm Password must be same with Password</b>
+            </label>
+            @Html.ValidationMessageFor(m => m.ConfirmPassword, null, new { @class = "text-danger" })
+            <p class="note">Confirm Password must be same with Password</p>
+        </section>
+
+        <section>
+            @Html.Captcha(registrationCaptcha)
+        </section>
+        <section>
+            <label class="input">
+                <i class="icon-append fa fa-lock"></i>
+                @Html.TextBox("CaptchaCode", null, new { @class = "form-control captchaVal", @placeholder = "Captcha Code" })
+                <b class="tooltip tooltip-bottom-right"><i class="fa fa-lock txt-color-teal"></i> Enter Captcha Code</b>
+            </label>
+            @Html.ValidationMessage("CaptchaCode", null, new { @class = "text-danger" })
+        </section>
+    </fieldset>
+    <footer>
+        <button type="submit" class="btn btn-primary">
+            Register
+        </button>
+        <a class="btn btn-danger" href="@Url.Action("Login","Account")">Cancel</a>
+        <input type="reset" class="btn btn-warning" value="Reset" />
+    </footer>
+}
+
+@Scripts.Render("~/bundles/jqueryval")

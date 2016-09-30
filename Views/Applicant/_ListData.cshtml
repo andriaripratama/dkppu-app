@@ -1,0 +1,59 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MstApplicantListViewModel>
+
+@{
+    Layout = null;
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.applicant_nik)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.fullname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.date_of_birth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.phone_number)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.email)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="list-data-applicant">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.applicant_nik)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.fullname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.date_of_birth_text)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.phone_number)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.email)
+                </td>
+                <td class="text-center" width="13%">
+                    <a href="@Url.Action("Details", "Applicant", new { id=item.id_applicant})" class="btn btn-primary btn-circle"><i class="fa fa-search"></i></a>
+                    <a href="@Url.Action("Edit", "Applicant", new { id = item.id_applicant })" class="btn btn-primary btn-circle"><i class="fa fa-edit"></i></a>
+                    @if (item.total_unfinish_technical_data == 0) 
+                    { 
+                        <a href="@Url.Action("Technical", "Applicant", new { id = item.id_applicant })" class="btn btn-primary btn-circle"><i class="fa fa-wrench"></i></a>
+                    }
+                    @*<a href="@Url.Action("Delete", "Applicant", new { id = item.id_applicant })" class="btn btn-danger btn-circle"><i class="fa fa-trash-o"></i></a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

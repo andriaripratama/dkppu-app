@@ -1,0 +1,108 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+
+<div role="content">
+    <div class="jarviswidget-editbox">
+    </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_phase)
+
+            <div>
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Information</legend>
+                    </fieldset>
+                </div>
+                @Html.Partial("../PAOCOrganization/Phase1/_InformationForm", Model.TrxOrganizationInitialCerViewModel)
+                <div class="row col-md-12">
+                    <fieldset>
+                        <legend>Formal Application Letter</legend>
+                    </fieldset>
+                </div>        
+                @Html.Partial("../PAOCOrganization/Phase2/_FormalApplicationLetterForm", Model.TrxOrganizationAppLetterViewModel)
+                <fieldset>
+                    <legend>Formal Application Attachments</legend>
+                    @Html.Partial("../PAOCOrganization/Phase1/_DocUploadRegisterForm", Model.ListOfMstOrganizationDocument)
+                </fieldset>
+                <div id="error" class="row form-group">
+                    <div class="col-md-8">
+                        <input type="checkbox" required="required" />
+                        I hereby certify that the above information given are true and correct
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" id="id_submit" value="submit" name="btn_submit" type="submit">Submit</button>
+                    <button class="btn btn-default" id="id_save" value="save" name="btn_submit" type="submit">Save</button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-danger">Cancel</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#addOrganizationManagement').click(function (e) {
+            addRow(e, 'TrxOrganizationAppLetterViewModel_ListOfTrxOrganizationManagement');
+        });
+
+        function addRow(e, tableName) {
+            e.preventDefault();
+
+            var trLast = $('#' + tableName).find("tr:last");
+            var trNew = $('#' + tableName + '_0').clone();
+            var suffix = $('#' + tableName + ' > tr').length;
+            var oldNTr = trNew.attr('id');
+            var newNTr = oldNTr.replace('_0', '_' + suffix);
+
+            $('#' + tableName + '_0').hide();
+
+            trNew.attr('id', newNTr);
+            trNew.removeAttr('style');
+
+            $.each(trNew.find('td'), function (i, val) {
+                var compObject = $(this).children('[id*=' + tableName + '_]');
+                var compName = compObject.attr('name');
+                var compID = compObject.attr('id');
+
+                if (typeof compName != 'undefined') {
+                    compName = compName.replace('[0]', '[' + parseInt(suffix) + ']');
+                    compObject.attr('name', compName);
+                    if (compObject.is('select'))
+                        compObject.addClass('required-value-dropdown');
+                    else
+                        compObject.addClass('required');
+                }
+
+                if (typeof compID != 'undefined') {
+                    compID = compID.replace('_0_', '_' + parseInt(suffix) + '_');
+
+                    compObject.attr('id', compID);
+                    compObject.removeClass('invisible');
+                }
+            });
+
+            trLast.after(trNew);
+
+            GetPositionOrganizationManagement(tableName, suffix);
+        }
+
+        function GetPositionOrganizationManagement(tableName, indexId) {
+            $.ajax({
+                url: '@Url.Action("GetPositionOrganizationManagement", "PAOCOrganization")',
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#' + tableName + '_' + indexId + '__id_personal_position').empty();
+                    $('#' + tableName + '_' + indexId + '__id_personal_position').append('<option value="">Select</option>');
+
+                    $.each(data, function (i, data) {
+                        $('#' + tableName + '_' + indexId + '__id_personal_position').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        }
+    });
+</script>

@@ -1,0 +1,40 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>
+@{
+    Layout = null;
+}
+
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Ratting</th>
+                    <th>Date Of Issue</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int j = 0;
+                    string vreadonly = "";
+                }
+                @foreach (DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel item in Model)
+                {
+                    vreadonly = "readonly='readonly'";;
+                    if ((item.is_history == false) && ViewBag.activity_id == "ACT01")
+                    {
+                        vreadonly = "";
+                    }
+                    <tr id="TrxLicAircraftTypeRatingViewModel_@j">
+                        <td><input type="text" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].type_rating_name" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__type_rating_name" value="@Html.DisplayFor(m => m[j].type_rating_name)" readonly="readonly"></td>
+                        <td><input type="text" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].issued_date" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(m => m[j].issued_date)" @vreadonly></td>
+                    </tr>
+                    
+                    j++;
+                }
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+

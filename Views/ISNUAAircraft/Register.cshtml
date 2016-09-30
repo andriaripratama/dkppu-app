@@ -1,0 +1,389 @@
+﻿@model DKUPPU.ViewModels.ISNUAViewModel
+@{
+    ViewBag.Title = Model.TrxAircraftViewModel.id_sop_type_aircraft_name;
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Register Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../TrxAircraft/RegisterForm/_DataOrganizationForm", Model.MstOrganizationViewModel)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.TrxAircraftViewModel.id_license_type_aircraft)
+                @Html.HiddenFor(model => model.TrxAircraftViewModel.id_sop_type_aircraft)
+                @Html.HiddenFor(model => model.TrxAircraftViewModel.id_sop_type_aircraft_name)
+                <style>
+                    .panel-heading .accordion-toggle:after {
+                        /* symbol for "opening" panels */
+                        font-family: 'Glyphicons Halflings'; /* essential for enabling glyphicon */
+                        content: "\e114"; /* adjust as needed, taken from bootstrap.css */
+                        float: right; /* adjust as needed */
+                        color: grey; /* adjust as needed */
+                    }
+
+                    .panel-heading .accordion-toggle.collapsed:after {
+                        /* symbol for "collapsed" panels */
+                        content: "\e080"; /* adjust as needed, taken from bootstrap.css */
+                    }
+                </style>
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle text-capitalize" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
+                                    License Details
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TrxAircraftViewModel.id_product_type, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.TrxAircraftViewModel.id_product_type, (IEnumerable<SelectListItem>)ViewBag.product_type, "Select Product", htmlAttributes: new { @class = "form-control required-value" })
+                                            @Html.ValidationMessageFor(model => model.TrxAircraftViewModel.id_product_type, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TrxAircraftViewModel.id_category_type, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.TrxAircraftViewModel.id_category_type, (IEnumerable<SelectListItem>)ViewBag.category_type, "Select Category", htmlAttributes: new { @class = "form-control required-value" })
+                                            @Html.ValidationMessageFor(model => model.TrxAircraftViewModel.id_category_type, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TrxAircraftViewModel.id_manufacturer, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.DropDownListFor(model => model.TrxAircraftViewModel.id_manufacturer, (IEnumerable<SelectListItem>)ViewBag.manufacturer, "Select Manufacturer", htmlAttributes: new { @class = "form-control required-value" })
+                                            @Html.ValidationMessageFor(model => model.TrxAircraftViewModel.id_manufacturer, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.TrxAircraftViewModel.type_name, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.TrxAircraftViewModel.type_name, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                            @Html.ValidationMessageFor(model => model.TrxAircraftViewModel.type_name, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="TrxAircraftViewModel_aircarft_notes" class="col-md-2 control-label text-left">Description type and model</label>
+                                        <div class="col-md-5">
+                                            @Html.TextAreaFor(model => model.TrxAircraftViewModel.aircarft_notes, htmlAttributes: new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.TrxAircraftViewModel.aircarft_notes, null, new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                //-------------------------------------
+                <div class="panel-group" id="accordion">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h4 class="panel-title">
+                                <a class="accordion-toggle text-capitalize" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    Aircraft Details
+                                </a>
+                            </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <div class="form-horizontal" id="AircraftDetails">
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.EngManName, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.EngManName, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.EngTypManName, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.EngTypManName, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.TotEng, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.TotEng, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.PropMan, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.PropMan, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.PropTypManName, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.PropTypManName, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.NumProp, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.NumProp, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.PowMan, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.PowMan, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.NumOfSeat, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.NumOfSeat, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.MinAmPilot, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.MinAmPilot, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.FlyEnd, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.FlyEnd, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.MTOW, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.MTOW, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.MLW, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.MLW, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.AirDesc, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.TextAreaFor(model => model.MstAircraftDetailsViewModel.AirDesc, new { @class = "form-control required-value" } )
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.StateOPHis, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.TextAreaFor(model => model.MstAircraftDetailsViewModel.StateOPHis, new  { @class = "form-control required-value" })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.TotPass, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.TotPass, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.Weight, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.Weight, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.MstAircraftDetailsViewModel.TotFlightHrs, new { @class = "col-md-2 control-label text-left" })
+                                        <div class="col-md-5">
+                                            @Html.EditorFor(model => model.MstAircraftDetailsViewModel.TotFlightHrs, new { htmlAttributes = new { @class = "form-control required-value" } })
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <fieldset>
+                    <legend>Upload Document</legend>
+                    @Html.Partial("../TrxAircraft/RegisterForm/_DocUploadForm", Model.TrxAircraftDocViewModel)
+                </fieldset>
+                <fieldset>
+                    <legend>Other Document
+                        <a class="pull-right btn btn-primary btn-xs" id="add-other-doc"><i class="fa fa-plus"></i></a>
+                        <a class="pull-right btn btn-danger btn-xs remove-other-doc"><i class="fa fa-trash-o"></i></a>
+                    </legend>
+                    <div id="uplodDoc">
+                    @Html.Partial("../TrxAircraft/RegisterForm/_OtherDocUploadForm", Model.TrxAircraftOtherDocViewModel)
+                    </div>  
+                </fieldset>
+                <div id="error">
+                    <input type="checkbox" required="required" />
+                    I hereby certify that the information above given are correct
+                </div>
+                <div class="form-actions">
+                    <button id="submit" class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+    @section Scripts {
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    <script>
+        $(function () {
+
+            // datepicker
+            $('.date-picker').datepicker({
+                //options
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                //...
+            });
+
+            //** Validasi form
+            $('form').submit(function () {
+                //return false;
+                var hasError = 0;
+                $form = $('form:first');
+
+                //validasi file type
+                $.each($form.find('input[type="file"]'), function (i, val) {
+                    if (!FileValidation($(this))) {
+                        hasError = hasError + 1;
+                    }
+                    if (!FileSize($(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                //validasi is required
+                $.each($form.find('.required-value'), function (i, val) {
+                    if (!IsRequired($(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+                //if hasError has value more than 0 that return false
+                if (hasError > 0) {
+                    return false;
+                }
+                //return false;
+            });
+
+            //validasi is required
+            $('.required-value').change(function () {
+                IsRequired($(this));
+            });
+
+            //validasi file type
+            $('input[type="file"]').on("change", function () {
+                if (FileValidation($(this))) {
+                    FileSize($(this));
+                }
+            });
+
+            function FileValidation(object) {
+                var IsValid = true;
+
+                var allowedExtensions = ["jpg", "pdf", "png"];
+
+                var value = $(object).val(),
+                            file = value.toLowerCase(),
+                            extension = file.substring(file.lastIndexOf('.') + 1);
+                if ($(object).val().length > 0) {
+
+                    $(object).parent().find('span').remove();
+                    $(object).parent().removeClass('has-error');
+                    $(object).parent().removeClass('has-success');
+
+                    if ($.inArray(extension, allowedExtensions) == -1) {
+                        $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: ' + allowedExtensions.join(", ") + '</span>');
+                        $(object).parent().addClass('has-error');
+                        IsValid = false;
+                    } else {
+                        $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object).parent().addClass('has-success');
+                        IsValid = true;
+                    }
+                }
+                return IsValid;
+            }
+
+            // validasi file size document upload
+            function FileSize(object) {
+                var IsValid = true;
+                if ($(object).val().length > 0) {
+                    $(object).parent().find('span').remove();
+                    $(object).parent().removeClass('has-error');
+                    $(object).parent().removeClass('has-success');
+                    var file = $(object)[0].files[0];
+                    var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                    if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                        $(object).after('<span class="help-block">The file size to big</span>');
+                        $(object).parent().addClass('has-error');
+                        IsValid = false;
+                    } else {
+                        $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object).parent().addClass('has-success');
+                        IsValid = true;
+                    }
+                }
+                return IsValid;
+            }
+
+            function IsRequired(object) {
+                var IsValid = true;
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var value = $(object).val();
+                if (value.length <= 0) {
+                    $(object).after('<span class="help-block">Is required.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+                return IsValid;
+            }
+
+        });
+    </script>

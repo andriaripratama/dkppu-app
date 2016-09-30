@@ -1,0 +1,141 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicExamBasicTrainingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Name Of School</th>
+                        <th>Place</th>
+                        <th>Duration</th>
+                        <th>Year</th>
+                        <th>Result</th>
+                        <th>#</th>
+                    </tr>
+                </thead>
+                <tbody id="BasicKnowladgeTraining">
+                    @{
+                        int j = 0;
+                        string vreadonly = "";
+                        string vrequered = "";
+                    }
+                    @foreach (DKUPPU.ViewModels.TrxLicExamBasicTrainingViewModel item in Model)
+                    {
+                        vreadonly = "";
+                        vrequered = "required-value";
+                        if ((item.is_history == true) || (ViewBag.wf_activity_name != "ACT01" && ViewBag.ReadOnly == true))
+                        {
+                            vreadonly = "readonly='readonly'";
+                            vrequered = "";
+                        }
+                        <tr id="BasicKnowladgeTraining-@j">
+                            <td>
+                                <input type="text" class="form-control @vrequered" name="BasicKnowladgeTraining[@j].name_of_school" id="BasicKnowladgeTraining_@j.ToString()__name_of_school" value="@Html.DisplayFor(m => m[j].name_of_school)" @vreadonly />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered" name="BasicKnowladgeTraining[@j].place_of_school" id="BasicKnowladgeTraining_@j.ToString()__place_of_school" value="@Html.DisplayFor(m => m[j].place_of_school)" @vreadonly />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered" name="BasicKnowladgeTraining[@j].duration_training" id="BasicKnowladgeTraining_@j.ToString()__duration_training" value="@Html.DisplayFor(m => m[j].duration_training)" @vreadonly />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered" name="BasicKnowladgeTraining[@j].year_training" id="BasicKnowladgeTraining_@j.ToString()__year_training" value="@Html.DisplayFor(m => m[j].year_training)" @vreadonly />
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered" name="BasicKnowladgeTraining[@j].result_training" id="BasicKnowladgeTraining_@j.ToString()__result_training" value="@Html.DisplayFor(m => m[j].result_training)" @vreadonly />
+                                <input type="hidden" name="BasicKnowladgeTraining[@j].id_trx_exam_basic_training" id="BasicKnowladgeTraining_@j.ToString()__id_trx_exam_basic_training" value="@Html.DisplayFor(m => m[j].id_trx_exam_basic_training)" />
+                            </td>
+                            <td></td>
+                        </tr>
+                        j++;
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#add-basic-knowladge-training').click(function (e) {
+            var $tabelData = $('#BasicKnowladgeTraining');
+            addRowBasicKnowladgeTraining(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-basic-knowladge-training", function (e) {
+            var trRemove = $(this).parent().parent().attr('id');
+            var indexIdTr = trRemove.match(/\d+/);
+            var $tabelData = $('#BasicKnowladgeTraining');
+            RemoveBasicKnowladgeTraining(e, "BasicKnowladgeTraining-" + indexIdTr, $tabelData);
+        });
+        function addRowBasicKnowladgeTraining(e, $tabelData) {
+            e.preventDefault();
+            var $trLast = $tabelData.find("tr:last");
+            var $trNew = $trLast.clone();
+
+            var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+            var oldNTr = $trNew.attr('id');
+            var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+            $trNew.attr('id', newNTr);
+            $trNew.find("td:last").html($('<a role="button" class="remove-basic-knowladge-training btn btn-xs btn-danger"><i class="fa fa-trash-o"></i></a>'));
+            $.each($trNew.find(':input'), function (i, val) {
+
+                // Replaced Name
+                var oldN = $(this).attr('name');
+                var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                $(this).attr('name', newN);
+
+                // Replaced ID
+                var oldID = $(this).attr('id');
+                var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                $(this).attr('id', newID);
+
+                $(this).val('');
+                $(this).removeAttr('readonly');
+            });
+            $.each($trNew.find('.date-filed'), function (i, val) {
+                $(this).removeClass('hasDatepicker');
+                $(this).datepicker({
+                    //options
+                    dateFormat: 'dd/mm/yy',
+                    changeMonth: true,
+                    changeYear: true,
+                    //...
+                });
+            });
+
+            $trLast.after($trNew);
+
+        }
+
+        function RemoveBasicKnowladgeTraining(e, TrIdToRemove, $tabelData) {
+            e.preventDefault();
+            $("#" + TrIdToRemove).remove();
+            $.each($tabelData.find('tr'), function (i, val) {
+
+                var oldIndex = $(this).attr('id').match(/\d+/);
+
+                $.each($(this).find(':input'), function (x, val) {
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + oldIndex + ']', '[' + i + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + oldIndex + '_', '_' + i + '_');
+                    $(this).attr('id', newID);
+                });
+
+                // replace id tr
+                var oldNTr = $(this).attr('id');
+                var newNTr = oldNTr.replace('-' + oldIndex, '-' + i);
+                $(this).attr('id', newNTr);
+
+            });
+        }
+    });
+</script>
+

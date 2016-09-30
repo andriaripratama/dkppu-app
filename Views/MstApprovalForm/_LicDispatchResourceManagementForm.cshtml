@@ -1,0 +1,45 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicDispatchResourceManagementViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date Of Recurrent</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicDispatchResourceManagementViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicDispatchResourceManagementViewModel_@j">
+                    <td>
+                        <input type="hidden" name="TrxLicDispatchResourceManagementViewModel[@j].id_trx_dispatch_rsc_mgt" id="TrxLicDispatchResourceManagementViewModel_@j.ToString()__id_trx_dispatch_rsc_mgt" value="@Html.DisplayFor(a => item.id_trx_dispatch_rsc_mgt)">
+                        <input type="text" class="form-control date-picker" name="TrxLicDispatchResourceManagementViewModel[@j].recurrent_date" id="TrxLicDispatchResourceManagementViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)" readonly="readonly">
+                    </td>
+                    <td>
+                        <input type="text" class="form-control date-picker" name="TrxLicDispatchResourceManagementViewModel[@j].expired_date" id="TrxLicDispatchResourceManagementViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)" readonly="readonly">
+                    </td>
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+
+
+

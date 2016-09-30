@@ -1,0 +1,26 @@
+﻿@model DKUPPU.ViewModels.MstJobViewModel
+@{
+    Layout = null;
+}
+<table class="table table-striped">
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.id_job)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.id_job)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.job_name)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.job_name)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.description)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.description)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.is_active)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.is_active)</td>
+    </tr>
+</table>

@@ -1,0 +1,195 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.UserApprovalViewModel>
+@{
+    ViewBag.Title = "ListUserApprove";
+}
+<style>
+    table > thead > tr > th {
+        cursor: pointer;
+    }
+</style>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Organization Type", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("id_org_type", (IEnumerable<SelectListItem>)ViewBag.IdOrgType, "Select Organization Type", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("Organization Name", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownList("id_org", (IEnumerable<SelectListItem>)ViewBag.IdOrg, "Select Organization", new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("User Name", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    <input type="text" name="txt-search" id="txt_search" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary pull-left" id="btn_search">Search</button>               
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Widget ID (each widget will need unique ID)-->
+<div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-0" data-widget-editbutton="false">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>List User Need Approved </h2>
+
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+
+        </div>
+        <!-- end widget edit box -->
+        <!-- widget content -->
+        <div class="widget-body no-padding" id="lis-user-approval">
+            <div id="table-list">
+                @Html.Partial("_ListUserOrganization", Model)
+            </div>
+
+            <div class="dt-toolbar-footer">
+                <div class="col-xs-2 col-sm-2" id="total-row">
+                    <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                </div>
+                <div class="col-xs-10 col-sm-10">
+                    <div class="dataTables_paginate paging_simple_numbers" id="page-list">
+                        @Html.Raw(ViewBag.Pagination)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+</div>
+<!-- end widget -->
+
+<script type="text/javascript">
+
+
+    $(function () {
+        var propertyOrder = "created_date";
+        var isDesc = "False";
+
+        $("#btn_search").click(function () {
+            var id_org = $("#id_org").val();
+            var srcValue = $("#txt_search").val();
+            searchClick(id_org, srcValue, 1, 10, propertyOrder, isDesc);
+        });
+
+        $('#page-list').on("click", "li.page", function (e) {
+            var pageIndex = $(this).attr('link');
+            var id_org = $("#id_org").val();
+            var pageSize = 10;
+            var srcValue = $('#txt_search').val();
+            searchClick(id_org, srcValue, pageIndex, pageSize, propertyOrder, isDesc);
+        });
+
+        $('#user-list>thead>tr>th').click(function (e) {
+            if ($(this).attr('data-order') != 'False') {
+                var pageIndex = 1;
+                var pageSize = 10;
+                var id_org = $("#id_org").val();
+                var srcValue = $("#txt_search").val();
+
+                propertyOrder = $(this).attr('id');
+                isDescending = $(this).attr('data-desc');
+                $('#user-list>thead>tr>th>span').remove();
+                if (isDescending == "True") {
+                    $(this).attr('data-desc', 'False');
+                    $(this).html($(this).text() + '<span class="fa fa-caret-up pull-right"></span>');
+                }
+                else {
+                    $(this).attr('data-desc', 'True');
+                    $(this).html($(this).text() + '<span style="padding-top:5px" class="fa fa-caret-down pull-right"></span>');
+                }
+                searchClick(id_org, srcValue, pageIndex, pageSize, propertyOrder, isDesc);
+            }
+        });
+
+
+        $("#id_org_type").change(function () {
+            var org_type = $(this).val();
+            $.ajax({
+                url: '@Url.Action("GetOrganizationByType","AJAX")',
+                data: { org_type: org_type },
+                dataType: 'json',
+                success: function (data) {
+                    $("#id_org").empty();
+                    $("#id_org").append("<option value=''>Select Organization Name</option>");
+                    $.each(data, function (index, item) {
+                        $("#id_org").append("<option value='" + item.id_lookup + "'>" + item.lookup_value + "</option>");
+                    });
+                },
+            });
+        });
+
+        function searchClick(id_org, srcValue, pageIndex, pageSize, propertyOrder, isDesc) {
+            $.ajax({
+                url: '@Url.Action("GetUserOrganizationJSON", "Account")',
+                data: {
+                    id_org: id_org,
+                    srcValue: srcValue,
+                    pageIndex: pageIndex,
+                    pageSize: pageSize,
+                    propertyOrder: propertyOrder,
+                    isDesc: isDesc,
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#table-list').after(img);
+                },
+                success: function (data) {
+                    var table_row = '';
+                    $.each(data.dataTable, function (i, value) {
+                        table_row += '<tr>';
+                        table_row += '<td>' + value.full_name + '</td>';
+                        table_row += '<td>' + value.username + '</td>';
+                        table_row += '<td>' + value.id_org + '</td>';
+                        table_row += '<td>' + value.email + '</td>';
+                        table_row += '<td>' + value.phone_number + '</td>';
+                        table_row += '<td class="text-center" width="5%"> <a href="@Url.Action("UserApproval", "Account")?userId=' + value.Id + '" class="btn btn-primary btn-circle"><i class="fa fa-search"></i></a>' +
+                                     '</td>';
+                        table_row += '</tr>';
+                    });
+                    $('#list-data').html(table_row);
+                    $('#total-row').html('<b><i>Total Data :</i> ' + data.totalRow + '</b>');
+                    $('#page-list').html(data.pagination);
+                    $('.loader').remove();
+                }
+            });
+        }
+    });
+</script>

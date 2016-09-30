@@ -1,0 +1,548 @@
+﻿@model DKUPPU.ViewModels.FOOLRegisterFormViewModel
+@{
+    ViewBag.Title = "FOOL Renewal";
+    //Model.Applicant = new DKUPPU.ViewModels.MstApplicantViewModel();
+}
+<script>
+    window.hasError = 0;
+</script>
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Renewal Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <!--ID Primary-->
+                @Html.HiddenFor(model => model.id_trx_license)
+                @Html.HiddenFor(model => model.id_applicant)
+                @Html.HiddenFor(model => model.id_license_category)
+                @Html.HiddenFor(model => model.id_license_type)
+                @Html.HiddenFor(model => model.id_sop_type)
+
+                <div class="row">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.fool_license_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.fool_license_no, (IEnumerable<SelectListItem>)ViewBag.fool_license_no, "Select FOOL No.", new { @class = "form-control required-value-dropdown" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>
+                                Type Of Aircraft
+                                @*<div class="pull-right">
+                                        <a id="addColumn" role="button" class="btn btn-primary btn-xs"><i class="fa fa-plus"></i></a>
+                                    </div>*@
+                            </legend>
+                            <div id="list-type-aircraft">
+
+                            </div>
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>
+                                Competency Checks
+                                <div class="pull-right" id="control-compentency-ratting">
+
+                                </div>
+                            </legend>
+                            <div id="list-competency-checks">
+
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>
+                                Recurrent Type Of Aircraft
+                                <div class="pull-right" id="control-recurrent-ratting">
+
+                                </div>
+                            </legend>
+
+                            <div id="list-recurrent-aircraft">
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>
+                                Familliarization Flight
+                                <div class="pull-right" id="control-family-flight">
+
+                                </div>
+                            </legend>
+                            <div id="list-family-flight">
+
+                            </div>
+                        </fieldset>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Recurrent Mandatory License</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>Dispatch Resources Training</legend>
+                            <div id="list-dispatch">
+
+                            </div>
+                            @*@Html.Partial("../TrxRegisterForm/_LicCrewEmergencyTrainingForm", Model.TrxLicCrewEmergencyTrainingViewModel)*@
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>Dangerous Good</legend>
+                            <div id="list-dangerous-good">
+
+                            </div>
+                            @*@Html.Partial("../TrxRegisterForm/_LicDangerousGoodsForm", Model.TrxLicDangerousGoodsViewModel)*@
+                        </fieldset>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>Aviation Security</legend>
+                            <div id="list-aviation-security">
+
+                            </div>
+                            @*@Html.Partial("../TrxRegisterForm/_LicAviationSecurityForm", Model.TrxLicAviationSecurityViewModel)*@
+                        </fieldset>
+                    </div>
+                    <div class="col-xs-6">
+                        <fieldset>
+                            <legend>
+                                Medical Class
+                                <div class="pull-right">
+                                    <a class="pull-right btn btn-primary btn-xs" id="add-medical-certificate"><i class="fa fa-plus"></i></a>
+                                    <a class="pull-right btn btn-danger btn-xs remove-medical-certificate"><i class="fa fa-trash-o"></i></a>
+                                </div>
+                            </legend>
+                            <div id="list-medical-certificate">
+
+                            </div>
+                            @*@Html.Partial("../TrxRegisterForm/_LicMedicalCertificateForm", Model.TrxLicMedicalCertificateViewModel)*@
+                        </fieldset>
+                    </div>
+                </div>
+                <fieldset>
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                        @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                    </fieldset>
+                </fieldset>
+                <div id="error">
+                    <input type="checkbox" id="checkbox-disclaimer" />
+                    I understand and aware of my responsibility as a representative of the company or organization as assigned.
+                    I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var hasError = 0;
+
+        /** PPL on Change **/
+        $('#fool_license_no').change(function () {
+            var id_trx_license = $(this).val();
+            GetMedicalCheckByMstLicense(id_trx_license);
+            GetTypeRatingMstLicense(id_trx_license);
+            GetCompetencyChecksMstLicense(id_trx_license);
+            GetReccurentTypeByMstLicense(id_trx_license);
+            GetCrewEmergencyTrainingMstLicense(id_trx_license);
+            GetAviationSecurityMstLicense(id_trx_license);
+            GetDangerousGoodMstLicense(id_trx_license);
+            GetCrewResourcheMstLicense(id_trx_license);
+            GetFamilyFlightByMstLicense(id_trx_license);
+            GetDispatchMstLicense(id_trx_license);
+
+
+        });
+        function GetMedicalCheckByMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetMedicalCheckByMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license,
+                    id_sop_type: $("#id_sop_type").val(),
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-medical-certificate').html(data);
+                }
+            });
+        }
+        function GetTypeRatingMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetTypeRatingMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-type-aircraft').html(data);
+                }
+            });
+        }
+        function GetCompetencyChecksMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetCompetencyChecksMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-competency-checks').html(data);
+                    var button = '<a class="pull-right btn btn-primary btn-xs add-competency" ><i class="fa fa-plus"></i></a>' +
+                                  '<a class="pull-right btn btn-danger btn-xs remove-competency"><i class="fa fa-trash-o"></i></a>';
+                    $('#control-compentency-ratting').html(button);
+                }
+            });
+        }
+        function GetReccurentTypeByMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetReccurentTypeByMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-recurrent-aircraft').html(data);
+                    var button = '<a class="pull-right btn btn-primary btn-xs add-recurrent" ><i class="fa fa-plus"></i></a>' +
+                                   '<a class="pull-right btn btn-danger btn-xs remove-recurrent"><i class="fa fa-trash-o"></i></a>';
+                    $('#control-recurrent-ratting').html(button);
+                }
+            });
+        }
+        function GetFamilyFlightByMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetFamilyFlightByMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-family-flight').html(data);
+                    var button = '<a class="pull-right btn btn-primary btn-xs add-family" ><i class="fa fa-plus"></i></a>' +
+                                   '<a class="pull-right btn btn-danger btn-xs remove-family"><i class="fa fa-trash-o"></i></a>';
+                    $('#control-family-flight').html(button);
+                }
+            });
+        }
+
+        function GetCrewEmergencyTrainingMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetCrewEmergencyTrainingMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-crew-emergency-training').html(data);
+                }
+            });
+        }
+
+        function GetAviationSecurityMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetAviationSecurityMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-aviation-security').html(data);
+                }
+            });
+        }
+        function GetDangerousGoodMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetDangerousGoodMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-dangerous-good').html(data);
+                }
+            });
+        }
+
+        function GetCrewResourcheMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetCrewResourcheMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-crew-resourche').html(data);
+                }
+            });
+        }
+        function GetDispatchMstLicense(id_mst_license) {
+            $.ajax({
+                url: '@Url.Action("GetDispatchMstLicense", "AJAX")',
+                data: {
+                    id_mst_license: id_mst_license
+                },
+                dataType: 'html',
+                success: function (data) {
+                    $('#list-dispatch').html(data);
+                }
+            });
+        }
+        //** Validasi form
+        $('form').submit(function () {
+            //return false;
+            var hasError = 0;
+            $form = $('form:first');
+
+            //validasi file type
+            $.each($form.find('input[type="file"]'), function (i, val) {
+                if (!FileValidation($(this))) {
+                    hasError = hasError + 1;
+                }
+                if (!FileSize($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi is required
+            $.each($form.find('.required-value'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.required-value-dropdown'), function (i, val) {
+                if (!IsRequired($(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //validasi date form - until
+            $.each($form.find('.from-date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_until = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__until_date');
+                if (!FromUntilValidate($(this), objec_until)) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.until-date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_from = $('#TrxLicMedicalCertificateViewModel_' + suffix + '__from_date');
+                if (!FromUntilValidate(objec_from, $(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.checked_date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_until = $('#TrxLicCompetencyCheckViewModel_' + suffix + '__expired_date');
+                if (!FromUntilValidate($(this), objec_until)) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.expired_date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_from = $('#TrxLicCompetencyCheckViewModel_' + suffix + '__checked_date');
+                if (!FromUntilValidate(objec_from, $(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.checked_date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_until = $('#TrxLicRecurrentTypeOfAircraftViewModel_' + suffix + '__expired_date');
+                if (!FromUntilValidate($(this), objec_until)) {
+                    hasError = hasError + 1;
+                }
+            });
+            $.each($form.find('.expired_date'), function (i, val) {
+                var suffix = parseInt($(this).attr('id').match(/\d+/));
+                var objec_from = $('#TrxLicRecurrentTypeOfAircraftViewModel_' + suffix + '__checked_date');
+                if (!FromUntilValidate(objec_from, $(this))) {
+                    hasError = hasError + 1;
+                }
+            });
+
+            //if hasError has value more than 0 that return false
+            if (hasError > 0) {
+                return false;
+            }
+            //return false;
+        });
+        
+
+        //validasi is required
+        $('.required-value').keyup(function () {
+            IsRequired($(this));
+        });
+
+        $('.required-value-dropdown').change(function () {
+            IsRequired($(this));
+        });
+
+        $('.required-value.date-picker').change(function () {
+            IsRequired($(this));
+        });
+        //Validasi type doc
+        $('input[type="file"]').on("change", function () {
+            if (FileValidation($(this))) {
+                FileSize($(this));
+            }
+        });
+
+        function FileValidation(object) {
+            var IsValid = true;
+
+            var allowedExtensions = ["jpg", "pdf", "png"];
+
+            var value = $(object).val(),
+                        file = value.toLowerCase(),
+                        extension = file.substring(file.lastIndexOf('.') + 1);
+            if ($(object).val().length > 0) {
+
+                $(object).parent().find('span').remove();
+                $(object).parent().parent().removeClass('has-error');
+                $(object).parent().parent().removeClass('has-success');
+
+                if ($.inArray(extension, allowedExtensions) == -1) {
+                    $(object).after('<span class="help-block">Invalid File. Please upload a File with extension: '+allowedExtensions.join(", ")+'</span>');
+                    $(object).parent().parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        // validasi file size document upload
+        function FileSize(object) {
+            var IsValid = true;
+            if ($(object).val().length > 0) {
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var file = $(object)[0].files[0];
+                var maxFileSize = $('#DocUploadFormFileSize').val();
+
+                if (file.size > parseInt(maxFileSize) || file.FileSize > parseInt(maxFileSize)) {
+                    $(object).after('<span class="help-block">The file size to big</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                } else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+            }
+            return IsValid;
+        }
+
+        function IsRequired(object) {
+            var IsValid = true;
+            $(object).parent().find('span').remove();
+            $(object).parent().removeClass('has-error');
+            $(object).parent().removeClass('has-success');
+            var value = $(object).val();
+            if (value.length <= 0) {
+                $(object).after('<span class="help-block">Is required.</span>');
+                $(object).parent().addClass('has-error');
+                IsValid = false;
+            }
+            else {
+                $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                $(object).parent().addClass('has-success');
+                IsValid = true;
+            }
+            return IsValid;
+        }
+
+
+        function FromUntilValidate(object_from, object_until) {
+            var IsValid = true;
+            var from_date = "";
+            var until_date = "";
+            var expired_date = "";
+            var checked_date = "";
+            $(object_from).parent().find('span').remove();
+            $(object_from).parent().removeClass('has-error');
+            $(object_from).parent().removeClass('has-success');
+
+            $(object_until).parent().find('span').remove();
+            $(object_until).parent().removeClass('has-error');
+            $(object_until).parent().removeClass('has-success');
+
+            until_date = $(object_until).val();
+            from_date = $(object_from).val();
+            expired_date = $(object_until).val();
+            checked_date = $(object_from).val();
+
+            if (from_date != null && until_date != null) {
+                if (from_date.length > 0 && until_date.length > 0) {
+                    var from = from_date.split('/');
+                    var fromDate = new Date(from[1] + '/' + from[0] + '/' + from[2]);
+
+                    var until = until_date.split('/');
+                    var untilDate = new Date(until[1] + '/' + until[0] + '/' + until[2]);
+
+                    if (fromDate >= untilDate) {
+                        $(object_from).after('<span class="help-block">The date range not valid</span>');
+                        $(object_from).parent().addClass('has-error');
+
+                        $(object_until).after('<span class="help-block">The date range not valid</span>');
+                        $(object_until).parent().addClass('has-error');
+                        IsValid = false;
+                    }
+                    else {
+                        $(object_from).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object_from).parent().addClass('has-success');
+
+                        $(object_until).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                        $(object_until).parent().addClass('has-success');
+                        IsValid = true;
+                    }
+                }
+            }
+            return IsValid;
+        }
+
+    });
+</script>

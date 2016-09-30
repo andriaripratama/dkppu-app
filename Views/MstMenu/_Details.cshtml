@@ -1,0 +1,41 @@
+﻿@model DKUPPU.ViewModels.MstMenuViewModel
+@{
+    Layout = null;   
+}
+<table class="table table-striped">
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_name)</td>
+        <td width="5">:</td>
+        <td>@Html.DisplayFor(m => m.menu_name)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_title)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.menu_title)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_icon)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.menu_icon)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_action)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.menu_action)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_controller)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.menu_controller)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.menu_params)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.menu_params)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(m => m.is_active)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(m => m.is_active)</td>
+    </tr>
+</table>

@@ -1,0 +1,105 @@
+﻿@model  DKUPPU.ViewModels.TrxBillingDetailViewModel
+@{
+    Layout = null;
+}
+
+<div class="modal-header">
+    <a class="close" aria-hidden="true" data-dismiss="modal" role="button"> <i class="fa fa-remove"></i> </a>
+    <h4>Checkout</h4>
+</div>
+<div class="modal-body">
+
+    <!-- Widget ID (each widget will need unique ID)-->
+    <div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+        <header>
+            <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+            <h2>List All Billing</h2>
+
+        </header>
+
+        <!-- widget div-->
+        <div>
+            <!-- widget content -->
+            <div class="widget-body no-padding">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <table class="table table-striped">
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.Invoice.invoice_no)</td>
+                                <td>:</td>
+                                <td colspan="3">@Html.DisplayFor(model => model.Invoice.invoice_no)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.Invoice.billing_code)</td>
+                                <td>:</td>
+                                <td colspan="3">@Html.DisplayFor(model => model.Invoice.billing_code)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.Invoice.pic_name)</td>
+                                <td>:</td>
+                                <td colspan="3">@Html.DisplayFor(model => model.Invoice.pic_name)</td>
+                            </tr>
+                            <tr>
+                                <td>@Html.DisplayNameFor(model => model.Invoice.expired_date)</td>
+                                <td>:</td>
+                                <td colspan="3">@Html.DisplayFor(model => model.Invoice.expired_date)</td>
+                            </tr>
+                            <tr>
+                                <td colspan="5">Billing Detail : </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.InvoiceDetail[0].nm_applicant)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.InvoiceDetail[0].simponi_code)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.InvoiceDetail[0].volume)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.InvoiceDetail[0].lic_unit)
+                                </td>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.InvoiceDetail[0].pnbp_price)
+                                </td>
+                            </tr>
+                            @foreach (var item in Model.InvoiceDetail)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.nm_applicant)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.simponi_code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.volume)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.lic_unit)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.pnbp_price_string)
+                                    </td>
+                                </tr>
+                            }
+                            <tr>
+                                <td colspan="4" class="text-left">@Html.DisplayNameFor(model => model.Invoice.total_price)</td>
+                                <td>@Html.DisplayFor(model => model.Invoice.total_price_string)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+</div>
+<!-- end widget -->
+<div class="modal-footer">
+    <a role="button" id="btn-checkout-ok" class="btn btn-primary" aria-hidden="true" data-dismiss="modal">OK</a>
+</div>

@@ -1,0 +1,29 @@
+﻿@model DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Medical Class</label>
+                <div class="col-md-5">
+                    <input type="hidden" name="TrxLicMedicalCertificateViewModel.med_certi_no" id="TrxLicMedicalCertificateViewModel_med_certi_no" class="form-control" value="@Html.DisplayFor(a => a.med_certi_no)" readonly="readonly" />
+                    <input name="TrxLicMedicalCertificateViewModel.med_certi_name" id="TrxLicMedicalCertificateViewModel_med_certi_name" class="form-control" value="@Html.DisplayFor(a => a.med_certi_name)" readonly="readonly" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">The period of validity</label>
+                <div class="col-md-5">
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicMedicalCertificateViewModel.from_date" id="TrxLicMedicalCertificateViewModel_from_date" class="form-control" value="@Html.DisplayFor(a => a.from_date)" readonly="readonly" />
+                    </div>
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicMedicalCertificateViewModel.until_date" id="TrxLicMedicalCertificateViewModel_until_date" class="form-control" value="@Html.DisplayFor(a => a.until_date)" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>

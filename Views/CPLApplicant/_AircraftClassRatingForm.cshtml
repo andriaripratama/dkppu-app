@@ -1,0 +1,55 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Class Ratting</th>
+                    <th>Date Of Issue</th>
+                    <th>Authorize</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int j = 0; string vdisable = "";}
+                @foreach (DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel item in Model)
+                {
+                    <tr>
+                        <td>
+                            @{ vdisable = ""; }
+                            @if (j == 0)
+                            {
+                                vdisable = "disabled";
+                                <input type="hidden" name="TrxLicAircraftCategoryRatingViewModel[@j].id_class_rating" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__id_class_rating" value="@Html.DisplayFor(m => m[j].id_class_rating)" />
+                                <input type="text" class="form-control required-value" name="TrxLicAircraftCategoryRatingViewModel[@j].class_ratting" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__class_rating" value="@Html.DisplayFor(m => m[j].class_ratting)" @vdisable />
+                            }
+                            else
+                            {
+                                @Html.DropDownList("TrxLicAircraftCategoryRatingViewModel[" + j.ToString() + "].id_class_rating", (IEnumerable<SelectListItem>)ViewBag.id_class_rating, "Select Class Rating", new { @class = "form-control required-value id_class_rating", id = "TrxLicAircraftCategoryRatingViewModel_" + j.ToString() + "__id_class_rating" })
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control date-picker required-value" name="TrxLicAircraftCategoryRatingViewModel[@j].issued_date" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(m => m[j].issued_date)" @vdisable />
+                        </td>
+                        <td>
+                            <input type="text" class="form-control required-value" name="TrxLicAircraftCategoryRatingViewModel[@j].authorize_ins_signature" id="TrxLicAircraftCategoryRatingViewModel_@j.ToString()__authorize_ins_signature" value="@Html.DisplayFor(m => m[j].authorize_ins_signature)" @vdisable />
+                        </td>
+                    </tr>
+                            j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    // datepicker
+    $('.date-picker').datepicker({
+        //options
+        dateFormat: 'dd/mm/yy',
+        changeMonth: true,
+        changeYear: true,
+        //...
+    });
+</script>

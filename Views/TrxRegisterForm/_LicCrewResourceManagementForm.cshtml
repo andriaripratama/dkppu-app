@@ -1,0 +1,49 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicCrewResourceManagementViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Date Of Recurrent</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicCrewResourceManagementViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicCrewResourceManagementViewModel_@j">
+                    @if (item.is_history == true) { 
+                    <td>
+                        <input readonly="readonly" type="text" class="form-control date-picker" name="TrxLicCrewResourceManagementViewModel[@j].recurrent_date" id="TrxLicCrewResourceManagementViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)">
+                        <input type="hidden" name="TrxLicCrewResourceManagementViewModel[@j].id_trx_crew_rsc_mgt" id="TrxLicCrewResourceManagementViewModel_@j.ToString()__id_trx_crew_rsc_mgt" value="@Html.DisplayFor(a => item.id_trx_crew_rsc_mgt)">
+                    </td>
+                    <td><input readonly="readonly" type="text" class="form-control date-picker" name="TrxLicCrewResourceManagementViewModel[@j].expired_date" id="TrxLicCrewResourceManagementViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)"></td>
+                    }
+                    else
+                    {
+                        <td><input type="text" class="form-control date-picker" name="TrxLicCrewResourceManagementViewModel[@j].recurrent_date" id="TrxLicCrewResourceManagementViewModel_@j.ToString()__recurrent_date"></td>
+                        <td><input type="text" class="form-control date-picker" name="TrxLicCrewResourceManagementViewModel[@j].expired_date" id="TrxLicCrewResourceManagementViewModel_@j.ToString()__expired_date"></td>
+                    }
+                </tr>
+                j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+
+

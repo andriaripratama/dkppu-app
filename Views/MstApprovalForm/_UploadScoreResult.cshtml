@@ -1,0 +1,52 @@
+﻿@model DKUPPU.ViewModels.TrxLicenseUploadViewModel
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    <div class="form-group">
+        @if (ViewBag.uploadScanExamResult != false)
+        {
+            <label class="col-md-2 control-label text-left" for="RegistrationNumber">Score Result </label>
+            <div class="col-md-3">
+                <input type="file" class="btn btn-default" name="TrxScoreResultUploadViewModel.File" id="TrxScoreResultUploadViewModel_File" required />
+                <input type="hidden" name="TrxScoreResultUploadViewModel.id_trx_license" id="TrxScoreResultUploadViewModel_id_trx_license" value="@Html.DisplayFor(m => m.id_trx_license)" required />
+            </div>
+        }
+        else
+        {
+            <span>&nbsp;&nbsp;</span>
+            <a id="score_result_file" style="cursor:pointer;" class="preview-lic" data-target="#preview-license" data-toggle="modal">Score Result</a>
+            <input type="hidden" name="TrxScoreResultUploadViewModel.id_trx_license_upload" id="TrxScoreResultUploadViewModel_id_trx_license_upload" value="@Html.DisplayFor(m => m.id_trx_license_upload)" required />
+        }
+    </div>
+</div>
+<div id="preview-license" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<script>
+    $(function () {
+        $('#upload-scan').click(function () {
+            $('#LicenseScan_id_doc_category').click();
+        });
+
+        $('.preview-lic').click(function () {
+            var id_trx_license_upload = $('#TrxScoreResultUploadViewModel_id_trx_license_upload').val();
+            $.ajax({
+                url: "@Url.Action("GetTrxLicenseUploadById", "AJAX")",
+                data: {
+                    id_trx_license_upload: id_trx_license_upload
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-license').html(img);
+                },
+                success: function (data) {
+                    $('#preview-license').html(data);
+                }
+            });
+        });
+    });
+</script>

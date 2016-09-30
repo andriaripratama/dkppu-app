@@ -1,0 +1,76 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Medical Class</th>
+
+                        <th>From</th>
+
+                        <th>Until</th>
+                    </tr>
+                </thead>
+                <tbody id="TrxLicMedicalCertificateViewModel">
+                    @{
+                        int j = 0;
+                        string vreadonly = "";
+                        string vrequered = "";
+                        string from_date = "";
+                        string skill01 = "";
+                        string until_date = "";
+                    }
+                    @foreach (DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel item in Model.OrderBy(a => a.created_date))
+                    {
+                        vreadonly = "readonly='readonly'";
+                        vrequered = "";
+                        from_date = "";
+                        skill01 = "";
+                        until_date = "";
+                        if (item.is_history == false)
+                        {
+                            vreadonly = "";
+                            vrequered = "required-value";
+                            from_date = "from-date";
+                            until_date = "until-date";
+                            skill01 = "SKILL01";
+                        }
+                        <tr id="TrxLicMedicalCertificateViewModel_@j">
+                            <td>
+                                <input type="text" class="form-control" name="TrxLicMedicalCertificateViewModel[@j].med_certi_no" id="TrxLicMedicalCertificateViewModel_@j.ToString()__med_certi_no" value="@Html.DisplayFor(m => m[j].med_certi_no)" readonly="readonly">
+                                <input type="hidden" name="TrxLicMedicalCertificateViewModel[@j].id_trx_lic_med_certi" id="TrxLicMedicalCertificateViewModel_@j.ToString()__id_trx_lic_med_certi" value="@Html.DisplayFor(m => m[j].id_trx_lic_med_certi)">
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered @skill01 @from_date" name="TrxLicMedicalCertificateViewModel[@j].from_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__from_date" value="@Html.DisplayFor(m => m[j].from_date)" @vreadonly>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control @vrequered date-picker @until_date" name="TrxLicMedicalCertificateViewModel[@j].until_date" id="TrxLicMedicalCertificateViewModel_@j.ToString()__until_date" value="@Html.DisplayFor(m => m[j].until_date)" @vreadonly>
+                            </td>
+                        </tr>
+                        j++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<script>
+    $(function () {
+        var VSKILL01 = $('#val-SKILL01').attr('data-date');
+
+        $('.SKILL01').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL01,
+            //...
+        });
+    });
+</script>
+

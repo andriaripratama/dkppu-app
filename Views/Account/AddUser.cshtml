@@ -1,0 +1,54 @@
+﻿@model DKUPPU.ViewModels.UserViewModel
+@{
+    ViewBag.Title = "Add External User";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>@ViewBag.Title </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-horizontal" }))
+            {
+                <fieldset>
+                    @Html.AntiForgeryToken()
+                    @Html.Partial("_UserRegisterForm", Model)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.id_role, new { @class = "col-md-2 control-label text-left" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.id_role, (IEnumerable<SelectListItem>)ViewBag.IdRole, "Select Role", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.id_role, null, new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn btn-primary" type="submit"> Submit </button>
+                        <a href="@Url.Action("ListUserApproval", "Account")" class="btn btn-danger">Back</a>
+                    </div>
+                </fieldset>
+
+            }
+        </div>
+    </div>
+</div>
+<div id="documet-view" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+                <h4>Document Preview</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row" id="preview-doc">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jqueryval")

@@ -1,0 +1,78 @@
+﻿@model DKUPPU.ViewModels.ERSAircraftViewModel
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.TrxAircraftViewModel.registration_number)
+        </label>
+        <div class="col-md-8">
+            <select class="form-control" id="registration_number" name="registration_number">
+                <option value="">Registration Number</option>
+                @foreach (var item in Model.ListOfRegistrationNumber)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.TrxAircraftViewModel.request_nationality_reg_mark)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.TrxAircraftViewModel.request_nationality_reg_mark, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.validity_c_r)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.validity_c_r, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.validity_c_a)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.validity_c_a, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.manufacturer_model)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.manufacturer_model, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.TrxAircraftViewModel.serial_number)
+        </label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.TrxAircraftViewModel.serial_number, new { htmlAttributes = new { @class = "form-control" } })
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            @Html.LabelFor(model => model.aircraft_category)
+        </label>
+        <div class="col-md-8">
+            <section>
+                <div class="inline-group">
+                    @foreach (var item in Model.ListOfAircraftCategory)
+                    {
+                        <label class="radio radio-inline">
+                            <input type="radio" name="proposed_type_operation" value="@item.id_lookup">
+                            <i></i>@item.lookup_value
+                        </label>
+                    }
+                </div>
+            </section>
+        </div>
+    </div>
+</div>

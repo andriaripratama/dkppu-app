@@ -1,0 +1,53 @@
+﻿@model DKUPPU.ViewModels.FasiliesRegisterFormViewModel
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <tbody id="FasiliesRegisterFormViewModel">
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.facility_operation, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => model.facility_operation, ViewBag.CurrencyList as IEnumerable<SelectListItem>, new { @class = "form-control required-value aircraft_type" })
+
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.maintenance_facility, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => model.maintenance_facility, ViewBag.MaintenanceFacility as IEnumerable<SelectListItem>, new { @class = "form-control required-value aircraft_type" })
+                </td>
+                <td>
+
+                    <input type="file" class="control-label text-left" name="model.maintenance_facility_file" id="model.maintenance_facility_file" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.suporting_fasility, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => model.suporting_fasility, ViewBag.MaintenanceFacility as IEnumerable<SelectListItem>, new { @class = "form-control required-value aircraft_type" })
+                </td>
+                <td>
+                    <input type="file" class="control-label text-left" name="model.suporting_fasility" id="model.suporting_fasility" />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.letter_intent, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.DropDownListFor(model => model.letter_intent, ViewBag.LetterIntent as IEnumerable<SelectListItem>, new { @class = "form-control required-value aircraft_type" })
+                </td>
+
+                <td>
+
+                    <input type="file" class="control-label text-left" name="model.maintenance_facility_file" id="model.maintenance_facility_file" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+

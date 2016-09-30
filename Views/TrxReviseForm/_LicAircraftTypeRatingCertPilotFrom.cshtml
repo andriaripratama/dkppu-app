@@ -1,0 +1,46 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Issue</th>
+                @*<th></th>*@
+            </tr>
+        </thead>
+        <tbody id="TrxLicAircraftTypeRatingViewModel">
+            @{int j = 0;}
+            @foreach (var item in Model)
+            {
+                <tr id="TrxLicAircraftTypeRatingViewModel_@j">
+                    <td>
+                        <input type="text" class="form-control aircraft-type-rating-text" name="TrxLicAircraftTypeRatingViewModel[@j].type_rating_name" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__type_rating_name" value="@Html.DisplayFor(m => m[j].type_rating_name)" readonly="readonly" required="required" />
+                        <input type="hidden" name="TrxLicAircraftTypeRatingViewModel[@j].id_trx_type_rating" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_trx_type_rating" value="@Html.DisplayFor(m => m[j].id_trx_type_rating)" />
+                    </td>
+                    <td><input type="text" class="form-control date-picker" name="TrxLicAircraftTypeRatingViewModel[@j].issued_date" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(m => m[j].issued_date)" required="required"></td>
+
+                </tr>
+                j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(document).ready(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+    });
+</script>
+
+
+

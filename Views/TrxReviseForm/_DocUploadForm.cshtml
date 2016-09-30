@@ -1,0 +1,56 @@
+﻿@model List<DKUPPU.ViewModels.MstDocUploadViewModel>
+@{
+    Layout = null;
+    string required = "";
+    string bintang = "";
+    string hasError = "";
+    string disabled = "";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.MstDocUploadViewModel item in Model)
+            {
+                required = "";
+                bintang = "";
+                hasError = "";
+                disabled = "disabled";
+                if (item.is_satisfied == false)
+                {
+                    required = "required-value";
+                    bintang = "*";
+                    hasError = "has-error";
+                    disabled = "";
+
+                    <div class="form-group">
+                        <label class="col-md-2 control-label text-left" for="sertificate_no">@Html.DisplayFor(m => m[j].label_name) @bintang</label>
+                        <div class="col-md-4  @hasError">
+                            <input type="file" class="btn btn-default @required @disabled" data-validation="@required" name="[@j].File" id="@j.ToString()__File" />
+
+                            <span style="pointer-events:all" class="form-control-feedback pull-left" data-html="true" data-original-title="@Html.DisplayFor(m => m[j].doc_remark_log)" data-placement="top" rel="tooltip">
+                                <i class="fa fa-exclamation-triangle" title=""></i>
+                            </span>
+
+                            <input type="hidden" name="MstDocUploadViewModel[@j].id_trx_uploaded_doc" id="MstDocUploadViewModel_@j.ToString()__id_trx_uploaded_doc" value="@Html.DisplayFor(m => m[j].id_trx_uploaded_doc)" />
+                            <input type="hidden" name="MstDocUploadViewModel[@j].is_satisfied" id="MstDocUploadViewModel_@j.ToString()__is_satisfied" value="@Html.ValueFor(m => m[j].is_satisfied)" />
+                            <input type="hidden" name="MstDocUploadViewModel[@j].doc_file_name" id="MstDocUploadViewModel_@j.ToString()__doc_file_name" value="@Html.DisplayFor(m => m[j].doc_file_name)" />
+
+                        </div>
+
+                    </div>
+                }
+                else
+                {
+
+                    <input type="hidden" name="MstDocUploadViewModel[@j].id_trx_uploaded_doc" id="MstDocUploadViewModel_@j.ToString()__id_trx_uploaded_doc" value="@Html.DisplayFor(m => m[j].id_trx_uploaded_doc)" />
+                    <input type="hidden" name="MstDocUploadViewModel[@j].is_satisfied" id="MstDocUploadViewModel_@j.ToString()__is_satisfied" value="@Html.ValueFor(m => m[j].is_satisfied)" />
+                    <input type="hidden" name="MstDocUploadViewModel[@j].doc_file_name" id="MstDocUploadViewModel_@j.ToString()__doc_file_name" value="@Html.DisplayFor(m => m[j].doc_file_name)" />
+
+                }
+                j++;
+            }
+        </div>
+    </div>
+
+</div>

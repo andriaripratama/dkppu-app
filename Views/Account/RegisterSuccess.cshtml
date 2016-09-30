@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Registration Success";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+}
+
+<form class="smart-form client-form" role="form">
+    <header>Success ....!</header>
+    <fieldset>
+        <section>
+            <p class="text-success">
+                Congratulation ..! <br />
+                Your registration at this application is SUCCESS...! <br />
+                Pleace check your email to complete your registration process.
+            </p>
+        </section>
+    </fieldset>
+    <footer>
+        <a href="@Url.Action("Login","Account")" class="btn btn-success">
+            Back To Login
+        </a>
+    </footer>
+</form>

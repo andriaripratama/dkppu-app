@@ -1,0 +1,67 @@
+﻿@model DKUPPU.ViewModels.TrxLicWrittenExamViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @*<div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Exam Type *</label>
+                <div class="col-md-5">
+                    <input type="hidden" name="TrxLicWrittenExamViewModel.exam_type" id="TrxLicWrittenExamViewModel_exam_type" class="form-control required-value" value="@Html.DisplayFor(m => m.exam_type)" required readonly="readonly" />
+                    <input name="TrxLicWrittenExamViewModel.exam_typevalue" id="TrxLicWrittenExamViewModel_exam_type_value" class="form-control required-value" value="@Html.DisplayFor(m => m.exam_type_value)" required readonly="readonly" />
+                </div>
+            </div>*@
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Medical Fitness *</label>
+                <div class="col-md-5">
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicWrittenExamViewModel.medical_valid_from_date" id="TrxLicWrittenExamViewModel_medical_valid_from_date" class="form-control date-picker required-value" placeholder="Input From Date" value="@Html.DisplayFor(m => m.medical_valid_from_date)" required readonly="readonly" />
+                    </div>
+                    <div class="col-xs-6 no-padding">
+                        <input name="TrxLicWrittenExamViewModel.medical_valid_to_date" id="TrxLicWrittenExamViewModel_medical_valid_to_date" class="form-control date-picker required-value" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.medical_valid_to_date)" required readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Total Flight Hours *</label>
+                <div class="col-md-5">
+                    <input name="TrxLicWrittenExamViewModel.total_flight_hour" id="TrxLicWrittenExamViewModel_total_flight_hour" class="form-control required-value" placeholder="Input Number" value="@Html.DisplayFor(m => m.total_flight_hour)" required readonly="readonly" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Have license before</label>
+                <div class="col-md-5">
+                    <label class="checkbox checkbox-inline">
+                        <input type="checkbox" name="TrxLicWrittenExamViewModel.is_have_license" id="TrxLicWrittenExamViewModel_is_have_license" class="have-license" disabled="disabled">yes &nbsp;
+                    </label>
+                    @if (Model.is_have_license == true)
+                    {
+                        <script>
+                            $(function () {
+                                $('#TrxLicWrittenExamViewModel_is_have_license').prop("checked", true);
+                            })
+                        </script>
+                    }
+                    @Html.DropDownList("TrxLicWrittenExamViewModel.license_name", (IEnumerable<SelectListItem>)ViewBag.license_name, "Select License Type.", new { @class = "form-control", id = "TrxLicWrittenExamViewModel_license_name", @disabled = "disabled" })
+                    @if (!(Model.license_name == null || Model.license_name == ""))
+                    {
+                        <script>
+                            $(function () {
+                                $('#TrxLicWrittenExamViewModel_license_name option[value=@Model.license_name]').attr('selected', 'selected');
+                            })
+                        </script>
+                    }
+                    @*<input name="TrxLicWrittenExamViewModel.license_name" id="TrxLicWrittenExamViewModel_license_name" class="form-control" placeholder="Input License Name" value="@Html.DisplayFor(m => m.license_name)" readonly="readonly" />*@
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">License Number</label>
+                <div class="col-md-5">
+                    <input name="TrxLicWrittenExamViewModel.license_number" id="TrxLicWrittenExamViewModel_license_number" class="form-control" value="@Html.DisplayFor(m => m.license_number)" readonly="readonly" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

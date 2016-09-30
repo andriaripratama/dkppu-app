@@ -1,0 +1,102 @@
+﻿@model DKUPPU.ViewModels.PurposeProcurementViewModel
+@{
+               Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Commercial Air Transport</th>
+                <th></th>
+                <th>Not Commercial Air Transport</th>
+            </tr>
+        </thead>
+        <tbody id="PurposeProcurementViewModel">
+            <tr>
+                  <td>
+                      <input type="checkbox" id="PurposeProcurementViewModel.IEAOCorOC" name="PurposeProcurementViewModel.IEAOCorOC" value="True"/>                 
+                  </td> 
+                    <td>
+                        @Html.LabelFor(model => model.IEAOCorOC, htmlAttributes: new { @class = "control-label text-left" })
+                    </td>
+                    <td>
+                        <input type="checkbox" id="PurposeProcurementViewModel.SaA" name="PurposeProcurementViewModel.SaA" value="True" />
+                    </td>
+                    <td>
+                        @Html.LabelFor(model => model.SaA, htmlAttributes: new { @class = "control-label text-left" })
+                    </td>
+                </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.RAO" name="PurposeProcurementViewModel.RAO" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.RAO, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.EeA" name="PurposeProcurementViewModel.EeA" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.EeA, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.TrATA" name="PurposeProcurementViewModel.AcPT" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.TrATA, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.SO" name="PurposeProcurementViewModel.SO" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.SO, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.AcPT" name="PurposeProcurementViewModel.AcPT" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.AcPT, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.Private" name="PurposeProcurementViewModel.Private" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.Private, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.RDO" name="PurposeProcurementViewModel.RDO" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.RDO, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    <input type="checkbox" id="PurposeProcurementViewModel.GM" name="PurposeProcurementViewModel.GM" value="True" />
+                </td>
+                <td>
+                    @Html.LabelFor(model => model.GM, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+    <table class="table table-bordered">
+        <tbody id="PurposeProcurementViewModel">
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.no_aircraft_requested)
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.no_aircraft_requested, new { htmlAttributes = new { @class = "form-control required-value" } })
+                </td>
+            </tr>
+    </table>
+    
+</div>

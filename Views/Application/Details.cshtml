@@ -1,0 +1,32 @@
+﻿@model DKUPPU.ViewModels.MstParameterViewModel
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-plus"></i></span>
+        <h2>@ViewBag.Title </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { @class = "form-horizontal", @enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Partial("_Details", Model)
+                <div class="form-actions">
+                    <a href="@Url.Action("Index","Application")" class="btn btn-success" type="submit"> Back To List </a>
+                    <a href="@Url.Action("Update", "Application", new { id = Model.id_parameter })" class="btn btn-warning" type="reset">Edit</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+    
+

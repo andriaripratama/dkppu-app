@@ -1,0 +1,198 @@
+﻿@model DKUPPU.ViewModels.MstApplicantTechnicalFormViewModel
+@{
+    ViewBag.Title = "Technical";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>@ViewBag.Title Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.License.id_trx_license)
+                    @Html.HiddenFor(model => model.License.id_sop_type)
+                    @Html.HiddenFor(model => model.License.id_license_category)
+                    @Html.HiddenFor(model => model.Applicant.id_applicant)
+                    @Html.HiddenFor(model => model.Applicant.job_id)
+                    @Html.HiddenFor(model => model.Applicant.radio_telephone_number)
+                    @Html.HiddenFor(model => model.WTILicenseTypeId)
+                    @Html.HiddenFor(model => model.WTIDocCategoryId)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LicenseId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.LicenseId, (IEnumerable<SelectListItem>)ViewBag.Licenses, "Select Item", htmlAttributes: new { @class = "form-control required-value-dropdown", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LicenseNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.LicenseNo, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                    @Html.Partial("_DocUploadForm", Model)
+                    <div class="form-group">
+                        <div class="col-md-2">Type of Aircraft</div>
+                        <div class="col-md-9" id="list-aircraft-type-rating">
+                            @Html.Partial("_LicAircraftTypeRatingForm", new List<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>())
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-2">Recurrent Type of Aircraft</div>
+                        <div class="col-md-9" id="list-recurrent-type-of-aircraft">
+                            @Html.Partial("_LicRecurrentTypeOfAircraftForm", new List<DKUPPU.ViewModels.TrxLicRecurrentTypeOfAircraftViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Competency Checks</div>
+                        <div class="col-md-9" id="list-competency-check">
+                            @Html.Partial("_LicCompetencyCheckForm", new List<DKUPPU.ViewModels.TrxLicCompetencyCheckViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Medical Check</div>
+                        <div class="col-md-9" id="list-medical-certificate">
+                            @Html.Partial("_LicMedicalCertificateForm", new List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>())
+                        </div>
+                    </div>
+                    @if (Model.License.id_wf_status != "WFS05")
+                    {
+                        <div class="form-group">
+                            <div class="col-md-2">Notes</div>
+                            <div class="col-md-9">
+                                @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12", @rows = "4" })
+                            </div>
+                        </div>
+                    }
+                    <div id="error">
+                        <input type="checkbox" id="checkbox-disclaimer" />
+                        I understand and aware of my responsibility as a representative of the company or organization as assigned. I further certify under penalty of perjury under Republic of Indonesia law that the information filled in the form above is true and correct.
+                    </div>
+                    <div class="form-actions">
+                        @if (Model.License.id_wf_status == "WFS05")
+                        {
+                            <a href="@Url.Action("Index","Home")" class="btn btn-primary"> Back </a>
+                        }
+                        else
+                        {
+                            <button id="action_revise" name="action_revise" class="btn btn-danger" type="submit"> Revise </button>
+                            <button id="action_submit" name="action_submit" class="btn btn-primary" type="submit"> Approve </button>
+                            <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                        }
+
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        var idTrxLicense = $('#License_id_trx_license').val();
+        var idTrxLicenseWTI = $('#WTILicense_id_trx_license').val();
+
+        GetAircraftTypeRating(idTrxLicense, '@ViewBag.IsAircraftTypeRatingReadOnly');
+        GetRecurrentTypeOfAircraft(idTrxLicense, '@ViewBag.IsRecurrentTypeOfAircraftReadOnly');
+        GetCompetencyCheck(idTrxLicense, '@ViewBag.IsCompetencyCheckReadOnly');
+        GetMedicalCertificate(idTrxLicense, '@ViewBag.IsMedicalCertificateReadOnly');
+
+        $('.view-document').click(function () {
+            img = '<img class="col-xs-12" src="@Url.Action("RetrieveWTIFile", "Applicant", new { idTrxLicense = (Model.WTILicense == null ? string.Empty : Model.WTILicense.id_trx_license) })" />';
+            $('#preview-doc').html(img);
+        });
+    });
+
+    function GetAircraftTypeRating(idTrxLicense, isAircraftTypeRatingReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetAircraftTypeRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isAircraftTypeRatingReadOnly: isAircraftTypeRatingReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-aircraft-type-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-aircraft-type-rating').html(data);
+            }
+        });
+    }
+
+    function GetRecurrentTypeOfAircraft(idTrxLicense, isRecurrentTypeOfAircraftReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetRecurrentTypeOfAircraft", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isRecurrentTypeOfAircraftReadOnly: isRecurrentTypeOfAircraftReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-recurrent-type-of-aircraft').html(img);
+            },
+            success: function (data) {
+                $('#list-recurrent-type-of-aircraft').html(data);
+            }
+        });
+    }
+
+    function GetCompetencyCheck(idTrxLicense, isCompetencyCheckReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetCompetencyCheck", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isCompetencyCheckReadOnly: isCompetencyCheckReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-competency-check').html(img);
+            },
+            success: function (data) {
+                $('#list-competency-check').html(data);
+            }
+        });
+    }
+
+    function GetMedicalCertificate(idTrxLicense, isMedicalCertificateReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetMedicalCertificate", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isMedicalCertificateReadOnly: isMedicalCertificateReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-medical-certificate').html(img);
+            },
+            success: function (data) {
+                $('#list-medical-certificate').html(data);
+            }
+        });
+    }
+</script>

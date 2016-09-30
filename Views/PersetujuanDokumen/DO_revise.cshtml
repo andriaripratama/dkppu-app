@@ -1,0 +1,72 @@
+﻿@model DKUPPU.ViewModels.DOAircraftRegisterViewModel
+@{
+    ViewBag.Title = "Revisi Dokumen Perawatan";
+}
+
+<h2>DO_revise</h2>
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Revisi Dokumen Perawatan</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+           
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                
+                <
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2 text-left"></label>
+                        <div class="col-md-10">
+                            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.license_type_exam)
+                            {
+                                <label class="radio radio-inline">
+                                    <input id="TrxLicWrittenExamViewModel.license_type" type="radio" class="radio-license-type-exam radiobox" name="license_type" value="@Html.DisplayFor(a=>item.id_lookup)" />
+                                    <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:20px"></div>
+                <div>
+                    @Html.Partial("../MstRegisterForm/_WrittenExamForm", Model.TrxLicWrittenExamViewModel)
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <fieldset>
+                            <legend>Upload Document</legend>
+                            @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div id="error">
+                    <input type="checkbox" required="required" />
+                    I hereby certify that the information above given are correct
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" type="submit"> Submit </button>
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Cancel </a>
+                </div>
+            }
+
+            <!--End Form-->
+        </div>
+    </div>
+</div>

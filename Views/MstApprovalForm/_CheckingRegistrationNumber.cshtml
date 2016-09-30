@@ -1,0 +1,101 @@
+﻿<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left" for="deliveryCode">Delivery Code *</label>
+        <div class="col-md-5">
+            <input name="deliveryCode" id="deliveryCode" class="form-control required-value" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left" for="IdCard">ID Card</label>
+        <div class="col-md-5">
+            <input name="TrxLicenseViewModel.id_card_accepted" id="TrxLicenseViewModel_id_card_accepted" class="form-control required-value" required="required" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left" for="Name">Name</label>
+        <div class="col-md-5">
+            <input name="TrxLicenseViewModel.accepted_by" id="TrxLicenseViewModel_accepted_by" class="form-control required-value" required="required" />
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $('#deliveryCode').bind('copy paste', function (e) {
+            e.preventDefault();
+        });
+
+        $(function () {
+            $('form').submit(function () {
+                //return false;
+                var hasError = 0;
+                $form = $('form:first');
+
+                //validasi is required
+                $.each($form.find('.required-value'), function (i, val) {
+                    if (!IsRequired($(this))) {
+                        hasError = hasError + 1;
+                    }
+                });
+
+                if (!cekRegNo()) {
+                    hasError = hasError + 1;
+                }
+                //if hasError has value more than 0 that return false
+                if (hasError > 0) {
+                    return false;
+                }
+                //return false;
+            });
+            //validasi is required
+            $('.required-value').keyup(function () {
+                IsRequired($(this));
+            });
+
+
+            function IsRequired(object) {
+                var IsValid = false;
+                $(object).parent().find('span').remove();
+                $(object).parent().removeClass('has-error');
+                $(object).parent().removeClass('has-success');
+                var value = $(object).val();
+                if (value.length <= 0) {
+                    $(object).after('<span class="help-block">Is required.</span>');
+                    $(object).parent().addClass('has-error');
+                    IsValid = false;
+                }
+                else {
+                    $(object).after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $(object).parent().addClass('has-success');
+                    IsValid = true;
+                }
+                return IsValid;
+            }
+
+            $('#deliveryCode').keyup(function () {
+                cekRegNo();
+            });
+            
+            function cekRegNo() {
+                var isValid = true;
+                var delivery_code = $('#TrxLicenseViewModel_delivery_code').val();
+                var delivery_code_input = $('#deliveryCode').val();
+                $('#deliveryCode').parent().find('span').remove();
+                $('#deliveryCode').parent().parent().removeClass('has-error');
+                $('#deliveryCode').parent().parent().removeClass('has-success');
+                if (delivery_code == delivery_code_input) {
+                    $('#action_Y').removeClass('disabled');
+                    $('#deliveryCode').after('<span class="form-control-feedback pull-left"><i class="fa fa-check"></i></span>');
+                    $('#deliveryCode').parent().parent().addClass('has-success');
+                    isValid = true;
+                } else {
+                    $('#action_Y').addClass('disabled');
+                    $('#deliveryCode').after('<span class="help-block">Registration number not correct</span>');
+                    $('#deliveryCode').parent().parent().addClass('has-error');
+                    isValid = false;
+                }
+                return isValid;
+            }
+        });
+    });
+</script>

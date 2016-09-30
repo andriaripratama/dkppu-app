@@ -1,0 +1,70 @@
+﻿@model DKUPPU.ViewModels.TotalCrewsRegisterFormViewModel
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+
+                <th>Human Resource</th>
+
+                <th>Total</th>
+
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody id="PurposeProcurementViewModel">
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.TotalCrews.total_pilot, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.total_pilot, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.desc_pilot, new { @class = "control-label text-left" })
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.TotalCrews.total_foo, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.total_foo, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.desc_foo, new { @class = "control-label text-left" })
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.TotalCrews.total_technician, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.total_technician, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.desc_technician, new { @class = "control-label text-left" })
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(model => model.TotalCrews.total_flight_attendant, htmlAttributes: new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.total_flight_attendant, new { @class = "control-label text-left" })
+                </td>
+                <td>
+                    @Html.EditorFor(model => model.TotalCrews.desc_flight_attendant, new { @class = "control-label text-left" })
+
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+</div>

@@ -1,0 +1,136 @@
+﻿@model DKUPPU.ViewModels.MstApplicantFormViewModel
+
+@{
+    Layout = null;
+}
+<table class="table table-striped">
+    <tr>
+        <td class="col-md-2"></td>
+        <td width="3"></td>
+        <td>
+            <img src="@Url.Action("RetriveFile", "Applicant", new { id = Model.id_applicant})" alt="Applicant Photo" height="150" />
+        </td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.fullname)</td>
+        <td width="3">:</td>
+        <td>@Html.DisplayFor(model => model.fullname)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.applicant_nik)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.applicant_nik)</td>
+    </tr>
+    @*<tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.emp_no)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.emp_no)</td>
+    </tr>*@    
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_job)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_job)</td>
+    </tr>    
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_identity_type)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_identity_type)</td>
+    </tr> 
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.identity_number)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.identity_number)</td>
+    </tr> 
+    
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.birth_date)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.birth_date)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_gender)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_gender)</td>
+    </tr> 
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_hair_color)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_hair_color)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_eyes_color)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_eyes_color)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.height)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.height)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.weight)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.weight)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_nationality)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_nationality)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_state)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_state)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_district)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_district)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_subdist)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_subdist)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.id_village)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.id_village)</td>
+    </tr>
+    
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.address)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.address)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.address_rt)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.address_rt)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.address_rw)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.address_rw)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.pos_code)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.pos_code)</td>
+    </tr>
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.phone_number)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.phone_number)</td>
+    </tr>
+    @*<tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.npwp_number)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.npwp_number)</td>
+    </tr>*@
+    <tr>
+        <td class="col-md-2">@Html.DisplayNameFor(model => model.email_address)</td>
+        <td>:</td>
+        <td>@Html.DisplayFor(model => model.email_address)</td>
+    </tr>
+</table>

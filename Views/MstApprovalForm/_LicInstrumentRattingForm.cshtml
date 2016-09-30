@@ -1,0 +1,62 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel>
+@{
+    Layout = null;
+
+    string sopType = ViewBag.sop_type == null ? string.Empty : ViewBag.sop_type;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>AirCraft or SIM</th>
+
+                    <th>Check Date</th>
+
+                    <th>Valid Until</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    int j = 0;
+                    string vreadonly = "";
+                    string vrequered = "";
+                    string datepicker = "";
+                    string checked_date = "";
+                    string expired_date = "";
+                }
+                @foreach (DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel item in Model)
+                {
+                    vreadonly = "readonly='readonly'";
+                    vrequered = "";
+                    datepicker = "";
+                    checked_date = "";
+                    expired_date = "";
+                    if ((item.is_history == false) && ViewBag.activity_id == "ACT01")
+                    {
+                        vreadonly = "";
+                        vrequered = (sopType == "WL05" || sopType == "WL06") ? string.Empty : "required-value";
+                        checked_date = "checked-date";
+                        expired_date = "expired-date";
+                        datepicker = "date-picker";
+                    }
+                    <tr>
+                        <td>
+                            @*@Html.DropDownList("MstLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, new { @class = "form-control", id = "MstLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type", @Value = @Html.DisplayFor(m => m[j].id_air_sim_type), @readonly="readonly" })*@
+                            <input type="text" class="form-control" name="MstLicInstrumentRatingViewModel[@j].id_air_sim_type_value" id="MstLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type_value" value="@Html.DisplayFor(m => m[j].id_air_sim_type_value)" readonly="readonly">
+                            <input type="hidden" name="MstLicInstrumentRatingViewModel[@j].id_trx_lic_instrument_rating" id="MstLicInstrumentRatingViewModel_@j.ToString()__id_trx_lic_instrument_rating" value="@Html.DisplayFor(m => m[j].id_trx_lic_instrument_rating)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @checked_date @datepicker" name="MstLicInstrumentRatingViewModel[@j].checked_date" id="MstLicInstrumentRatingViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vreadonly>
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @expired_date @datepicker" name="MstLicInstrumentRatingViewModel[@j].expired_date" id="MstLicInstrumentRatingViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vreadonly>
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+

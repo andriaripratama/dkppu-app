@@ -1,0 +1,56 @@
+﻿@model DKUPPU.ViewModels.TrxLicToeflCertificateViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">Certificate Number *</label>
+                <div class="col-md-5">
+                    <input name="TrxLicToeflCertificateViewModel.toefl_certi_no" id="TrxLicToeflCertificateViewModel_toefl_certi_no" class="form-control required-value" placeholder="Input Sertificate Number" value="@Html.DisplayFor(m => m.toefl_certi_no)" required="required" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-md-2 control-label text-left" for="sertificate_no">TOEIC Score *</label>
+                <div class="col-md-5">
+                    <input name="TrxLicToeflCertificateViewModel.toefl_test_score" id="TrxLicToeflCertificateViewModel_toefl_test_score" class="form-control numberOnly required-value" placeholder="Input Toeic Score" value="@Html.DisplayFor(m => m.toefl_test_score)" required="required" />
+                </div>
+            </div>
+        </div>
+    </div>
+    
+</div>
+<script>
+    $(document).ready(function () {
+        $('.numberOnly').change(function () {
+            //return false;
+            $(this).parent().find('span').remove();
+            $(this).parent().parent().removeClass('has-error');
+
+            var value = $(this).val();
+            window.hasError = window.hasError + 1;
+            var numericReg = /^\d*[0-9](|.\d*[0-9]|,\d*[0-9])?$/;
+            if (!numericReg.test(value)) {
+                $(this).after('<span class="help-block">Numeric characters only.</span>');
+                $(this).parent().parent().addClass('has-error');
+            } else {
+                window.hasError = window.hasError - 1;
+            }
+        });
+
+        $('#TrxLicToeflCertificateViewModel_toefl_test_score').change(function () {
+            $(this).parent().find('span').remove();
+            $(this).parent().parent().removeClass('has-error');
+
+            var value = parseInt($(this).val());
+            window.hasError = window.hasError + 1;
+            if (value < 400) {
+                $(this).after('<span class="help-block">The score not pass</span>');
+                $(this).parent().parent().addClass('has-error');
+            } else {
+                window.hasError = window.hasError - 1;
+            }
+        });
+    });
+</script>

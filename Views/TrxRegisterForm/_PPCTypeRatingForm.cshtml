@@ -1,0 +1,314 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicPpcViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model[0].id_ppc_type_rating)</th>
+                <th>@Html.DisplayNameFor(model => model[0].id_air_sim_type)</th>
+                <th>@Html.DisplayNameFor(model => model[0].checked_date)</th>
+                <th>@Html.DisplayNameFor(model => model[0].expired_date)</th>
+                <th>@Html.DisplayNameFor(model => model[0].ppc_pic)</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicPpcViewModel">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string datepicker = "";
+                string skill03 = "";
+                string from_date = "";
+                string until_date = "";
+                bool is_history = false;
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicPpcViewModel item in Model)
+            {
+                is_history = item.is_history??false;
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                datepicker = "";
+                from_date = "";
+                skill03 = "";
+                until_date = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    datepicker = "date-picker";
+                    skill03 = "SKILL03";
+                    until_date = "until-date";
+                    from_date = "from-date";
+                }
+                <tr id="TrxLicPpcViewModel_@j" class="old-tr">
+                    <td>
+                        <input type="hidden" name="TrxLicPpcViewModel[@j].id_ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__id_ppc_type_rating" value="@Html.DisplayFor(m => m[j].id_ppc_type_rating)">
+                        <input type="hidden" name="TrxLicPpcViewModel[@j].id_trx_lic_ppc" id="TrxLicPpcViewModel_@j.ToString()__id_trx_lic_ppc" value="@Html.DisplayFor(m => m[j].id_trx_lic_ppc)">
+                        <input type="hidden" name="TrxLicPpcViewModel[@j].ppc_type_rating" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating" value="@Html.DisplayFor(m => m[j].ppc_type_rating)">
+                        <input type="hidden" name="TrxLicPpcViewModel[@j].is_history" id="TrxLicPpcViewModel_@j.ToString()__is_history" value="@is_history.ToString()">
+                        <input type="text" class="form-control required-value ppc_type_rating_value" name="TrxLicPpcViewModel[@j].ppc_type_rating_value" id="TrxLicPpcViewModel_@j.ToString()__ppc_type_rating_value" value="@Html.DisplayFor(m => m[j].ppc_type_rating_value)" readonly="readonly" />
+                    </td>
+                    <td>
+                        @if (item.is_history == true)
+                        {
+                            @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Aircraft / SIM", new { @class = "form-control AircraftOrSIM", id = "TrxLicPpcViewModel_" + j.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                            if (!(item.id_air_sim_type == null || item.id_air_sim_type == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicPpcViewModel_@j.ToString()__id_air_sim_type option[value=@item.id_air_sim_type]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].id_air_sim_type" id="TrxLicPpcViewModel_@j.ToString()__id_air_sim_type_2" value="@Html.DisplayFor(m => m[j].id_air_sim_type)" />
+                        }
+                        else
+                        {
+                            @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.AircraftOrSIM, "Select Aircraft / SIM", new { @class = "form-control required-value AircraftOrSIM", id = "TrxLicPpcViewModel_" + j.ToString() + "__id_air_sim_type" })
+                        }
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @vrequered @datepicker @skill03 date-skill03 @from_date" name="TrxLicPpcViewModel[@j].checked_date" id="TrxLicPpcViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vreadonly />
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @vrequered @datepicker date-field @until_date" name="TrxLicPpcViewModel[@j].expired_date" id="TrxLicPpcViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vreadonly />
+                    </td>
+                    <td>
+                        @if (item.is_history == true)
+                        {
+                            @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control PositionOrPIC", id = "TrxLicPpcViewModel_" + j.ToString() + "__ppc_pic", @disabled = "disabled" })
+                            if (!(item.ppc_pic == null || item.ppc_pic == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicPpcViewModel_@j.ToString()__ppc_pic option[value=@item.ppc_pic]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            <input type="hidden" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic_2" value="@Html.DisplayFor(m => m[j].ppc_pic)" />
+                        }
+                        else
+                        {
+                            @Html.DropDownList("TrxLicPpcViewModel[" + j.ToString() + "].ppc_pic", (IEnumerable<SelectListItem>)ViewBag.PositionOrPIC, new { @class = "form-control required-value PositionOrPIC", id = "TrxLicPpcViewModel_" + j.ToString() + "__ppc_pic" })
+                        }
+                        @*<input type="text" class="form-control @vrequered" name="TrxLicPpcViewModel[@j].ppc_pic" id="TrxLicPpcViewModel_@j.ToString()__ppc_pic" value="@Html.DisplayFor(m => m[j].ppc_pic)" @vreadonly />*@
+                    </td>
+                </tr>
+                        j++;
+            }
+        </tbody>
+    </table>
+</div>
+@if (ViewBag.HistoryOfPPC != null)
+{
+    @Html.DropDownList("dropdown-ppc", (IEnumerable<SelectListItem>)ViewBag.HistoryOfPPC, "Select PPC", new { @class = "form-control ppc_type_rating_value", id = "dropdown-ppc", @style = "display:none" })
+
+}
+<script>
+    $(function () {
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+        var VSKILL03 = $('#val-SKILL03').attr('data-date');
+        $('.SKILL03').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL03,
+            //...
+        });
+
+        $('.id_class_rating').change(function () {
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#TrxLicPpcViewModel_' + index + '__ppc_type_rating').val(itemText);
+            $('#TrxLicPpcViewModel_' + index + '__id_ppc_type_rating').val(itemValue);
+            $('#TrxLicPpcViewModel_' + index + '__ppc_type_rating_value').val(itemText);
+        });
+
+        $('div').on('change', 'select.ppc_type_rating_value', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#TrxLicPpcViewModel_' + index + '__ppc_type_rating').val(itemText);
+            $('#TrxLicPpcViewModel_' + index + '__id_ppc_type_rating').val(itemValue);
+        });
+
+        $('.AircraftOrSIM').change(function () {
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#TrxLicPpcViewModel_' + index + '__id_air_sim_type_2').val(itemValue);
+        });
+
+        $('.PositionOrPIC').change(function () {
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#TrxLicPpcViewModel_' + index + '__id_air_sim_type_2').val(itemValue);
+        });
+
+        $('div').on('click', 'a.add-ppc-certificate', function (e) {
+            e.preventDefault();
+            var $ppc = $('#TrxLicPpcViewModel');
+            addRowTrxLicPpcViewModel(e, $ppc);
+        });
+
+        $('div').on('click', 'a.remove-ppc-certificate', function (e) {
+            e.preventDefault();
+            var $ppc = $('#TrxLicPpcViewModel');
+            RemoveTrxLicPpcViewModel(e, $ppc);
+        });
+
+        function addRowTrxLicPpcViewModel(e, $tabelData) {
+            e.preventDefault();
+            var $trLast = $tabelData.find("tr:last");
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('_' + suffix, '_' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeClass("input-validation-error");
+                    $(this).removeAttr('readonly');
+                    $(this).removeAttr('disabled');
+                });
+
+                $.each($trNew.find(':input.ppc_type_rating_value'), function (i, val) {
+                    var name = $(this).attr('name');
+                    var id = $(this).attr('id');
+                    var $dropdown = $('#dropdown-ppc');
+                    $dropdown.removeAttr('style');
+                    $dropdown.addClass('required-value-dropdown');
+                    $dropdown.attr('name', name);
+                    $dropdown.attr('id', id);
+                    $(this).after($dropdown);
+                    $(this).remove();
+                });
+
+                $.each($trNew.find(':input.AircraftOrSIM'), function (i, val) {
+                    $(this).removeAttr('disabled');
+                });
+
+                $.each($trNew.find(':input.PositionOrPIC'), function (i, val) {
+                    $(this).removeAttr('disabled');
+                });
+
+
+                $.each($trNew.find(':input.date-field'), function (i, val) {
+                    $(this).removeClass("hasDatepicker");
+                    $(this).datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true
+                    });
+                });
+                
+                $.each($trNew.find('.date-skill03'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        minDate: VSKILL03,
+                    });
+                });
+
+                $.each($trNew.find('#TrxLicPpcViewModel_' + (parseInt(suffix) + 1) + '__checked_date'), function (i, val) {
+                    $(this).addClass('from-date');
+                });
+
+                $.each($trNew.find('#TrxLicPpcViewModel_' + (parseInt(suffix) + 1) + '__expired_date'), function (i, val) {
+                    $(this).addClass('until-date');
+                });
+                $(':input.hasDatepicker').each(function () {
+                    /*
+                    jQuery(this).on("keypress keyup blur", function (event) {
+                        $(this).val($(this).val().replace(/[^\d].+/, ""));
+                        if ((!event.which < 48 || !event.which > 57)) {
+                            event.preventDefault();
+                        }
+                    });
+                    */
+
+                    $(this).keypress(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+
+                    $(this).keydown(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+
+                    $(this).keyup(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+                });
+                $trLast.after($trNew);
+            }
+
+        }
+        function RemoveTrxLicPpcViewModel(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>

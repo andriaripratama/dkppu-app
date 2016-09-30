@@ -1,0 +1,42 @@
+﻿@model DKUPPU.ViewModels.MstDeliveryCodeViewModel
+@{
+    Layout = null;
+}
+<div role="content">
+    <div class="row">
+        <div class="col-xs-2">
+            <img alt="demo user" src="~/Images/logo.png" height="150">
+        </div>
+        <div class="col-xs-6 center">
+            <p>KEMENTERIAN PERHUBUNGAN</p>
+            <p>DIREKTORAT JENDRAL PERHUBUNGAN UDARA</p>
+            <p>DIREKTORAT KELAIKUDARAAN DAN PENGOPERASIAN PESAWAT UDARA</p>
+            <p>PERIZINAN LICENSI ONLINE</p>
+        </div>
+    </div>
+
+    <div class="widget-body">
+        <!--Data Applicant Begin-->
+        @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+
+        <div class="row">
+            <div class="col-xs-8">
+                <p>
+                Silahkan Ambil Dokumen Lisensi / Sertifikat di Direktorat Kelaikudaraan dan Pengoperasian Pesawat Udara,
+                Direktorat Jendral Perhubungan Udara, Kementerian Perhubungan,
+                Republik Indonesia, Lantai 22. Dengan Membawa dan Menyerahkan Berkas Kode Pengiriman
+                <br />
+                Please Take a Document License / Certificate in The Directorate of AirWorthiness and Aircraft Operation, 
+                The Directorate General of Civil Aviaton, The Ministry of Transportation Indonesian Republic
+                floor 22. With Carrying and Submit The File Delivery Code
+                </p>
+
+            </div>
+
+            <div class="col-xs-2">
+                <img alt="demo user" src="~/Images/barcode.png" height="150">
+            </div>
+        </div>
+
+    </div>
+</div>

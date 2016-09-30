@@ -1,0 +1,71 @@
+﻿@model DKUPPU.ViewModels.RegisterApplicantData
+
+
+<div class="row">
+    <div class="col-lg-2">
+        <div class="from-group">
+            <label class="col-md-4 control-label text-left">
+               SIUAUN/SIKAU
+            </label>
+        </div>
+        <div class="from-group">
+            <br />
+        </div>
+        <div class="from-group">
+            <br />
+        </div>
+        <div class="from-group">
+            <label class="col-md-4 control-label text-left">
+                AOC/OC/PSC Number
+            </label>
+        </div>
+    </div>
+        <div class="col-lg-5">
+            <div class="from-group">
+                <label class="col-md-4 control-label text-left">
+                    @Html.LabelFor(model => model.siuaun_no)
+                </label>
+                <div class="col-md-7">
+                    @Html.EditorFor(model => model.siuaun_no, new { htmlAttributes = new { @class = "form-control required-value" } })
+                </div>
+            </div>
+            <div class="from-group">
+                <br />
+            </div>
+            <div class="from-group">
+                <br />
+            </div>
+            <div class="from-group">
+                <label class="col-md-4 control-label text-left">
+                    @Html.LabelFor(model => model.aoc_no)
+                </label>
+                <div class="col-md-7">
+                    @Html.EditorFor(model => model.aoc_no, new { htmlAttributes = new { @class = "form-control required-value" } })
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="from-group">
+                <label class="col-md-4 control-label text-left">
+                    @Html.LabelFor(model => model.date_siuaun)
+                </label>
+                <div class="col-md-7">
+                    <input name="RegisterApplicantData.date_siuaun" id="RegisterApplicantData.date_siuaun" class="form-control date-picker required-value" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.date_siuaun)" required />
+                </div>
+            </div>
+            <div class="from-group">
+                <br />
+            </div>
+            <br />
+            <div class="from-group">
+                <label class="col-md-4 control-label text-left">
+                    @Html.LabelFor(model => model.date_aoc)
+                </label>
+                <div class="col-md-7">
+                    <input name="RegisterApplicantData.date_aoc" id="RegisterApplicantData.date_aoc" class="form-control date-picker required-value" placeholder="Input Until Date" value="@Html.DisplayFor(m => m.date_aoc)" required />
+                </div>
+            </div>
+
+        </div>
+
+    </div>

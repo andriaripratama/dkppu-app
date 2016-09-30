@@ -1,0 +1,36 @@
+﻿@model DKUPPU.ViewModels.MstDocUploadViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <a style="cursor:pointer;" class="preview-official" data-target="#preview-document" data-toggle="modal">@Html.DisplayFor(Model => Model.label_name)</a>
+        <input type="hidden" class="form-control" name="MstDocUploadViewModel.id_trx_uploaded_doc" id="MstDocUploadViewModel_id_trx_uploaded_doc" value="@Html.DisplayFor(Model => Model.id_trx_uploaded_doc)">
+    </div>
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+
+</div>
+<script>
+    $(function () {
+        $('.preview-official').click(function () {
+            var id_trx_uploaded_doc = $('#MstDocUploadViewModel_id_trx_uploaded_doc').val();
+            $.ajax({
+                url: "@Url.Action("GetTrxDocUploadById", "AJAX")",
+                data: {
+                    id_trx_uploaded_doc: id_trx_uploaded_doc
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

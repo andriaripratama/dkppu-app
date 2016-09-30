@@ -1,0 +1,196 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicFamiliarizationFlightViewModel>
+@{
+    Layout = null;
+}
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Checks</th>
+                <th>Valid Until</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicFamiliarizationFlightViewModel">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string datepicker = "";
+                string skill08 = "";
+                string recurrent_date = "";
+                string expired_date = "";
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicFamiliarizationFlightViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                datepicker = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    datepicker = "date-picker";
+                    skill08 = "SKILL08";
+                    recurrent_date = "";
+                    expired_date = "";
+                }
+                <tr id="TrxLicFamiliarizationFlightViewModel_@j" class="old-tr">
+                    <td>
+                        <input type="hidden" name="TrxLicFamiliarizationFlightViewModel[@j].id_rating" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__id_rating" required="required" value="@Html.DisplayFor(a => item.id_rating)">
+                        <input type="hidden" name="TrxLicFamiliarizationFlightViewModel[@j].id_trx_familiarization_flight" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__id_trx_familiarization_flight" value="@Html.DisplayFor(a => item.id_trx_familiarization_flight)">
+                        @if (item.is_history == false || item.is_history == null)
+                        {
+                            <input type="text" class="form-control" name="TrxLicFamiliarizationFlightViewModel[@j].group_type_rating" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__group_type_rating" value="@Html.DisplayFor(a => item.group_type_rating)" readonly="readonly">
+                        }
+                        else
+                        {
+                            <input type="hidden" name="TrxLicFamiliarizationFlightViewModel[@j].group_type_rating" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__group_type_rating" value="@Html.DisplayFor(a => item.group_type_rating)">
+                            <input type="text" class="form-control familiarization" name="TrxLicFamiliarizationFlightViewModel[@j].id_rating_value" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__id_rating_value" value="@Html.DisplayFor(a => item.group_type_rating)" @vreadonly>
+                        }
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @vrequered @skill08 date-skill08 @recurrent_date" name="TrxLicFamiliarizationFlightViewModel[@j].recurrent_date" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__recurrent_date" value="@Html.DisplayFor(a => item.recurrent_date)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @vrequered  @datepicker date-field @expired_date" name="TrxLicFamiliarizationFlightViewModel[@j].expired_date" id="TrxLicFamiliarizationFlightViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(a => item.expired_date)" @vreadonly>
+                    </td>
+                </tr>
+                        j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+@if (ViewBag.HistoryOfTypeAircraft != null)
+{
+    @Html.DropDownList("dropdown-family", (IEnumerable<SelectListItem>)ViewBag.HistoryOfTypeAircraft, "Select Type Aircraft :", new { @class = "form-control familiarization", id = "dropdown-family", @style = "display:none" })
+}
+
+<script>
+
+    $(function () {
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+        var VSKILL08 = $('#val-SKILL08').attr('data-date');
+        $('.SKILL08').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL08,
+            //...
+        });
+        $('div').on('change', 'select.familiarization', function (e) {
+            e.preventDefault();
+            var id = $(this).attr('id');
+            var itemText = $('#' + id + ' option:selected').text();
+            var itemValue = $(this).val();
+            var index = parseInt($(this).attr('name').match(/\d+/));
+            $('#TrxLicFamiliarizationFlightViewModel_' + index + '__group_type_rating').val(itemText);
+            $('#TrxLicFamiliarizationFlightViewModel_' + index + '__id_rating').val(itemValue);
+        });
+
+
+        $('div').on('click', 'a.add-family', function (e) {
+            e.preventDefault();
+            var $family = $('#TrxLicFamiliarizationFlightViewModel');
+            addRowTrxLicFamiliarizationFlightViewModel(e, $family);
+        });
+
+        $('div').on('click', 'a.remove-family', function (e) {
+            e.preventDefault();
+            var $family = $('#TrxLicFamiliarizationFlightViewModel');
+            RemoveTrxLicFamiliarizationFlightViewModel(e, $family);
+        });
+
+        function addRowTrxLicFamiliarizationFlightViewModel(e, $tabelData) {
+            e.preventDefault();
+            var $trLast = $tabelData.find("tr:last");
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('_' + suffix, '_' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeClass("input-validation-error");
+                    $(this).removeAttr('readonly');
+                    $(this).removeAttr('disabled');
+                });
+
+                $.each($trNew.find(':input.familiarization'), function (i, val) {
+                    var name = $(this).attr('name');
+                    var id = $(this).attr('id');
+                    var $dropdown = $('#dropdown-family');
+                    $dropdown.removeAttr('style');
+                    $dropdown.addClass('required-value-dropdown');
+                    $dropdown.attr('name', name);
+                    $dropdown.attr('id', id);
+                    $(this).after($dropdown);
+                    $(this).remove();
+                });
+
+
+                $.each($trNew.find(':input.date-field'), function (i, val) {
+                    $(this).removeClass("hasDatepicker");
+                    $(this).datepicker({
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true
+                    });
+                });
+                $.each($trNew.find('.date-skill08'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        minDate: VSKILL08,
+                    });
+                });
+                $trLast.after($trNew);
+            }
+
+        }
+        function RemoveTrxLicFamiliarizationFlightViewModel(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>
+
+
+
+
+
+

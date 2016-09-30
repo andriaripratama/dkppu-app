@@ -1,0 +1,72 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicenseNotesViewModel>
+@{
+    Layout = null;
+    List<DKUPPU.Helpers.WorkflowAction> AllActions = DKUPPU.Helpers.WorkflowAction.GetWFActions(true, true, true);
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th style="width:19%">User</th>
+                        <th style="width:17%">Log Type</th>
+                        <th style="width:14%">Date</th>
+                        <th style="width:50%">Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="MstDocUploadViewModel">
+                    @{int j = 0; string action = "";}
+                    @if (ViewBag.wf_activity_name == "ACTV")
+                    {
+                        foreach (var item in Model.Where(a => a.log_type == "R" || a.log_type == "N").OrderByDescending(a => a.updated_date))
+                        {
+                            action = AllActions.Where(x => x.kode == item.log_type).Select(x => x.name).FirstOrDefault();
+                            <tr id="@j">
+                                <td>
+                                    @Html.DisplayFor(a => item.created_by)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => action)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => item.created_date_text)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => item.notes)
+                                </td>
+                            </tr>
+                            j++;
+                        }
+                    }
+                    else
+                    {
+                        foreach (var item in Model.OrderByDescending(a => a.updated_date))
+                        {
+                            action = item.log_type == "Y" ? "Approved" : (item.log_type == "N" ? "Rejected" : "Revised To User" );
+                            action = item.activity_name + " (" + action + ")";
+                            
+                            <tr id="@j">
+                                <td>
+                                    @Html.DisplayFor(a => item.created_by)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => action)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => item.created_date_text)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(a => item.notes)
+                                </td>
+                            </tr>
+                            j++;
+                        }
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>

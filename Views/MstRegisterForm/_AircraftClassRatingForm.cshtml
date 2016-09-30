@@ -1,0 +1,36 @@
+﻿@model List<DKUPPU.ViewModels.MstAircraftClassRattingViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="form-horizontal">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Class Ratting</th>
+                    <th>Date Of Issue</th>
+                    <th>Authorize</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{int j = 0;}
+                @foreach (DKUPPU.ViewModels.MstAircraftClassRattingViewModel item in Model)
+                {
+                    <tr>
+                        <td>
+                            <input type="hidden" name="MstAircraftClassRattingViewModel[@j].id_class_ratting" id="MstAircraftClassRattingViewModel_@j.ToString()__id_class_ratting" value="@Html.DisplayFor(m => m[j].id_class_ratting)">
+                            <input type="text" class="form-control" name="MstAircraftClassRattingViewModel[@j].class_rating" id="MstAircraftClassRattingViewModel_@j.ToString()__class_rating" value="@Html.DisplayFor(m => m[j].class_rating)">                            
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="MstAircraftClassRattingViewModel[@j].date_of_issue" id="MstAircraftClassRattingViewModel_@j.ToString()__date_of_issue" value="@Html.DisplayFor(m => m[j].date_of_issue)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control" name="MstAircraftClassRattingViewModel[@j].authorize_ins_signature" id="MstAircraftClassRattingViewModel_@j.ToString()__authorize_ins_signature" value="@Html.DisplayFor(m => m[j].authorize_ins_signature)">
+                        </td>
+                    </tr>
+                    j++;
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

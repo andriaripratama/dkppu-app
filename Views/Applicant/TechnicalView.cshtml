@@ -1,0 +1,278 @@
+﻿@model DKUPPU.ViewModels.MstApplicantTechnicalFormViewModel
+
+@{
+    ViewBag.Title = "Technical";
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>@ViewBag.Title Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-horizontal">
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.License.id_trx_license)
+                    @Html.HiddenFor(model => model.WTILicense.id_trx_license)
+                    @Html.HiddenFor(model => model.Applicant.job_id)
+                    @Html.HiddenFor(model => model.LicenseId)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.LicenseId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.LicenseId, (IEnumerable<SelectListItem>)ViewBag.Licenses, "Select Item", htmlAttributes: new { @class = "form-control required-value-dropdown", disabled = "disabled" })
+                        </div>
+                        @Html.LabelFor(model => model.TotalFlyingHours, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.TotalFlyingHours, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                        </div>
+                    </div>
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LicenseNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.LicenseNo, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset>
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Applicant.radio_telephone_number, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-2">
+                                @Html.EditorFor(model => model.Applicant.radio_telephone_number, new { htmlAttributes = new { @class = "form-control", disabled = "disabled" } })
+                            </div>
+                        </div>
+                    </fieldset>
+                    @Html.Partial("_DocUploadForm", Model)
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AircraftCategoryRating, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-10">
+                            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.AircraftCategoryRatings)
+                            {
+                                string checkedHTML = "";
+
+                                if (Model.AircraftCategoryRatingId == item.lookup_value)
+                                {
+                                    checkedHTML = "checked='checked'";
+                                }
+
+                                <label class="radio radio-inline">
+                                    <input id="radio-aircraft-ratting-@item.lookup_value" type="radio" class="radio-aircraft-ratting radiobox" name="AircraftCategoryRatingId" value="@Html.DisplayFor(a => item.lookup_value)" disabled="disabled" @checkedHTML />
+                                    <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                                </label>
+                            }
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2"></div>
+                        <div class="col-md-9" id="list-aircraft-class-rating">
+                            @Html.Partial("_AircraftClassRatingForm", new List<DKUPPU.ViewModels.TrxLicAircraftCategoryRatingViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Aircraft Type Rating</div>
+                        <div class="col-md-9" id="list-aircraft-type-rating">
+                            @Html.Partial("_LicAircraftTypeRatingForm", new List<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">PPC</div>
+                        <div class="col-md-9" id="list-ppc-type-rating">
+                            @Html.Partial("_PPCTypeRatingForm", new List<DKUPPU.ViewModels.TrxLicPpcViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Instrument Rating</div>
+                        <div class="col-md-9" id="list-instrument-rating">
+                            @Html.Partial("_LicInstrumentRatingForm", new List<DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">Medical Check</div>
+                        <div class="col-md-9" id="list-medical-certificate">
+                            @Html.Partial("_LicMedicalCertificateForm", new List<DKUPPU.ViewModels.TrxLicMedicalCertificateViewModel>())
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-md-2">EPC</div>
+                        <div class="col-md-9" id="list-epc">
+                            @Html.Partial("_LicEPCForm", new List<DKUPPU.ViewModels.TrxLicEpcViewModel>())
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Logs</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("_LogNotesForm", Model.LicNotes)
+                            </div>
+                        </div>
+                    </fieldset>
+                    <div class="form-actions">
+                        <a href="@Url.Action("Index","Home")" class="btn btn-primary"> Back </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        var idTrxLicense = $('#License_id_trx_license').val();
+        var idTrxLicenseWTI = $('#WTILicense_id_trx_license').val();
+        var aircraftCategoryRating = $('input:radio[name=AircraftCategoryRatingId]:checked').val();
+
+        if (idTrxLicenseWTI != '') {
+            $('#IsWTIFrame').css('display', 'none');
+        }
+        else {
+            $('input:radio[name=IsWTI][value="No"]').attr('checked', true);
+        }
+
+        GetAircraftCategoryRating(idTrxLicense, aircraftCategoryRating, '@ViewBag.IsAircraftCategoryRatingItemReadOnly');
+        GetAircraftTypeRating(idTrxLicense, '@ViewBag.IsAircraftTypeRatingReadOnly');
+        GetPPCTypeRating(idTrxLicense, '@ViewBag.IsPPCTypeRatingReadOnly');
+        GetInstrumentRating(idTrxLicense, '@ViewBag.IsInstrumentRatingReadOnly');
+        GetMedicalCertificate(idTrxLicense, '@ViewBag.IsMedicalCertificateReadOnly');
+        GetEPC(idTrxLicense, '@ViewBag.IsEPCReadOnly');
+
+        $('.view-document').click(function () {
+            img = '<img class="col-xs-12" src="@Url.Action("RetrieveWTIFile", "Applicant", new { idTrxLicense = Model.WTILicense.id_trx_license })" />';
+
+            $('#preview-doc').html(img);
+        });
+    });
+
+    function GetAircraftCategoryRating(idTrxLicense, groupName, isAircraftCategoryRatingItemReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetAircraftCategoryRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                groupName: groupName,
+                isAircraftCategoryRatingItemReadOnly: isAircraftCategoryRatingItemReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-aircraft-class-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-aircraft-class-rating').html(data);
+
+                $('#add-class-rating').removeClass('disabled');
+            }
+        });
+    }
+
+    function GetAircraftTypeRating(idTrxLicense, isAircraftTypeRatingReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetAircraftTypeRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isAircraftTypeRatingReadOnly: isAircraftTypeRatingReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-aircraft-type-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-aircraft-type-rating').html(data);
+            }
+        });
+    }
+
+    function GetPPCTypeRating(idTrxLicense, isPPCTypeRatingReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetPPCTypeRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isPPCTypeRatingReadOnly: isPPCTypeRatingReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-ppc-type-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-ppc-type-rating').html(data);
+            }
+        });
+    }
+
+    function GetInstrumentRating(idTrxLicense, isInstrumentRatingReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetInstrumentRating", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isInstrumentRatingReadOnly: isInstrumentRatingReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-instrument-rating').html(img);
+            },
+            success: function (data) {
+                $('#list-instrument-rating').html(data);
+            }
+        });
+    }
+
+    function GetMedicalCertificate(idTrxLicense, isMedicalCertificateReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetMedicalCertificate", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isMedicalCertificateReadOnly: isMedicalCertificateReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-medical-certificate').html(img);
+            },
+            success: function (data) {
+                $('#list-medical-certificate').html(data);
+            }
+        });
+    }
+
+    function GetEPC(idTrxLicense, isEPCReadOnly) {
+        $.ajax({
+            url: '@Url.Action("GetEPC", "Applicant")',
+            data: {
+                idTrxLicense: idTrxLicense,
+                isEPCReadOnly: isEPCReadOnly
+            },
+            dataType: 'html',
+            beforeSend: function () {
+                var img = '<div class="row">' +
+                            '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                            '</div></div>';
+                $('#list-epc').html(img);
+            },
+            success: function (data) {
+                $('#list-epc').html(data);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,77 @@
+﻿@model DKUPPU.ViewModels.MstApplicantTechnicalFormViewModel
+@{
+    Layout = null;
+    string disabledHTML = string.Empty;
+    bool isReadOnly = ViewBag.IsWTIReadOnly == null ? false : (ViewBag.IsWTIReadOnly.ToString() == "True" ? true : false);
+    bool isViewButtonVisible = ViewBag.IsDocumentHistoryVisible == null ? false : (ViewBag.IsDocumentHistoryVisible.ToString() == "True" ? true : false);
+    if (isReadOnly)
+    {
+        disabledHTML = "disabled='disabled'";
+    }
+}
+
+    @if (isReadOnly)
+    {
+        <fieldset>
+            <div class="form-group">
+                @Html.LabelFor(model => model.WTISopTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(model => model.WTISopTypeId, (IEnumerable<SelectListItem>)ViewBag.WTISopTypes, new { @class = "form-control", id = "WTISopTypeId", disabled = "disabled" })
+                </div>
+                @Html.LabelFor(model => model.WTISopTypeDocFile, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                <div class="col-md-2 midtext">
+                    <a role="button" class="btn btn-primary btn-sm view-document" data-target="#documet-view" data-type="idcard" data-toggle="modal">View</a>
+                </div>
+            </div>
+        </fieldset>
+    }
+    else
+    {
+        <div class="form-group" id="IsWTIFrame">
+            @Html.LabelFor(model => model.IsWTI, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.YesNoQuestion)
+                {
+                    <label class="radio radio-inline">
+                        <input id="IsWTI_@item.id_lookup" type="radio" class="radiobox" name="IsWTI" value="@Html.DisplayFor(a => item.lookup_value)" disabled="disabled" />
+                        <span>@Html.DisplayFor(a => item.lookup_value)</span>
+                    </label>
+                }
+            </div>
+        </div>
+
+        <fieldset>
+            <div class="form-group">
+                @Html.LabelFor(model => model.WTISopTypeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(model => model.WTISopTypeId, (IEnumerable<SelectListItem>)ViewBag.WTISopTypes, new { @class = "form-control", id = "WTISopTypeId" })
+                </div>
+                @Html.LabelFor(model => model.WTISopTypeDocFile, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                <div class="col-md-2">
+                    <input type="file" name="_WTISopTypeDocFile" class="btn btn-warning" id="WTISopTypeDocFile" />
+                </div>
+                @if (isViewButtonVisible)
+                {
+                <div class="col-md-1" style="width: 10px;">&nbsp;</div>
+                <div class="col-md-2 midtext">
+                    <a role="button" class="btn btn-primary btn-sm view-document" data-target="#documet-view" data-type="idcard" data-toggle="modal">View</a>
+                </div>
+                }
+            </div>
+        </fieldset>
+    }
+    <div id="documet-view" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+                    <h4>Document Preview</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="preview-doc">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

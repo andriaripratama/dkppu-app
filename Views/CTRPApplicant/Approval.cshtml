@@ -1,0 +1,322 @@
+﻿@model DKUPPU.ViewModels.CTRPApprovalViewModel
+@{
+    ViewBag.Title = "Certification of Type Rating Pilot Approval";
+    ViewBag.activity_id = Model.wf_activity_name;
+    ViewBag.wf_activity_name = Model.wf_activity_name;
+    
+    bool isStaff = ViewBag.activity_id == null ? false : (ViewBag.activity_id == "ACT01" ? true : false);
+}
+@if (Model.wf_activity_name == "ACTV")
+{
+    <style>
+        input {
+            background-color: transparent !important;
+            border: none !important;
+        }
+    </style>
+}
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>
+            @if (Model.wf_activity_name == "ACTV")
+            {
+                <text>View Form</text>
+            }
+            else
+            {
+                <text>Approval Form</text>
+            }
+        </h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+            <!--Data Applican End-->
+            <!--Form Begin-->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-horizontal">
+                    @Html.ValidationSummary(true)
+                    @Html.HiddenFor(model => model.wf_activity_name)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.id_applicant)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_category)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.delivery_code)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.id_license_type)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.id_sop_type)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+                    @Html.HiddenFor(model => model.TrxWfViewModel.sn)
+                    @Html.HiddenFor(model => model.TrxLicenseViewModel.created_by)
+                    @Html.HiddenFor(model => model.Applicant.job_name)
+                    @Html.HiddenFor(model => model.Applicant.full_name)
+                    @Html.HiddenFor(model => model.Applicant.id_applicant)
+                    @Html.HiddenFor(model => model.Applicant.id_card)
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.id_license_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.DropDownListFor(model => model.LicenseType, (IEnumerable<SelectListItem>)ViewBag.LicenseTypeDrop, "Select Lic. Type", htmlAttributes: new { @class = "form-control license-type-ctrp", @disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.license_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.TrxLicenseViewModel.license_no, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.total_flying_hours, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-2">
+                            @Html.EditorFor(model => model.TrxLicenseViewModel.total_flying_hours, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                        </div>
+                        @Html.LabelFor(model => model.TrxLicenseViewModel.radio_phone_no, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-2">
+                            @if (isStaff)
+                            {
+                                @Html.EditorFor(model => model.Applicant.radio_telephone_number, new { htmlAttributes = new { @class = "form-control" } })
+                            }
+                            else
+                            {
+                                @Html.EditorFor(model => model.Applicant.radio_telephone_number, new { htmlAttributes = new { @class = "form-control", @readonly = "readonly" } })
+                            }
+                        </div>
+                    </div>
+                    <div id="medical-certificate-license">
+                        @Html.Partial("../MstApprovalForm/_MedicalCheckForm", Model.TrxLicMedicalCertificateViewModel)
+                    </div>
+                    <!--List Aircarft Type Ratting-->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.aircraft_type_rating, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-9" id="list-aircraft-type-ratting">
+                            @Html.Partial("../MstApprovalForm/_LicAircraftTypeRatingCertPilotFrom", Model.TrxLicAircraftTypeRatingViewModel)
+                        </div>
+                    </div>
+                    <!--PPC Type Ratting-->
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ppc_type_ratting, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+                        <div class="col-md-9" id="list-ppc-ratting">
+                            @Html.Partial("../MstApprovalForm/_PPCTypeRatingForm", Model.TrxLicPpcViewModel)
+                        </div>
+                    </div>
+                    @if (ViewBag.UploadDocumentForm == true)
+                    {
+                        <fieldset>
+                            <legend>Upload Document</legend>
+                            @Html.Partial("../MstApprovalForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                        </fieldset>
+                    }
+                    @if (ViewBag.CreateNote != false)
+                    {
+                        <fieldset>
+                            <legend>Notes</legend>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.TextAreaFor(model => model.Notes, new { @Class = "from-control col-xs-12" })
+                                </div>
+                            </div>
+                        </fieldset>
+                    }
+                    @if (Model.TrxLicenseViewModel.id_wf_status == "WFS05" && ViewBag.ViewAcceptName == true)
+                    {
+                        <fieldset>
+                            <legend>Taken By</legend>
+                            <table>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(model => model.TrxLicenseViewModel.id_card_accepted)
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(model => model.TrxLicenseViewModel.id_card_accepted, new { htmlAttributes = new { @class = "form-control" } })
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    }
+
+                    <fieldset>
+                        @if (ViewBag.Logs == true && !DKUPPU.Helpers.SessionLoginHelper.IsExnternal())
+                        {
+                            <legend>Logs</legend>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_LogNotesForm", Model.TrxLicenseNotesViewModel)
+                                </div>
+                            </div>
+                        }
+                        @if (ViewBag.GenerateLicense == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_GenerateLicenseNumber", Model.TrxLicenseViewModel)
+                                </div>
+                            </div>
+                        }
+                        @if (ViewBag.UploadLicenseScan == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_UploadLicenseScan", Model.TrxLicenseUploadViewModel)
+                                </div>
+                            </div>
+                            <script>
+                                $('#TrxLicenseUploadViewModel_license_no').hide();
+                            </script>
+                        }
+                        @if (ViewBag.CheckingRegNo == true)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    @Html.Partial("../MstApprovalForm/_CheckingRegistrationNumber", Model.TrxLicenseUploadViewModel)
+                                </div>
+                            </div>
+                        }
+
+                    </fieldset>
+                    <div class="form-actions">
+                        @if (ViewBag.WFActions != null)
+                        {
+                            string disabled = "";
+                            if (Model.wf_activity_name == "ACT04" || Model.wf_activity_name == "ACT01" || Model.wf_activity_name == "ACT02" || Model.wf_activity_name == "ACT06")
+                            {
+                                disabled = "disabled";
+                            }
+                            foreach (DKUPPU.Helpers.WorkflowAction action in ViewBag.WFActions as List<DKUPPU.Helpers.WorkflowAction>)
+                            {
+                                if (action.kode == null)
+                                {
+                                    <a class="btn btn-primary" name="action_@action.kode" id="action_@action.kode">@action.name</a>
+                                }
+                                else
+                                {
+                                    <input class="btn btn-primary @disabled" data-submit="false" type="submit" name="action_@action.kode" id="action_@action.kode" value="@action.name" onclick="javascript: return RejectConfirmation(this);" />
+                                }
+                            }
+                        }
+                        @if (Model.TrxLicenseViewModel.is_draft == true)
+                        {
+                            <button id="DeleteButton" type="button" class="btn btn-danger"> Delete </button>
+                            <script>
+                                $(document).ready(function () {
+                                    $('#DeleteButton').click(function () {
+                                        $.ajax({
+                                            url: '@Url.Action("DeleteTrxLicenseById", "AJAX")',
+                                            data: {
+                                                p_id_trx_license: $('#TrxLicenseViewModel_id_trx_license').val()
+                                            },
+                                            type: 'POST',
+                                            dataType: 'json',
+                                            success: function (data) {
+                                                if (data.resultOperation) {
+                                                    window.location.href = data.urlSuccess;
+                                                } else {
+                                                    alert(data.messageFail);
+                                                }
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+                        }
+                        <a href="@Url.Action(" index","home")" class="btn btn-default"> Back </a>
+                    </div>
+                    <!--End Form-->
+
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@if (Model.wf_activity_name == "ACT04")
+{
+    <script>
+        $(function () {
+            var license_no = $('#TrxLicenseViewModel_license_no').val();
+            if (license_no == null || license_no == "") {
+                $('#action_').addClass('disabled');
+            } else {
+                $('#action_').removeClass('disabled');
+                $('#action_Y').attr('data-submit', 'true');
+                $('#action_Y').removeClass('disabled');
+            }
+            $('#action_').click(function () {
+                var ReportUrl = "@Html.DisplayFor(a => a.TrxLicenseViewModel.report_url)";
+                var id_mst_license = "@Model.TrxLicenseViewModel.id_mst_license";
+                ReportUrl = ReportUrl.replace('{0}', id_mst_license);
+                ReportUrl = ReportUrl.replace(/&amp;/g, '&');
+                window.open(ReportUrl);
+                $('#action_Y').attr('data-submit', 'true');
+                $('#action_Y').removeClass('disabled');
+            });
+
+            $('form').submit(function () {
+                var isValid = $('#action_Y').attr('data-submit');
+                if (isValid == 'false') {
+                    return false;
+                }
+            });
+        });
+    </script>
+}
+@if (Model.wf_activity_name == "ACT01" || Model.wf_activity_name == "ACT02")
+{
+    <script>
+        $(function () {
+            CheckingDoc();
+
+            $('.satisfied').click(function () {
+                CheckingDoc();
+            });
+            $('.un-satisfied').click(function () {
+                CheckingDoc();
+            });
+            function CheckingDoc() {
+                var IsValid = false;
+                var lengthSatisfied = $('.satisfied').length;
+                var lengthSatisfiedChecked = $('.satisfied:checked').length;
+                //var lengthUnSatisfied = $('.un-satisfied').length;
+                var lengthUnSatisfiedChecked = $('.un-satisfied:checked').length;
+                if (lengthSatisfiedChecked == lengthSatisfied) {
+                    enebelButtonProcesed();
+                }
+                else if (((lengthUnSatisfiedChecked + lengthSatisfiedChecked) == lengthSatisfied) && lengthUnSatisfiedChecked > 0) {
+                    enebelButtonRevise();
+                }
+                else {
+                    DesableAll();
+                }
+            }
+
+            function enebelButtonProcesed() {
+                $('#action_Y').removeClass('disabled');
+                $('#action_R').addClass('disabled');
+                $('#action_N').addClass('disabled');
+            }
+            function DesableAll() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').addClass('disabled');
+                $('#action_N').addClass('disabled');
+            }
+            function enebelButtonRevise() {
+                $('#action_Y').addClass('disabled');
+                $('#action_R').removeClass('disabled');
+                $('#action_N').removeClass('disabled');
+            }
+        })
+    </script>
+}

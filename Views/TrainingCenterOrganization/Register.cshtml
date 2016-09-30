@@ -1,0 +1,27 @@
+﻿@model DKUPPU.ViewModels.TrainingCenterRegisterViewModel
+@{
+    ViewBag.Title = "Issuance Certificates of Training Center Organization";
+
+}
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_trx_org)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_org_certificate)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_org_type)
+            @Html.HiddenFor(model => model.TrxOrganizationViewModel.id_sop_type)
+
+            <!--Data Applicant Begin-->
+            <fieldset>
+                <div class="form-group">
+                    @Html.Partial("../MstRegisterForm/_DataOrganizationForm", Model.MstOrganizationViewModel)
+                </div>
+            </fieldset>
+            <!--Data Applican End-->
+
+        }
+    </div>
+</div>    

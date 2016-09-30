@@ -1,0 +1,249 @@
+﻿@model DKUPPU.ViewModels.MstApplicantFormViewModel
+
+@{
+    Layout = null;
+}
+@Html.HiddenFor(m => m.id_org)
+@Html.HiddenFor(m => m.id_org_type)
+
+<div class="form-horizontal">
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Employee ID *</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.applicant_nik, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.applicant_nik, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @*<div class="form-group">
+            @Html.LabelFor(model => model.emp_no, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.emp_no, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.emp_no, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Position *</label>
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.id_job, (IEnumerable<SelectListItem>)ViewBag.IdJob, "Select Job", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_job, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Full Name *</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.fullname, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.fullname, "", new { @class = "text-danger" })
+        </div>
+        <div class="col-md-7">
+            <label for="fullname" class="control-label col-md-10">The name must correspond with the ID card</label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Identity Type *</label>
+        @*@Html.LabelFor(model => model.id_identity_type, htmlAttributes: new { @class = "control-label col-md-2 text-left" })*@
+        <div class="col-md-3">
+            @{ string oldIdentity = "";}
+            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.id_identity_type)
+            {
+                if (Model != null)
+                {
+                    if (Model.id_identity_type == item.id_lookup)
+                    {
+                        oldIdentity = "checked='checked'";
+                    }
+                    else
+                    {
+                        oldIdentity = "";
+                    }
+                }
+                <label class="radio radio-inline">
+                    <input type="radio" name="id_identity_type" required value="@item.id_lookup" @oldIdentity />
+                    <i></i>
+                    @item.lookup_value
+                </label>
+            }
+            @Html.ValidationMessageFor(model => model.id_identity_type, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label">Identity Number *</label>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.identity_number, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.identity_number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Place Of Birth *</label>
+        <div class="col-md-3">
+            @Html.TextBoxFor(model => model.place_of_birth, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.place_of_birth, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label text-right">Birth Date *</label>
+        <div class="col-md-3">
+            <div class="input-group">
+                @Html.EditorFor(model => model.birth_date, new { htmlAttributes = new { @class = "form-control date-picker" } })
+                <span class="input-group-addon">
+                    <i class="fa fa-calendar"></i>
+                </span>
+            </div>
+            @Html.ValidationMessageFor(model => model.birth_date, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Gender *</label>
+        <div class="col-md-8">
+            @{ string isChecked = "";}
+            @foreach (var item in (IEnumerable<DKUPPU.ViewModels.MstLookupViewModel>)ViewBag.id_gender)
+            {
+                if (Model != null)
+                {
+                    if (Model.id_gender == item.id_lookup)
+                    {
+                        isChecked = "checked='checked'";
+                    }
+                    else
+                    {
+                        isChecked = "";
+                    }
+                }
+                <label class="radio radio-inline">
+                    <input type="radio" name="id_gender" required value="@item.id_lookup" @isChecked />
+                    <i></i>
+                    @item.lookup_value
+                </label>
+            }
+            @Html.ValidationMessageFor(model => model.id_gender, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Hair Color *</label>
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_hair_color, (IEnumerable<SelectListItem>)ViewBag.IdHairColor, "Select Hair Color", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_hair_color, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label">Eye Color *</label>
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_eyes_color, (IEnumerable<SelectListItem>)ViewBag.IdEyesColor, "Select Eye Color", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_eyes_color, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Height *</label>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.height, new { htmlAttributes = new { @class = "form-control number-only" } })
+            @Html.ValidationMessageFor(model => model.height, "", new { @class = "text-danger" })
+        </div>
+        <label class="col-md-2 control-label">Weight *</label>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.weight, new { htmlAttributes = new { @class = "form-control number-only" } })
+            @Html.ValidationMessageFor(model => model.weight, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Nationality *</label>
+        <div class="col-md-8">
+            @Html.DropDownListFor(model => model.id_nationality, (IEnumerable<SelectListItem>)ViewBag.IdNationality, "Select Nationality", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_nationality, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group" id="id-loc-1">
+        @Html.LabelFor(model => model.id_state, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_state, (IEnumerable<SelectListItem>)ViewBag.IdState, "Select Province", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_state, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.id_district, htmlAttributes: new { @class = "control-label col-md-2 text-right" })
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_district, (IEnumerable<SelectListItem>)ViewBag.IdDistrict, "Select District", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_district, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group" id="id-loc-2">
+        @Html.LabelFor(model => model.id_subdist, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_subdist, (IEnumerable<SelectListItem>)ViewBag.IdSubdisctrict, "Select Sub District", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_subdist, "", new { @class = "text-danger" })
+        </div>
+        @Html.LabelFor(model => model.id_village, htmlAttributes: new { @class = "control-label col-md-2 text-right" })
+        <div class="col-md-3">
+            @Html.DropDownListFor(model => model.id_village, (IEnumerable<SelectListItem>)ViewBag.IdVillage, "Select Village", htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.id_village, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group" id="id-loc-2">
+        @*@Html.LabelFor(model => model.npwp_number, htmlAttributes: new { @class = "control-label col-md-2 text-left" })
+            <div class="col-md-3">
+               @Html.EditorFor(model => model.npwp_number, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.npwp_number, "", new { @class = "text-danger" })
+            </div>*@
+        <label class="col-md-2 control-label text-left">Pos Code *</label>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.pos_code, new { htmlAttributes = new { @class = "form-control number-only" } })
+            @Html.ValidationMessageFor(model => model.pos_code, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Address *</label>
+        <div class="col-md-3">
+            @Html.EditorFor(model => model.address, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.address, "", new { @class = "text-danger" })
+        </div>
+        <div id="id-loc-3">
+            @Html.LabelFor(model => model.address_rt, htmlAttributes: new { @class = "control-label col-md-2 text-right" })
+            <div class="col-md-1">
+                @Html.EditorFor(model => model.address_rt, new { htmlAttributes = new { @class = "form-control number-only" } })
+                @Html.ValidationMessageFor(model => model.address_rt, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.address_rw, htmlAttributes: new { @class = "control-label col-md-1 text-right" })
+            <div class="col-md-1">
+                @Html.EditorFor(model => model.address_rw, new { htmlAttributes = new { @class = "form-control number-only" } })
+                @Html.ValidationMessageFor(model => model.address_rw, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Phone Number *</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.phone_number, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.phone_number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-md-2 control-label text-left">Email Address *</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.email_address, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.email_address, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group hidden">
+        <label class="col-md-2 control-label text-left">Radio Telephone Number</label>
+        <div class="col-md-8">
+            @Html.EditorFor(model => model.radio_phone_number, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.radio_phone_number, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('.number-only').keypress(function (e) {
+            if (e.charCode != 8 && e.charCode != 0 && e.charCode != 46 && (e.charCode < 48 || e.charCode > 57)) {
+                return false;
+                e.preventDefault();
+            }
+        })
+    });
+</script>

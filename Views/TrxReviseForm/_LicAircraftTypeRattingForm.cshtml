@@ -1,0 +1,114 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Ratting</th>
+                <th>Date Of Issue</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicAircraftTypeRatingViewModel">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string skill05 = "";
+                string datepicker = "";
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicAircraftTypeRatingViewModel item in Model.OrderBy(a=>a.updated_date))
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                skill05 = "";
+                datepicker = "";
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = "required-value";
+                    skill05 = "SKILL05";
+                    datepicker = "date-picker";
+                }
+                <tr id="TrxLicAircraftTypeRatingViewModel_@j">
+                    @if (item.is_history == true)
+                    {
+                        <td>
+                            @Html.DropDownList("TrxLicAircraftTypeRatingViewModel[" + j.ToString() + "].id_type_rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, "Select Type Rating", new { @class = "form-control id_type_rating", id = "TrxLicAircraftTypeRatingViewModel_" + j.ToString() + "__id_type_rating", @disabled = "disabled" })
+                            @if (!(item.id_type_rating == null || item.id_type_rating == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_type_rating option[value=@item.id_type_rating]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @datepicker" name="TrxLicAircraftTypeRatingViewModel[@j].issued_date" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(a => item.issued_date)" readonly="readonly">
+                            <input type="hidden" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].id_type_rating" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_type_rating" value="@Html.DisplayFor(a => item.id_type_rating)">
+                            <input type="hidden" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].type_rating_name" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__type_rating_name" value="@Html.DisplayFor(a => item.type_rating_name)">
+                            <input type="hidden" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].id_trx_type_rating" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_trx_type_rating" value="@Html.DisplayFor(a => item.id_trx_type_rating)">
+                        </td>
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>
+                            @Html.DropDownList("TrxLicAircraftTypeRatingViewModel[" + j.ToString() + "].id_type_rating", (IEnumerable<SelectListItem>)ViewBag.ratingdrop, "Select Type Rating", new { @class = "form-control id_type_rating", id = "TrxLicAircraftTypeRatingViewModel_" + j.ToString() + "__id_type_rating" })
+                            @if (!(item.id_type_rating == null || item.id_type_rating == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_type_rating option[value=@item.id_type_rating]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            <input type="hidden" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].type_rating_name" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__type_rating_name" value="@Html.DisplayFor(a => item.type_rating_name)">
+                            <input type="hidden" class="form-control" name="TrxLicAircraftTypeRatingViewModel[@j].id_trx_type_rating" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__id_trx_type_rating" value="@Html.DisplayFor(a => item.id_trx_type_rating)">
+                        </td>
+                        <td>
+                            <input type="text" class="form-control @vrequered @skill05 date-skill09" name="TrxLicAircraftTypeRatingViewModel[@j].issued_date" id="TrxLicAircraftTypeRatingViewModel_@j.ToString()__issued_date" value="@Html.DisplayFor(a => item.issued_date)">
+                        </td>
+                        <td></td>
+                    }
+
+                </tr>
+                    j++;
+            }
+        </tbody>
+
+    </table>
+</div>
+<script>
+    $(function () {
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true
+            //...
+        });
+        $('div').on("change", ":input.id_type_rating", function (e) {
+            e.preventDefault();
+            var id = $(this).attr("id");
+            var index = parseInt($(this).parent().parent().attr('id').match(/\d+/));
+            var itemText = $('#' + id + ' option:selected').text();
+            $('#TrxLicAircraftTypeRatingViewModel_' + index + '__type_rating_name').val(itemText);
+        });
+        
+        var VSKILL05 = $('#val-SKILL05').attr('data-date');
+        $('.SKILL05').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL05,
+            //...
+        });
+    });
+</script>
+

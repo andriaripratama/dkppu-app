@@ -1,0 +1,84 @@
+﻿@model List<DKUPPU.ViewModels.TrxOrganizationDocCertificationViewModel>
+@{
+    Layout = null;
+
+    bool isDocCertificationFileUploadVisible = ViewBag.IsDocCertificationFileUploadVisible == null ? false : (ViewBag.IsDocCertificationFileUploadVisible ? true : false);
+    string tagDocCertificationFileUploadVisible = isDocCertificationFileUploadVisible ? string.Empty : "hidden = 'hidden'";
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Document</th>
+                        <th @tagDocCertificationFileUploadVisible>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody id="ListOfTrxOrganizationDocCertification">
+                    @{
+                        int i = 0;
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        bool isFileExist = false;
+
+                        if (!string.IsNullOrEmpty(item.id_trx_org_doc_certification))
+                        {
+                            isFileExist = true;
+                        }
+
+                        <tr id="ListOfTrxOrganizationDocCertification_@i">
+                            <td>
+                                @if (isFileExist)
+                                {
+                                    <a id="@i" style="cursor:pointer;" class="col-md-12 preview" data-target="#preview-document" data-toggle="modal">@Html.DisplayFor(a => item.label_name)</a>
+                                }
+                                else
+                                {
+                                    <label class="col-md-12 control-label text-left" for="sertificate_no">@Html.DisplayFor(x => item.label_name)</label>
+                                }
+                                <input type="hidden" name="ListOfTrxOrganizationDocCertification[@i].id_doc_category" id="ListOfTrxOrganizationDocCertification_@i.ToString()__id_doc_category" value="@Html.DisplayFor(m => item.id_doc_category)" />
+                                <input type="hidden" class="form-control" name="ListOfTrxOrganizationDocCertification[@i].id_trx_org_doc_certification" id="ListOfTrxOrganizationDocCertification_@i.ToString()__id_trx_org_doc_certification" value="@Html.DisplayFor(a => item.id_trx_org_doc_certification)">
+                            </td>
+                            <td @tagDocCertificationFileUploadVisible>
+                                <input type="file" class="form-control btn btn-default" name="[@i].File" id="@i.ToString()__File" />
+                            </td>
+                        </tr>
+
+                        i++;
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+</div>
+<div id="preview-document" class="modal fade" aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1"></div>
+<script>
+    $(function () {
+        $('.preview').click(function () {
+            var id = $(this).attr('id');
+
+            var id_trx_org_doc_certification = $('#ListOfTrxOrganizationDocCertification_' + id + '__id_trx_org_doc_certification').val();
+
+            $.ajax({
+                url: "@Url.Action("GetTrxOrganizationDocCertificationUploadById", "AJAX")",
+                data: {
+                    id_trx_org_doc_certification: id_trx_org_doc_certification
+                },
+                dataType: 'html',
+                beforeSend: function () {
+                    var img = '<div class="modal-dialog modal-lg">' +
+                                '<div class="modal-content"><div style="text-align:center;height:300px;padding-top:125px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#preview-document').html(img);
+                },
+                success: function (data) {
+                    $('#preview-document').html(data);
+                }
+            });
+        });
+    });
+</script>

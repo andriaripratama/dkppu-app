@@ -1,0 +1,121 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MstParameterViewModel>
+@using PagedList.Mvc;
+@using PagedList;
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Parameter Name", new { @class = "class-label col-md-2" })
+                <div class="col-md-4">
+                    <input type="text" id="search-name" name="search-name" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <button type="button" class="btn btn-primary pull-left" id="btn_search">Search</button>
+                    <a href="@Url.Action("Create","Application")" class="btn btn-labeled btn-primary pull-right"><span class="btn-label"><i class="glyphicon glyphicon-plus"></i></span>Add</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Widget ID (each widget will need unique ID)-->
+<div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-0" data-widget-editbutton="false">
+    <!-- widget options:
+    usage: <div class="jarviswidget" id="wid-id-0" data-widget-editbutton="false">
+
+    data-widget-colorbutton="false"
+    data-widget-editbutton="false"
+    data-widget-togglebutton="false"
+    data-widget-deletebutton="false"
+    data-widget-fullscreenbutton="false"
+    data-widget-custombutton="false"
+    data-widget-collapsed="true"
+    data-widget-sortable="false"
+
+    -->
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>List Of Parameter </h2>
+
+    </header>
+
+    <!-- widget div-->
+    <div>
+
+        <!-- widget edit box -->
+        <div class="jarviswidget-editbox">
+            <!-- This area used as dropdown edit box -->
+
+        </div>
+        <!-- end widget edit box -->
+        <!-- widget content -->
+        <div class="widget-body no-padding" id="list-applicant">
+            <div id="table-list">
+                @Html.Partial("_ListData", Model)
+            </div>
+
+            <div class="dt-toolbar-footer">
+                <div class="col-xs-12 col-sm-12">
+                    <div class="dataTables_paginate paging_simple_numbers" id="page-applicant-list">
+                        @Html.Raw(ViewBag.Pagination)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+</div>
+<!-- end widget -->
+<script type="text/javascript">
+    $(function () {
+
+        $('#btn_search').click(function () {
+            var idparam = $('#search-name').val();
+            searchClick(idparam);
+        });
+
+        function searchClick(idparam)
+        {
+            $.ajax({
+                url: '@Url.Action("GetDataJson", "Application")',
+                data: {
+                    id: idparam
+                },
+                dataType: 'JSON',
+                beforeSend: function () {
+                    var img = '<div class="loader" style="background-color: #000;position: absolute;bottom: 0;right:0;left:0;top: 0;z-index: 1000;opacity: 0.5;">' +
+                                    '<div style="text-align:center;height:300px;padding-top:60px">' +
+                                        '<img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" />' +
+                                    '</div>' +
+                                '</div>';
+                    $('#table-list').after(img);
+                },
+                success: function (data) {
+                    var table_row = '';
+                    $.each(data, function (i, value) {
+                        table_row += '<tr>';
+                        table_row += '<td>' + value.id_parameter + '</td>';
+                        table_row += '<td>' + value.param_value + '</td>';
+                        table_row += '<td>' + value.param_description + '</td>';
+                        table_row += '<td class="text-center" width="10%"> <a href="@Url.Action("Details", "Applicant")/' + value.id_parameter + '" class="btn btn-success btn-circle"><i class="fa fa-search"></i></a>' +
+                                          '<a href="@Url.Action("Update", "Applicant")/' + value.id_parameter + '" class="btn btn-primary btn-circle"><i class="fa fa-edit"></i></a> ' +
+                                     '</td>';
+                        table_row += '</tr>';
+                    });
+                    $('#list-data-applicant').html(table_row);
+                    $('.loader').remove();
+                }
+            });
+        }
+
+    });
+</script>

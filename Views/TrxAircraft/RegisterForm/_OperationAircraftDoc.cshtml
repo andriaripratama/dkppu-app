@@ -1,0 +1,108 @@
+﻿@model List<DKUPPU.ViewModels.OperationAircraftViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            @{int j = 0;
+              string vreadonly = "";
+              string vrequered = "";
+              }
+            @foreach (DKUPPU.ViewModels.OperationAircraftViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-left" for="@j.ToString();">@Html.LabelFor(m=>m[j].DokName)</label>
+                    <input type="text" class="@required" />
+                </div>
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-left" for="@j.ToString()__File">@Html.DisplayFor(m => m[j].label_name) </label>
+                    <div class="col-md-5">
+                        <input type="file" class="btn btn-default @required" data-validation="@required" name="[@j].File" id="@j.ToString()__File" />
+                        <input type="hidden" name="OperationAircraftViewModel[@j].id_attach" id="OperationAircraftViewModel_@j.ToString()__id_attach" value="@Html.DisplayFor(m => m[j].id_attach)" />
+                        <input type="hidden" name="OperationAircraftViewModel[@j].id_trx_aircraft" id="OperationAircraftViewModel_@j.ToString()__id_trx_aircraft" value="@Html.DisplayFor(m => m[j].id_trx_aircraft)" />
+                    </div>
+                </div>
+                j++;
+            }
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(function () {
+        $('#add-crew-utilization').click(function (e) {
+            var $tabelData = $('#table-crew');
+            addRow(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-crew-utilization", function (e) {
+            var $tabelData = $('#table-crew');
+            Remove(e, $tabelData);
+        });
+        function addRow(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__med_certi_no'), function (i, val) {
+
+                    $(this).attr('readonly', 'readonly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__daily'), function (i, val) {
+                    $(this).addClass('daily');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__weekly'), function (i, val) {
+                    $(this).addClass('weekly');
+                });
+
+                $.each($trNew.find('#AircraftUtilizationCrewViewModel_' + (parseInt(suffix) + 1) + '__monthly'), function (i, val) {
+                    $(this).addClass('monthly');
+                });
+
+                $trLast.after($trNew);
+
+
+
+            }
+
+        }
+
+        function Remove(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>

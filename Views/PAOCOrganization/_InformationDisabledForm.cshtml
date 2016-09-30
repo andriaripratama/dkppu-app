@@ -1,0 +1,76 @@
+﻿@model DKUPPU.ViewModels.PAOCOrganizationViewModel
+@{
+    Layout = null;
+}
+
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        @Html.LabelFor(model => model.TrxOrganizationViewModel.proposed_type_operation)
+    </label>
+    <div class="col-md-8">
+        <section>
+            <div class="inline-group">
+                @foreach (var item in Model.OperationTypeMstLookupViewModel)
+                {
+                    <label class="radio radio-inline">
+                        <input type="radio" name="proposed_type_operation" value="@item.id_lookup" disabled="disabled" @(item.id_lookup == Model.TrxOrganizationViewModel.proposed_type_operation ? "checked='checked'" : "")>
+                        <i></i>@item.lookup_value
+                    </label>
+                }
+            </div>
+        </section>
+    </div>
+</div>
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        @Html.LabelFor(model => model.TrxOrganizationViewModel.airline_type)
+    </label>
+    <div class="col-md-8">
+        @Html.DropDownListFor(model => model.TrxOrganizationViewModel.airline_type, Model.ListOfAirlinesType, "Select Airlines Type", (ViewBag.IsAirlineTypeDisable) ? (object)new { @class = "form-control input", @disabled = "disabled" } : (object)new { @class = "form-control input" })
+    </div>
+</div>
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        &nbsp;
+    </label>
+    <div class="col-md-8">
+        @Html.Partial("../PAOCOrganization/_OrgAirlineTypeDetailForm", Model.TrxOrganizationAirlineTypeViewModel)
+    </div>
+</div>
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        @Html.LabelFor(model => model.TrxOrganizationViewModel.aircraft_type_model)
+    </label>
+    <div class="col-md-4">
+        <select class="form-control" id="aircraft_type_model" name="aircraft_type_model" disabled ="disabled">
+            <option value="">Select Aircraft Type</option>
+            @foreach (var item in Model.ListOfAircraftModelType)
+            {
+                <option value="@item.Value" @(item.Value == Model.TrxOrganizationViewModel.aircraft_type_model ? "selected='selected'" : "")>@item.Text</option>
+            }
+            <option value="0" @("0" == Model.TrxOrganizationViewModel.aircraft_type_model ? "selected='selected'" : "")>Others</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <label class="col-md-3 control-label text-left">
+                @Html.LabelFor(model => model.TrxOrganizationViewModel.aircraft_type_model_other)
+            </label>
+            <div class="col-md-9">
+                <section>
+                    <div class="inline-group">
+                        @Html.EditorFor(model => model.TrxOrganizationViewModel.aircraft_type_model_other, new { htmlAttributes = new { @class = "form-control input", @disabled = "disabled" } })
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row form-group">
+    <label class="col-md-4 control-label text-left">
+        @Html.LabelFor(model => model.TrxOrganizationViewModel.main_base)
+    </label>
+    <div class="col-md-8">
+        @Html.EditorFor(model => model.TrxOrganizationViewModel.main_base, (ViewBag.IsMainBaseDisable) ? (object)new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } } : (object)new { htmlAttributes = new { @class = "form-control" } })
+    </div>
+</div>

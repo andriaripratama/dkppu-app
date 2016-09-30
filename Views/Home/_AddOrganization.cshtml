@@ -1,0 +1,121 @@
+﻿@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Add Organization License</h4>
+        </div>
+        <div class="modal-body">
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="CertificationType">Certification Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("org_certification_type", (IEnumerable<SelectListItem>)ViewBag.CertificateType, "Select Certification Type", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">License Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("org_license_type", (IEnumerable<SelectListItem>)ViewBag.LicenseType, "Select License Type",new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2 control-label" for="LicenseType">SOP Type</label>
+                    <div class="col-md-5">
+                        @Html.DropDownList("org_sop_type", (IEnumerable<SelectListItem>)ViewBag.SOPType, "Select SOP Type", new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-md-2"></label>
+                    <div class="col-md-5">
+                        <input class="form-control" id="search-value" name="search-value" placeholder="Search" />
+                    </div>
+                    <div class="col-md-5">
+                        <button id="add-organization" class="btn btn-primary btn-sm">Search</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" id="list-organization-add">
+
+            </div>
+        </div>
+    </div>
+    <div id="submit-loader"></div>
+</div>
+<script>
+    $(function () {
+        $('#add-organization').click(function () {
+            var certification_type = $('#org_certification_type').val();
+            var license_type = $('#org_license_type').val();
+            var sop_type = $('#org_sop_type').val();
+            var sop_type_title = $('#org_sop_type option:selected').text();
+
+            addForm(certification_type, license_type, sop_type, sop_type_title);
+        });
+
+        //org_certification_type
+        $('#org_certification_type').change(function () {
+            $('#org_license_type').empty();
+            $('#org_sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetLicenseTypeByCertificateTypeId", "Home")',
+                data: {
+                    id_certificate_type: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#org_license_type').empty();
+                    $('#org_license_type').append('<option value="">Select License Type</option>');
+                    $('#org_sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#org_license_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        //license_type
+        $('#org_license_type').change(function () {
+            $('#org_sop_type').empty();
+            $.ajax({
+                url: '@Url.Action("GetSOPTypeByLicenseType", "Home")',
+                data: {
+                    id_license_type: $(this).val()
+                },
+                dataType: 'JSON',
+                success: function (data) {
+                    $('#org_sop_type').empty();
+                    $('#org_sop_type').append('<option value="">Select SOP Type</option>');
+                    $.each(data, function (i, data) {
+                        $('#org_sop_type').append('<option value="' + data.id_lookup + '">' + data.lookup_value + '</option>');
+                    });
+                }
+            });
+        });
+
+        function addForm(certification_type, license_type, sop_type, sop_type_title) {
+            $.ajax({
+                type: 'POST',
+                url: '@Url.Action("GetNewOrganizationForm", "Home")',
+                data: {
+                    id_certification_type: certification_type,
+                    id_license_type: license_type,
+                    id_sop_type: sop_type,
+                    title_sop_type: sop_type_title
+                },
+                dataType: 'json',
+                beforeSend: function () {
+                    var img = '<div class="row">' +
+                                '<div class="col-xs-12"><div style="text-align:center;height:200px;padding-top:75px"><img style="width:50px;height:50px" src="@DKUPPU.Helpers.ImageLoader.Loader" /></div>' +
+                                '</div></div>';
+                    $('#list-organization-add').html(img);
+                },
+                success: function (response) {
+                    window.location.href = response.Url;
+                }
+            });
+        }
+    });
+</script>

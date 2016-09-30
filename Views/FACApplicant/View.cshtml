@@ -1,0 +1,172 @@
+﻿@model DKUPPU.ViewModels.FACApprovalViewModel
+@{
+    ViewBag.Title = "FAC Approval";
+    ViewBag.wf_activity_name = Model.wf_activity_name;
+}
+@if (Model.wf_activity_name == "ACTV")
+{
+    <style>
+        input {
+            background-color: transparent !important;
+            border: none !important;
+        }
+    </style>
+}
+
+<div class="jarviswidget jarviswidget-sortable" data-widget-editbutton="false" data-widget-colorbutton="false" role="widget">
+    <header>
+        <span class="widget-icon"><i class="fa fa-eye"></i></span>
+        <h2>Approval Form</h2>
+        <span class="jarviswidget-loader">
+            <i class="fa fa-refresh fa-spin"></i>
+        </span>
+    </header>
+    <div role="content">
+        <div class="jarviswidget-editbox"> </div>
+        <div class="widget-body">
+
+            <!--Data Applicant Begin-->
+            @Html.Partial("../MstRegisterForm/_DataApplicantForm", Model.Applicant)
+
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.id_trx_license)
+                @Html.HiddenFor(model => model.TrxLicenseViewModel.reg_no)
+
+                if (ViewBag.Medical == true)
+                {
+                    <fieldset>
+                        <legend>
+                            Medical Class
+                        </legend>
+                        @Html.Partial("../MstApprovalForm/_MedicalCheckForm", Model.TrxLicMedicalCertificateViewModel)
+                    </fieldset>
+                }
+                <div class="row">
+                    <div class="col-xs-6">
+                        <legend>
+                            Type Of Aircraft
+                        </legend>
+                        @Html.Partial("../MstApprovalForm/_LicAircraftTypeRattingForm", Model.TrxLicAircraftTypeRatingViewModel)
+                    </div>
+                    <div class="col-xs-6">
+                        <legend>Competency Checks</legend>
+                        @Html.Partial("../MstApprovalForm/_LicCompetencyCheckForm", Model.TrxLicCompetencyCheckViewModel)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <legend>Recurrent Type Of Aircraft</legend>
+                        @Html.Partial("../MstApprovalForm/_LicRecurrentTypeOfAircraftForm", Model.TrxLicRecurrentTypeOfAircraftViewModel)
+                    </div>
+                    <div class="col-xs-6">
+                        <legend>Medical Check</legend>
+                        @Html.Partial("../MstApprovalForm/_LicMedicalCertificate", Model.TrxLicMedicalCertificateViewModel)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h2>Recurrent Mandatory License</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <legend>Crew Member Emergency Training</legend>
+                        @Html.Partial("../MstApprovalForm/_LicCrewEmergencyTrainingForm", Model.TrxLicCrewEmergencyTrainingViewModel)
+                    </div>
+                    <div class="col-xs-6">
+                        <legend>Aviation Security</legend>
+                        @Html.Partial("../MstApprovalForm/_LicAviationSecurityForm", Model.TrxLicAviationSecurityViewModel)
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-6">
+                        <legend>Dangerous Good</legend>
+                        @Html.Partial("../MstApprovalForm/_LicDangerousGoodsForm", Model.TrxLicDangerousGoodsViewModel)
+                    </div>
+                    <div class="col-xs-6">
+                        <legend>Crew Resourche Management</legend>
+                        @Html.Partial("../MstApprovalForm/_LicCrewResourceManagementForm", Model.TrxLicCrewResourceManagementViewModel)
+                    </div>
+                </div>
+                if (ViewBag.UploadDocumentForm == true)
+                {
+                    <fieldset>
+                        <legend>Upload Document</legend>
+                        @Html.Partial("../MstApprovalForm/_DocUploadForm", Model.MstDocUploadViewModel)
+                    </fieldset>
+
+                }
+                if (Model.TrxLicenseViewModel.id_wf_status == "WFS05" && ViewBag.ViewAcceptName == true)
+                {
+                    <fieldset>
+                        <legend>Taken By</legend>
+                        <table>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.TrxLicenseViewModel.accepted_by, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.LabelFor(model => model.TrxLicenseViewModel.id_card_accepted)
+                                </td>
+                                <td>
+                                    @Html.EditorFor(model => model.TrxLicenseViewModel.id_card_accepted, new { htmlAttributes = new { @class = "form-control" } })
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                }
+                if (ViewBag.Logs == true && !DKUPPU.Helpers.SessionLoginHelper.IsExnternal())
+                {
+                    <fieldset>
+                        <legend>Logs</legend>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @Html.Partial("../MstApprovalForm/_LogNotesForm", Model.TrxLicenseNotesViewModel)
+                            </div>
+                        </div>
+                    </fieldset>
+                }
+
+
+                <div class="form-actions">
+                    @if (Model.TrxLicenseViewModel.is_draft == true)
+                    {
+                        <button id="DeleteButton" type="button" class="btn btn-danger"> Delete </button>
+                        <script>
+                            $(document).ready(function () {
+                                $('#DeleteButton').click(function () {
+                                    $.ajax({
+                                        url: '@Url.Action("DeleteTrxLicenseById", "AJAX")',
+                                        data: {
+                                            p_id_trx_license: $('#TrxLicenseViewModel_id_trx_license').val()
+                                        },
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        success: function (data) {
+                                            if (data.resultOperation) {
+                                                window.location.href = data.urlSuccess;
+                                            } else {
+                                                alert(data.messageFail);
+                                            }
+                                        }
+                                    });
+                                });
+                            });
+                        </script>
+                    }
+                    <a href="@Url.Action("Index","Home")" class="btn btn-default"> Back </a>
+                </div>
+            }
+            <!--End Form-->
+
+        </div>
+    </div>
+</div>

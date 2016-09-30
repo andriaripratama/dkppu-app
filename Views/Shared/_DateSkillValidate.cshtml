@@ -1,0 +1,27 @@
+﻿@{
+    List<DKUPPU.ViewModels.MstLookupViewModel> skill = DKUPPU.DAL.MstLookupDAL.GetLookupListByGroup("skill type");
+}
+
+@foreach (var item in skill)
+{
+    <div id="val-@item.id_lookup" data-date="@ViewData[item.id_lookup]"></div>
+}
+
+@section Scripts{
+    @foreach (var item in skill)
+    {
+    <div id="val-@item.id_lookup" data-date="@ViewData[item.id_lookup]"></div>
+    <script>
+        $(function () {
+            $('.@item.id_lookup').datepicker({
+                //options
+                dateFormat: 'dd/mm/yy',
+                changeMonth: true,
+                changeYear: true,
+                minDate: '@ViewData[item.id_lookup]',
+                //...
+            });
+        });
+    </script>
+    }
+}

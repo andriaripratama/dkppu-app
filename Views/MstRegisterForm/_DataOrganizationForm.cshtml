@@ -1,0 +1,67 @@
+﻿@model DKUPPU.ViewModels.MstOrganizationViewModel
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-7">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.org_name)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.org_name)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.address)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.address)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.owner_fullname)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.owner_fullname)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-3">@Html.DisplayNameFor(modelItem => modelItem.org_tdp_no)</td>
+                <td>:</td>
+                <td class="col-xs-9">@Html.DisplayFor(modelItem => modelItem.org_tdp_no)</td>
+            </tr>
+        </table>
+    </div>
+    <div class="col-xs-5">
+        <table class="table table-striped table-bordered">
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.org_fax_no)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.org_fax_no)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.id_village)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.id_village)</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.org_website)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.org_website) cm</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.org_npwp_no)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.org_npwp_no) kg</td>
+            </tr>
+            <tr>
+                <td class="col-xs-2">@Html.DisplayNameFor(modelItem => modelItem.org_phone_no)</td>
+                <td>:</td>
+                <td class="col-xs-10">@Html.DisplayFor(modelItem => modelItem.org_phone_no) kg</td>
+
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td class="col-xs-6">@Html.DisplayNameFor(modelItem => modelItem.registration_date)</td>
+                <td class="col-xs-6">@Html.DisplayFor(modelItem => modelItem.registration_date)</td>
+            </tr>
+        </table>
+    </div>
+</div>
+

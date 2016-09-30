@@ -1,0 +1,112 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.TrxLicenseInvoiceViewModel>
+@{
+    Layout = null;
+}
+
+<!-- Widget ID (each widget will need unique ID)-->
+<div class="jarviswidget jarviswidget-color-greenDark" id="wid-id-2" data-widget-editbutton="false">
+    <header>
+        <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+        <h2>List All Billing</h2>
+    </header>
+
+    <!-- widget div-->
+    <div id="table-list">
+        <!-- widget content -->
+        <div class="widget-body no-padding">
+            <div class="table-responsive">
+                <table id="table-applicant" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th id="invoice_no" data-desc="True">
+                                @Html.DisplayNameFor(model => model.invoice_no)
+                            </th>
+                            <th id="pic_name" data-desc="True">
+                                @Html.DisplayNameFor(model => model.pic_name)
+                            </th>
+                            <th id="billing_code" data-desc="True">
+                                @Html.DisplayNameFor(model => model.billing_code)
+                            </th>
+                            <th id="expired_date" data-desc="True">
+                                @Html.DisplayNameFor(model => model.expired_date)
+                            </th>
+                            <th id="total_price" data-desc="True">
+                                @Html.DisplayNameFor(model => model.total_price)
+                            </th>
+                            <th id="is_paid" data-desc="True">
+                                @Html.DisplayNameFor(model => model.is_paid)
+                            </th>
+                            <th>
+                                #
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="applicant-list-data">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.invoice_no)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.pic_name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.billing_code)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.expired_date_string)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.total_price_string)
+                                </td>
+                                <td>
+                                    @if (item.is_getcode == true)
+                                    {
+                                        <a id="@item.id_trx_lic_invoice" role="button" class="get-billing-code btn btn-primary btn-danger btn-xs">Get Code</a>
+                                    }
+                                    else
+                                    {
+                                        if (item.is_paid == false)
+                                        {
+                                            <span class="label label-warning arrowed">Unpaid</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="label label-primary arrowed">Paid</span>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.is_paid == false)
+                                    {
+                                        <a href="@item.Url" class="btn btn-sm btn-primary disabled">Print Receipt</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@item.Url" class="btn btn-sm btn-primary">Print Receipt</a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="dt-toolbar-footer">
+                    <div class="col-xs-2 col-sm-2" id="total-row">
+                        <b><i>Total Data :</i> @ViewBag.TotalRow</b>
+                    </div>
+                    <div class="col-xs-10 col-sm-10">
+                        <div class="dataTables_paginate paging_simple_numbers" id="pagination-applicant">
+                            @Html.Raw(ViewBag.Pagination)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end widget content -->
+
+    </div>
+    <!-- end widget div -->
+
+</div>
+<!-- end widget -->

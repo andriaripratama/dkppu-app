@@ -1,0 +1,42 @@
+﻿@model IEnumerable<DKUPPU.ViewModels.MstParameterViewModel>
+
+@{
+    Layout = null;
+}
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.id_parameter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.param_value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.param_description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="list-data-applicant">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.id_parameter)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.param_value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.param_description)
+                </td>
+                <td class="text-center" width="10%">
+                    <a href="@Url.Action("Details", "Application", new { id = item.id_parameter })" class="btn btn-success btn-circle"><i class="fa fa-search"></i></a>
+                    <a href="@Url.Action("Update", "Application", new { id = item.id_parameter })" class="btn btn-primary btn-circle"><i class="fa fa-edit"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

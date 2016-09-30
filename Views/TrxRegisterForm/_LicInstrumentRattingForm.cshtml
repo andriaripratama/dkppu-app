@@ -1,0 +1,204 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel>
+@{
+    Layout = null;
+
+    string sopType = ViewBag.sop_type == null ? string.Empty : ViewBag.sop_type;
+}
+<div class="table-responsive">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(model => model[0].id_air_sim_type)</th>
+
+                <th>@Html.DisplayNameFor(model => model[0].checked_date)</th>
+
+                <th>@Html.DisplayNameFor(model => model[0].expired_date)</th>
+            </tr>
+        </thead>
+        <tbody id="TrxLicInstrumentRatingViewModel">
+            @{
+                int j = 0;
+                string vreadonly = "";
+                string vrequered = "";
+                string datepicker = "";
+                string skill04 = "";
+            }
+            @foreach (DKUPPU.ViewModels.TrxLicInstrumentRatingViewModel item in Model)
+            {
+                vreadonly = "readonly='readonly'";
+                vrequered = "";
+                datepicker = "date-picker";
+                skill04 = "";
+                
+                if (item.is_history == false || item.is_history == null)
+                {
+                    vreadonly = "";
+                    vrequered = (sopType == "WL05") ? string.Empty : "required-value";
+                    datepicker = "date-picker";
+                    skill04 = "SKILL04";
+                }
+                <tr id="TrxLicInstrumentRatingViewModel_@j" class="old-tr">
+                    <td>
+                        <input type="hidden" name="TrxLicInstrumentRatingViewModel[@j].is_history_value" id="TrxLicInstrumentRatingViewModel_@j.ToString()__is_history_value" value="@Html.DisplayFor(m => m[j].is_history_value)">
+                        @if (item.is_history == true)
+                        {
+                            @Html.DropDownList("TrxLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, "Select Air or SIM", new { @class = "form-control", id = "TrxLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type", @disabled = "disabled" })
+                            if (!(Model[j].id_air_sim_type == null || Model[j].id_air_sim_type == ""))
+                            {
+                                <script>
+                                    $(function () {
+                                        $('#TrxLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type option[value=@Model[j].id_air_sim_type]').attr('selected', 'selected');
+                                    })
+                                </script>
+                            }
+                            <input type="hidden" name="TrxLicInstrumentRatingViewModel[@j].id_air_sim_type" id="TrxLicInstrumentRatingViewModel_@j.ToString()__id_air_sim_type" value="@Html.DisplayFor(m => m[j].id_air_sim_type)" @vreadonly>
+
+                        }
+                        else
+                        {
+                            @Html.DropDownList("TrxLicInstrumentRatingViewModel[" + j.ToString() + "].id_air_sim_type", (IEnumerable<SelectListItem>)ViewBag.airsimtypedrop, "Select Air or SIM", new { @class = "form-control", id = "TrxLicInstrumentRatingViewModel_" + j.ToString() + "__id_air_sim_type" })
+
+                        }
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @skill04 @datepicker @vrequered date-skill04 start-date" name="TrxLicInstrumentRatingViewModel[@j].checked_date" id="TrxLicInstrumentRatingViewModel_@j.ToString()__checked_date" value="@Html.DisplayFor(m => m[j].checked_date)" @vreadonly>
+                        <input type="hidden" name="TrxLicInstrumentRatingViewModel[@j].id_trx_lic_instrument_rating" id="TrxLicInstrumentRatingViewModel_@j.ToString()__id_trx_lic_instrument_rating" value="@Html.DisplayFor(m => m[j].id_trx_lic_instrument_rating)" @vreadonly>
+                    </td>
+                    <td>
+                        <input type="text" class="form-control @datepicker @vrequered date-field" name="TrxLicInstrumentRatingViewModel[@j].expired_date" id="TrxLicInstrumentRatingViewModel_@j.ToString()__expired_date" value="@Html.DisplayFor(m => m[j].expired_date)" @vreadonly>
+                    </td>
+                </tr>
+                        j++;
+            }
+        </tbody>
+    </table>
+</div>
+<script>
+    $(function () {
+        var VSKILL04 = $('#val-SKILL04').attr('data-date');
+        $('.SKILL04').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            minDate: VSKILL04,
+            //...
+        });
+        $('div').on("click", "a.add-instrument", function (e) {
+            e.preventDefault();
+            var $tabelData = $('#TrxLicInstrumentRatingViewModel');
+            addRowTrxLicInstrumentRatingViewModel(e, $tabelData);
+        });
+        $('div').on("click", "a.remove-instrument", function (e) {
+            e.preventDefault();
+            var $tabelData = $('#TrxLicInstrumentRatingViewModel');
+            RemoveTrxLicInstrumentRatingViewModel(e, $tabelData);
+        });
+        function addRowTrxLicInstrumentRatingViewModel(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) < 1) {
+                var $trLast = $tabelData.find("tr:last");
+                var $trNew = $trLast.clone();
+
+                var suffix = $trNew.find(':input:first').attr('name').match(/\d+/);
+                var oldNTr = $trNew.attr('id');
+                var newNTr = oldNTr.replace('-' + suffix, '-' + (parseInt(suffix) + 1));
+                $trNew.attr('id', newNTr);
+                $trNew.removeClass('old-tr');
+                $trNew.addClass('new-tr');
+                $.each($trNew.find(':input'), function (i, val) {
+                    if (i == 0) {
+                        $(this).removeAttr('disabled')
+                    }
+                    // Replaced Name
+                    var oldN = $(this).attr('name');
+                    var newN = oldN.replace('[' + suffix + ']', '[' + (parseInt(suffix) + 1) + ']');
+                    $(this).attr('name', newN);
+
+                    // Replaced ID
+                    var oldID = $(this).attr('id');
+                    var newID = oldID.replace('_' + suffix + '_', '_' + (parseInt(suffix) + 1) + '_');
+                    $(this).attr('id', newID);
+
+                    $(this).val('');
+                    $(this).removeAttr('readonly');
+                });
+                $.each($trNew.find('.date-field'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        //...
+                    });
+                });
+                $.each($trNew.find('.date-skill04'), function (i, val) {
+                    $(this).removeClass('hasDatepicker');
+                    $(this).datepicker({
+                        //options
+                        dateFormat: 'dd/mm/yy',
+                        changeMonth: true,
+                        changeYear: true,
+                        minDate: VSKILL04,
+                    });
+                });
+                $(':input.hasDatepicker').each(function () {
+                    /*
+                    jQuery(this).on("keypress keyup blur", function (event) {
+                        $(this).val($(this).val().replace(/[^\d].+/, ""));
+                        if ((!event.which < 48 || !event.which > 57)) {
+                            event.preventDefault();
+                        }
+                    });
+                    */
+
+                    $(this).keypress(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+
+                    $(this).keydown(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+
+                    $(this).keyup(function (e) {
+                        var key = e.charCode || e.keyCode;
+
+                        if (key == 13) {
+                            // enter key do nothing
+                        }
+                        else {
+                            e.preventDefault();
+                        }
+                    });
+                });
+                $trLast.after($trNew);
+            }
+
+        }
+
+        function RemoveTrxLicInstrumentRatingViewModel(e, $tabelData) {
+            e.preventDefault();
+            var trLenght = $tabelData.find('tr.new-tr').length;
+            if (parseInt(trLenght) == 1) {
+                var trTodelete = $tabelData.find('tr.new-tr');
+                trTodelete.remove();
+            }
+        }
+    });
+</script>

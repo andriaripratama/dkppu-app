@@ -1,0 +1,26 @@
+﻿@model List<DKUPPU.ViewModels.TrxLicWrittenExamResultViewModel>
+@{
+    Layout = null;
+}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="form-horizontal">
+            <input type="hidden" id="subject_count" value="@Model.Count" />
+            @{int j = 0;}
+            @foreach (DKUPPU.ViewModels.TrxLicWrittenExamResultViewModel item in Model)
+            {
+                <div class="form-group">
+                    <label class="col-md-4 control-label text-left" for="result_exam">@Html.DisplayFor(m => m[j].subject_order). @Html.DisplayFor(m => m[j].id_subject_value)</label>
+                    <div class="col-md-5">
+                        <input type="number" maxlength="5" class="form-control required-value change-handled result-value" data-validation="required-value" required="required" name="TrxLicWrittenExamResultViewModel[@j].result_value" id="@j.ToString()__result_value" value="@Html.DisplayFor(m => m[j].result_value)" />
+                        <input type="hidden" name="TrxLicWrittenExamResultViewModel[@j].id_subject" id="TrxLicWrittenExamResultViewModel_@j.ToString()__id_subject" value="@Html.DisplayFor(m => m[j].id_subject)" />
+                        <input type="hidden" name="TrxLicWrittenExamResultViewModel[@j].id_trx_lic_exam_result" id="TrxLicWrittenExamResultViewModel_@j.ToString()__id_trx_lic_exam_result" value="@Html.DisplayFor(m => m[j].id_trx_lic_exam_result)" />
+                    </div>
+                </div>
+                j++;
+            }
+        </div>
+    </div>
+
+</div>
+

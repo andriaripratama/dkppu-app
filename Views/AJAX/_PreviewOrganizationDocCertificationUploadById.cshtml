@@ -1,0 +1,17 @@
+﻿@model DKUPPU.ViewModels.TrxOrganizationDocCertificationViewModel
+@{
+    Layout = null;
+}
+<div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button class="close" aria-hidden="true" data-dismiss="modal" type="button"> <i class="fa fa-remove"></i> </button>
+            <h4>Document Preview</h4>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <img class="col-xs-12" src="@Url.Action("PreviewUploadedOrganizationDocCertification", "AJAX", new { id_trx_org_doc_certification = Model.id_trx_org_doc_certification })" />
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,194 @@
+﻿@model DKUPPU.ViewModels.IderaEvaluationRecordsForm
+@{
+    Layout = null;
+}
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.RealeaseMortgageRecord.Reference_Cancellation)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.RealeaseMortgageRecord.Reference_Cancellation, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.RealeaseMortgageRecord.Date)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.RealeaseMortgageRecord.Date, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.RealeaseMortgageRecord.Certification)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.RealeaseMortgageRecord.Certification, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.RealeaseMortgageRecord.Assigned_Inspector)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.RealeaseMortgageRecord.Assigned_Inspector, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+
+<div class="form-group">
+    <label class="col-md-6 control-label text-left">
+        A.Cancellation Base on DAAO form 47-17
+    </label>
+    <label class="col-md-6 control-label text-left">
+        B.Cancellation Base on IDERA
+    </label>
+</div>
+
+<div class="form-group">
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Application_Information)
+    </label>
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Application_Information)
+    </label>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationDAAO.Name)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Name, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationIDERA.Name)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Name, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationDAAO.Address)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Address, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationIDERA.Address)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Address, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Reason_Cancellation)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Reason_Cancellation, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Reason_Cancellation)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Reason_Cancellation, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Attached_Document)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Attached_Document, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Attached_Document)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Attached_Document, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Remarks)
+    </label>
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Remarks)
+    </label>
+</div>
+<div class="form-group">
+    <div class="col-md-6">
+        @Html.TextAreaFor(model => model.CancellationDAAO.Remarks, new { htmlAttributes = new { @class = "form-control required-value", @cols = 320, @rows = 90 } })
+    </div>
+    <div class="col-md-6">
+        @Html.TextAreaFor(model => model.CancellationIDERA.Remarks, new { htmlAttributes = new { @class = "form-control required-value", @cols = 320, @rows = 90 } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Cancellation_Letter)
+    </label>
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Cancellation_Letter)
+    </label>
+</div>
+@*Checkbox*@
+<div class="form-group">
+        <label class="col-md-6 control-label text-left">
+            @Html.RadioButtonFor(m => m.CancellationDAAO.Whorm_Concern, "1" ) Tho Whom it May Concern
+        </label>
+        <label class="col-md-4 control-label text-left">
+            @Html.RadioButtonFor(m => m.CancellationIDERA.Whorm_Concern, "1") Tho Whom it May Concern
+        </label>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationDAAO.Number1)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Number1, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationIDERA.Number1)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Number1, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+@*Checkbox*@
+<div class="form-group">
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationDAAO.Number2)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Number2, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-center">
+        @Html.LabelFor(model => model.CancellationIDERA.Number2)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Number2, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>
+<div class="form-group">
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Certification_Inspector)
+    </label>
+    <label class="col-md-6 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Certification_Inspector)
+    </label>
+</div>
+<div class="form-group">
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationDAAO.Asigned_Inspector)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationDAAO.Asigned_Inspector, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+    <label class="col-md-2 control-label text-left">
+        @Html.LabelFor(model => model.CancellationIDERA.Asigned_Inspector)
+    </label>
+    <div class="col-md-4">
+        @Html.EditorFor(model => model.CancellationIDERA.Asigned_Inspector, new { htmlAttributes = new { @class = "form-control required-value" } })
+    </div>
+</div>

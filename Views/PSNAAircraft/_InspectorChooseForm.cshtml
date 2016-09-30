@@ -1,0 +1,47 @@
+﻿@model List<DKUPPU.ViewModels.PSNAAircraftInspectorTypeViewModel>
+@{
+    Layout = null;
+}
+<div class="form-horizontal">
+    <div class="row form-group">
+        <label class="col-md-4 control-label text-left">
+            Inspector
+        </label>
+        <div class="col-md-8">
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody id="PSNAAircraftInspectorTypeViewModel">
+                        @{
+                            int i = 0;
+                        }
+                        @foreach (DKUPPU.ViewModels.PSNAAircraftInspectorTypeViewModel item in Model)
+                        {
+                            <tr id="PSNAAircraftInspectorTypeViewModel_@i">
+                                <td>
+                                    <label for="PSNAAircraftInspectorTypeViewModel_@i.ToString()__name_inspector_type">@item.name_inspector_type</label>
+                                </td>
+                                <td>
+                                    <select class="form-control input-sm" id="PSNAAircraftInspectorTypeViewModel_@i.ToString()__id_inspector" name="PSNAAircraftInspectorTypeViewModel[@i].id_inspector">
+                                        <option value="" selected>Select</option>
+                                        @foreach (var item2 in item.PSNAAircraftInspectorViewModel)
+                                        {
+                                            <option value="@item2.id">@item2.name</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                                
+                            i++;
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

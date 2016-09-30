@@ -1,0 +1,37 @@
+﻿@model List<DKUPPU.ViewModels.TrxOrganizationCertificationTeamViewModel>
+@{
+    Layout = null;
+}
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Personnel Name</th>
+                <th>Position</th>
+                <th>Specialty</th>
+                <th width="40px"></th>
+            </tr>
+        </thead>
+        <tbody id="ListOfTrxOrganizationCertificationTeam">
+            <tr id="ListOfTrxOrganizationCertificationTeam_0">
+                <td>
+                    <select name="ListOfTrxOrganizationCertificationTeam[0].id_user_cer_team" id="ListOfTrxOrganizationCertificationTeam_0__id_user_cer_team" class="form-control input-sm invisible">
+                        <option value="">Select</option>
+                    </select>
+                </td>
+                <td>
+                    <select name="ListOfTrxOrganizationCertificationTeam[0].id_position_cer_team" id="ListOfTrxOrganizationCertificationTeam_0__id_position_cer_team" class="form-control input-sm invisible">
+                        <option value="">Select</option>
+                    </select>
+                </td>
+                <td>
+                    <input name="ListOfTrxOrganizationCertificationTeam[0].speciality" id="ListOfTrxOrganizationCertificationTeam_0__speciality" class="form-control input-sm invisible" />
+                </td>
+                <td>
+                    <a role="button" id="ListOfTrxOrganizationCertificationTeam_0__remove" class="certification-team-remove-row btn btn-xs btn-danger invisible"><i class="fa fa-trash-o"></i></a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

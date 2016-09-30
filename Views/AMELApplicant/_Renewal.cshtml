@@ -1,0 +1,38 @@
+﻿@model DKUPPU.ViewModels.AMELFormViewModel
+@{
+    Layout = null;
+}
+<fieldset>
+    <legend>Basic Certificate</legend>
+    @Html.Partial("../TrxRegisterForm/_LicExamBasicCertificateAMELForm", Model.TrxLicExamBasicCertificateViewModel)
+</fieldset>
+
+<fieldset>
+    <legend>License From ICAO Contracting STATE</legend>
+    @Html.TextAreaFor(a => a.TrxLicenseViewModel.notes, new { @Class = "from-control col-xs-12" })
+</fieldset>
+
+
+ <!--training-->
+<fieldset>
+    <legend>
+        Basic Knowladge Training
+        <a class="pull-right btn btn-primary btn-xs" id="add-basic-knowladge-training"><i class="fa fa-plus"></i></a>
+    </legend>
+    @Html.Partial("../TrxRegisterForm/_LicExamBasicKnowladgeTraining", Model.BasicKnowladgeTraining)
+</fieldset>
+<fieldset>
+    <legend>
+        Aircraft Type Rating Training
+        <a class="pull-right btn btn-primary btn-xs" id="add-airctaft-type-training"><i class="fa fa-plus"></i></a>
+    </legend>
+    @Html.Partial("../TrxRegisterForm/_LicExamAircraftTypeRatingTraining", Model.AircraftTypeRatingTraining)
+</fieldset>
+<fieldset>
+    <legend>
+        Recurrent Training
+        <a class="pull-right btn btn-primary btn-xs" id="add-recurrent-training"><i class="fa fa-plus"></i></a>
+    </legend>
+    @Html.Partial("../TrxRegisterForm/_LicExamRecurrentTraining", Model.RecurrentTraining)
+</fieldset>
+<!--end training-->

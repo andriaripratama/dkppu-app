@@ -1,0 +1,34 @@
+﻿@model List<DKUPPU.ViewModels.MstMappingAircraftApprovalDtlViewModel>
+@{
+    Layout = null;
+}
+
+<div class="form-horizontal">
+    @{int j = 0;}
+    @foreach (DKUPPU.ViewModels.MstMappingAircraftApprovalDtlViewModel item in Model)
+    {
+        <div class="form-group">
+            <label class="col-md-4 control-label text-left" for="MstMappingAircraftApprovalDtlViewModel_@j.ToString()__TrxAircraftApprovalViewModel_id_user">@Html.DisplayFor(m => m[j].group_name)</label>
+            <div class="col-md-5">
+                @Html.DropDownList("MstMappingAircraftApprovalDtlViewModel[" + j + "].TrxAircraftApprovalViewModel.id_user", (IEnumerable<SelectListItem>)new SelectList(item.MstUserViewModel, "id_user", "fullname"), "Select item", new { @class = "form-control required-value", id = "MstMappingAircraftApprovalDtlViewModel_" + j.ToString() + "__TrxAircraftApprovalViewModel_id_user" })
+                @if (item.TrxAircraftApprovalViewModel != null)
+                {
+                    if (!(Model[j].TrxAircraftApprovalViewModel.id_user == "" || Model[j].TrxAircraftApprovalViewModel.id_user == null))
+                    {
+                        <script>
+                            $(function () {
+                                $('#MstMappingAircraftApprovalDtlViewModel_@j.ToString()__TrxAircraftApprovalViewModel_id_user option[value=@item.TrxAircraftApprovalViewModel.id_user]').attr('selected', 'selected');
+                            })
+                        </script>
+                    }
+                }
+                <input type="hidden" name="MstMappingAircraftApprovalDtlViewModel[@j].TrxAircraftApprovalViewModel.id_trx_aircraft_approval" id="MstMappingAircraftApprovalDtlViewModel_@j.ToString()_TrxAircraftApprovalViewModel_id_trx_aircraft_approval" value="@Html.DisplayFor(m => m[j].TrxAircraftApprovalViewModel.id_trx_aircraft_approval)" />
+                <input type="hidden" name="MstMappingAircraftApprovalDtlViewModel[@j].TrxAircraftApprovalViewModel.id_approval_group" id="MstMappingAircraftApprovalDtlViewModel_@j.ToString()_TrxAircraftApprovalViewModel_id_approval_group" value="@Html.DisplayFor(m => m[j].TrxAircraftApprovalViewModel.id_approval_group)" />
+                <input type="hidden" name="MstMappingAircraftApprovalDtlViewModel[@j].id_approval_group" id="MstMappingAircraftApprovalDtlViewModel_@j.ToString()_id_approval_group" value="@Html.DisplayFor(m => m[j].id_approval_group)" />
+                <input type="hidden" name="MstMappingAircraftApprovalDtlViewModel[@j].group_code" id="MstMappingAircraftApprovalDtlViewModel_@j.ToString()_group_code" value="@Html.DisplayFor(m => m[j].group_code)" />
+                <input type="hidden" name="MstMappingAircraftApprovalDtlViewModel[@j].TrxAircraftApprovalViewModel.id_approval_status" id="MstMappingAircraftApprovalDtlViewModel_@j.ToString()_TrxAircraftApprovalViewModel_id_approval_status" value="@Html.DisplayFor(m => m[j].TrxAircraftApprovalViewModel.id_approval_status)" />
+            </div>
+        </div>
+                j++;
+    }
+</div>

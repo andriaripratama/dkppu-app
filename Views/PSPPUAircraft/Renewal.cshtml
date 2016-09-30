@@ -1,0 +1,428 @@
+﻿@model DKUPPU.ViewModels.PSPPURenewalViewModel
+@{
+    ViewBag.Title = "Renewal";
+}
+
+<h2>APPLICATION FOR RENEWAL/REPLACEMENT OF CERTIFICATE OF REGISTRATION</h2>
+
+<div role="content">
+    <div class="jarviswidget-editbox"> </div>
+    <div class="widget-body">
+        <hr class="simple">
+        <div>
+            <ul id="myTab1" class="nav nav-tabs bordered">
+                <li class="active">
+                    <a href="#s1" data-toggle="tab"><i class="glyphicon glyphicon-th-large"></i> Application Information</a>
+                </li>
+                <li>
+                    <a href="#s2" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft Information</a>
+                </li>
+                <li>
+                    <a href="#s3" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft Ownership Information</a>
+                </li>
+                <li>
+                    <a href="#s4" data-toggle="tab"><i class="glyphicon glyphicon-plane"></i> Aircraft term of Possesion</a>
+                </li>
+                <li>
+                    <a href="#s5" data-toggle="tab"><i class="glyphicon glyphicon-book"></i> Certification </a>
+                </li>
+            </ul>
+            <div id="myTabContent1" class="tab-content padding-10">
+                <div class="tab-pane fade in active" id="s1">
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label text-left">
+                                    @Html.LabelFor(model => model.AppInf.Name)
+                                </label>
+                                <div class="col-md-4">
+                                    @Html.EditorFor(model => model.AppInf.Name, new { htmlAttributes = new { @class = "form-control required-value" } })
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label text-left">
+                                    @Html.LabelFor(model => model.AppInf.Address)
+                                </label>
+                                <div class="col-md-4">
+                                    @Html.TextAreaFor(model => model.AppInf.Address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+
+                <div class="tab-pane fade" id="s2">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.NaRM)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AircraftInf.NaRM, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.RegisNumb)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AircraftInf.RegisNumb, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.ValCaR)
+                            </label>
+                            <div class="col-md-4">
+                                <input name="AAircraftInf.ValCaR"
+                                       id="AircraftInf_ValCaR"
+                                       class="form-control date-picker required-value"
+                                       value="@Html.DisplayFor(model => model.AircraftInf.ValCaR)" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.ValCaA)
+                            </label>
+                            <div class="col-md-4">
+                                <input name="AAircraftInf.ValCaA"
+                                       id="AircraftInf_ValCaA"
+                                       class="form-control date-picker required-value"
+                                       value="@Html.DisplayFor(model => model.AircraftInf.ValCaA)" required />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.ManuAndModel)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AircraftInf.ManuAndModel, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.SerialNumber)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AircraftInf.SerialNumber, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.Model)
+                            </label>
+                            <div class="col-md-8">
+                                <div class="inline-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio-model" checked="checked">
+                                        <i></i>Fixed Wing
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input type="radio" name="radio-model">
+                                        <i></i>Helicopter
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-model">
+                                        <i></i>Other
+                                        @Html.TextBoxFor(model => model.AircraftInf.Model, new { htmlAttributes = new { @class = "form-control col-sm-2" } })
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.AircraftInf.NaVofInsurance)
+                            </label>
+                            <div class="col-md-5">
+                                <input type="file" class="btn btn-default" id="NaVofInsuranceData">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="tab-pane fade" id="s3">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left">
+                                @Html.LabelFor(model => model.AOI.TermOfOwnership)
+                            </label>
+                            <div class="col-md-8">
+                                <div class="inline-group">
+                                    <labeattach class="radio radio-inline">
+                                        <input type="radio" name="radio-modelaircraft" checked="checked">
+                                        <i></i>Cash of Purchase
+                                    </labeattach>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-modelaircraft">
+                                        <i></i>Gift Grant
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-modelaircraft">
+                                        <i></i>Other
+                                        @Html.TextBoxFor(model => model.AOI.TermOfOwnership, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left">
+                                @Html.LabelFor(model => model.AOI.NameOfOwnership)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AOI.NameOfOwnership, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left">
+                                @Html.LabelFor(model => model.AOI.Address)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.TextAreaFor(model => model.AOI.Address, new { @class = "form-control required-value", @cols = 55, @rows = 4 })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left">
+                                @Html.LabelFor(model => model.AOI.EviOfOwnership)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.AOI.EviOfOwnership, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label text-left">
+                                @Html.LabelFor(model => model.AOI.Date)
+                            </label>
+                            <div class="col-md-2">
+                                <input name="AircraftOwnershipInformation.Date"
+                                       id="AircraftOwnershipInformation"
+                                       class="form-control date-picker required-value"
+                                       @*placeholder="Input From Date"*@
+                                       value="@Html.DisplayFor(model => model.AOI.Date)" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="s4">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.TermOfPossesion)
+                            </label>
+                            <div class="col-md-8">
+                                <div class="inline-group">
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-TermOfPossesion" checked="checked">
+                                        <i></i>Leasing
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-TermOfPossesion">
+                                        <i></i>Conditional Sale
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" name="radio-TermOfPossesion">
+                                        <i></i>Other
+                                        @Html.TextBoxFor(model => model.ToP.TermOfPossesion, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+                                </div>
+                            </div>
+                            @*<div class="col-md-10">
+                                    <label class="radio radio-inline">
+                                        <input type="radio" class="radiobox" name="style-0a" checked="checked">
+                                        <span>Leasing</span>
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" class="radiobox" name="style-0a">
+                                        <span>Conditional Sale</span>
+                                    </label>
+                                    <label class="radio radio-inline">
+                                        <input type="radio" class="radiobox" name="style-0a">
+                                        <span>
+                                            Other
+                                            @Html.TextBoxFor(model => model.AircraftTermOfPossesion.TermOfPossesion, new { @class = "form-control" })
+                                        </span>
+                                    </label>
+                                </div>*@
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.EviOfAgreement)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ToP.EviOfAgreement, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-12 control-label text-left">
+                                Lesser/Conditional Seller/Other
+                            </label>
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.NameSeller)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ToP.NameSeller, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.AddressSeller)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ToP.AddressSeller, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-12 control-label text-left">
+                                Lesser/Conditional Buyer/Other
+                            </label>
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.NameBuyer)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ToP.NameBuyer, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.ToP.AddressBuyer)
+                            </label>
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.ToP.AddressBuyer, new { htmlAttributes = new { @class = "form-control required-value" } })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="s5">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.Certification.ReasonForRenewal)
+                            </label>
+                            <div class="col-md-10">
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-ReasonForRenewal" checked="checked">
+                                        <i></i>Expiration of C of R
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-ReasonForRenewal">
+                                        <i></i>Change of Ownership
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-ReasonForRenewal">
+                                        <i></i>Change of Address
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-ReasonForRenewal">
+                                        <i></i>Lost
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-ReasonForRenewal">
+                                        <i></i>Other
+                                        @Html.TextBoxFor(model => model.Certification.ReasonForRenewal, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-7 control-label text-left">
+                                @Html.Label("Attach reference for C of R or Lesse Agreement of Evidence of Lost (or destroyed)")
+                            </label>
+                            <div class="col-md-5">
+                                <input type="file" class="btn btn-default" id="upldoc1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-7 control-label text-left">
+                                @Html.Label("If any changes name and or address of ownership, applicant must be submitted evidence of new ownership or address of owner")
+                            </label>
+                            <div class="col-md-5">
+                                <input type="file" class="btn btn-default" id="upldoc2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-2 control-label text-left">
+                                @Html.LabelFor(model => model.Certification.CustomClearence)
+                            </label>
+                            <div class="col-md-10">
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-CustomClearence" checked="checked">
+                                        <i></i>Custom Clearence
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-CustomClearence">
+                                        <i></i>Permanent Import
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-CustomClearence">
+                                        <i></i>Temporary Import
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label class="radio">
+                                        <input type="radio" name="radio-CustomClearence">
+                                        <i></i>Other
+                                        @Html.TextBoxFor(model => model.Certification.ReasonForRenewal, new { htmlAttributes = new { @class = "form-control" } })
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row col-md-12">
+            <fieldset>
+                <legend>Upload Document</legend>
+                @* @Html.Partial("../MstRegisterForm/_DocUploadForm", Model.UploadDocument)*@
+            </fieldset>
+            <div id="error" class="col-md-12">
+                <input type="checkbox" required="required" />
+                I hereby certify that the information above given are correct and the undersigned will comply what Republic of Indonesia Avoation Law Number 1 Year 2009 and other applicable regulations
+            </div>
+        </div>
+        <div class="form-actions">
+            <button class="btn btn-primary" type="submit"> Submit </button>
+            <a href="#" class="btn btn-danger"> Back </a>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        // datepicker
+        $('.date-picker').datepicker({
+            //options
+            dateFormat: 'dd/mm/yy',
+            changeMonth: true,
+            changeYear: true,
+            //...
+        });
+    });
+</script>
+
+
